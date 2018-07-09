@@ -39,7 +39,7 @@ exports.insertProblemToDB=function(req,res){
     ,ssl:true
   });
 
-  var sql = "insert into Problem(id, description, solution, author_id) values(?,?,?,?)";
+  var sql = "insert into Problem(id, description, solution, author_id) values($1,$2,$3,$4)";
 
   var problemId=getUniqueId(authorName);
   pool.query(sql, [problemId,problemDescription,ansDescription,authorName], function(err,result){
@@ -125,7 +125,7 @@ exports.verifyUser=function(req,res){
     ssl:true
   });
 
-  var sql = "SELECT count(*) as count FROM Customer where id=? and password=?";
+  var sql = "SELECT count(*) as count FROM Customer where id=$1 and password=$2";
 
   pool.query(sql, [userId,password], function (err, result, fields){
     if(result[0].count=="0"){
@@ -163,9 +163,9 @@ exports.insertUserToDB=function(req,res){
     ssl:true
   });
 
-  var sql = "insert into Customer(id,password,first_name,last_name,address1,address2,city,zip,phone,mobile,email) values(?,?,?,?,?,?,?,?,?,?,?)";
+  var sql = "insert into Customer(id,password,first_name,last_name,address1,address2,city,zip,phone,mobile,email) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)";
 
-  pool.query(sql, [userId,password,firstName,lastName,address1,address2,city, zip, phone,cell,email], function(err,result)
+  pool.query(sql, [userId,password,firstName,lastName,address1,address2,city, zip, phone,cell,email], (err,result)=>
   {
     if (err) throw err;
     console.log("1 record inserted");
@@ -248,7 +248,7 @@ exports.insertCourseToDB=function(req,res){
     port:configuration.getPort(),
     ssl:true
   });
-  var sql = "insert into Course(id, name, description, owner_id) values(?,?,?,?)";
+  var sql = "insert into Course(id, name, description, owner_id) values($1,$2,$3,$4)";
 
   var courseId=getUniqueId(ownerId);
   pool.query(sql, [courseId,courseName,courseDescription,ownerId], function(err,result){
@@ -334,7 +334,7 @@ exports.insertQuizToDB=function(req,res){
     port:configuration.getPort(),
     ssl:true
   });
-  var sql = "insert into Quiz(id, description, course_id, instructor_id) values(?,?,?,?)";
+  var sql = "insert into Quiz(id, description, course_id, instructor_id) values($1,$2,$3,$4)";
 
   var quizId=getUniqueId(authorName);
   pool.query(sql, [quizId,quizDescription,courseId,authorName], function(err,result){
