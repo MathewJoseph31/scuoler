@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="css/style.css">
+<meta charset="UTF-8">
+<title>Insert New Questions</title>
+</head>
+<body>
+
+               <% if(userId){ %>
+ 		    <div w3-include-html="headerLogged"+<%= userId%> ></div> 
+                <% } %>
+ <!--<div w3-include-html="chapter.ejs"></div> -->
+<a class="HomeLink" href="/">back to home</a>
+<div class="h1">
+Insert a new Course
+</div>
+<fieldset>
+<form method="post" action="InsertCourseAction">
+Course Name:<br>
+<input id="courseName" name="courseName" type="text" cols="150" required="true">
+</textarea> 
+<br>
+<br>
+Course Description:<br>
+<textarea id="courseDescription" name="courseDescription" type="text" rows="10" cols="150" required="true">
+</textarea> <br>
+<br>
+<br>
+Owner:<br>
+<input id="ownerId" name="ownerId" type="text" cols="150" required="true">
+</input> <br>
+<br>
+<input type="submit" value="insert course"/>
+                      <% if(message !== null){ %>
+                   <p class="ActionMessage"><%= message %></p>
+                      <% } %>
+</form>
+</fieldset>
+</body>
+<script type="text/javascript" src="scripts/general.js"></script>
+</html>
