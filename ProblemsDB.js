@@ -128,7 +128,7 @@ exports.verifyUser=function(req,res){
   var sql = "SELECT count(*) as count FROM Customer where id=$1 and password=$2";
 
   pool.query(sql, [userId,password], function (err, result, fields){
-    if(result[0].count=="0"){
+    if(result.rows[0].count=="0"){
       res.render('index.ejs', {userId: undefined,errorMsg:"User Id/password error"});
     }
     else{
