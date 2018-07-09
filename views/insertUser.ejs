@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="css/style.css">
+<meta charset="UTF-8">
+<title>Insert A New User</title>
+</head>
+<body>
+         <% if(userId){ %>
+ 		    <div w3-include-html="headerLogged"+<%= userId%> ></div> 
+                <% } %>
+         <% if(userId==undefined){%>
+		<div w3-include-html="header.ejs"></div>
+         <%} %>
+<a class="HomeLink" href="/">back to home</a>
+<div class="h1">
+Insert/Register A New User
+</div>
+<fieldset>
+<form method="post" action="InsertUserAction">
+User Id: <input id="userId" name="userId" type="text" required="true">
+Password: <input id="password" name="password" type="password" required="true">
+<br>
+<br>
+First Name: <input id="firstName" name="firstName" type="text" rows="10" size="18" required="true">
+Last Name:  <input id="lastName" name="lastName" type="text" rows="10" size="19" 	required="true">
+<br>
+<br>
+Address1: <input id="address1" name="address1" type="text"  required="true">
+Address2:  <input id="address2" name="address2" type="text" required="true">
+<br>
+<br>
+City: <input style="margin-left:1cm;" id="city" name="city" type="text" required="true">
+Zip:  <input style="margin-left:1.5cm;" id="zip" name="zip" type="text" required="true">
+phone:  <input id="phone" name="phone" type="text" required="true">
+<br>
+<br>
+cell num:
+<input id="cell" name="cell" type="text" required="true">
+email:
+<input style="margin-left:1cm;" id="email" name="email" type="text" required="true">
+<br>
+<br>
+<input type="submit" style="margin-left:0.1cm;" value="insert/register user"/>
+                      <% if(message !== null){ %>
+                   <p class="ActionMessage"><%= message %></p>
+                      <% } %>
+</form>
+</fieldset>
+</body>
+<script type="text/javascript" src="scripts/general.js"></script>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Test</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+  
+  </head>
+  <body>
+    <div class="container">
+      <fieldset>
+        <form action="/problem" method="post">
+          <input name="city" type="text" class="ghost-input" placeholder="Enter a City" required>
+          <input type="button" id="showButton" name="showButton" class="ghost-button" value="shome me"/>
+          <input type="submit"  class="ghost-button" value="Get Weather">
+          <div id="test"></div>
+	  <% if(question1 !== null){ %>
+  	 <p class="question" id="question">           
+          <%= question1 %>
+          </p>
+	  <% } %>
+         <% if(answer1 !== null){ %>
+          <p class="answer" id="answer">
+           <%= answer1 %>
+          </p>
+          <% } %>
+         <script type="text/javascript" src="scripts/problem.js">
+         </script>
+        </form>
+        <a href='/'>home</a>
+      </fieldset>
+    </div>
+  </body>
+</html>

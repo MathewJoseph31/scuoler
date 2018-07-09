@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="css/style.css">
+<meta charset="UTF-8">
+<title>Insert A New Quiz</title>
+</head>
+<body>
+               <% if(userId){ %>
+ 		    <div w3-include-html="headerLogged"></div> 
+                <% } %>
+<a class="HomeLink" href="/">back to home</a>
+<div class="h1">
+Insert A New Quiz
+</div>
+<fieldset>
+<form method="post" action="InsertQuizAction">
+Quiz Description:<br>
+<textarea id="quizDescription" name="quizDescription" type="text" rows="10" cols="150" required="true">
+</textarea> 
+<br>
+<br>
+Course Id:<br>
+<input id="courseId" name="courseId" type="text" rows="10" cols="150" required="true">
+</textarea> <br>
+<br>
+<br>
+Author:<br>
+<input id="authorName" name="authorName" type="text" cols="150" required="true">
+</input> <br>
+<br>
+<input type="submit" value="insert quiz"/>
+                      <% if(message !== null){ %>
+                   <p class="ActionMessage"><%= message %></p>
+                      <% } %>
+</form>
+</fieldset>
+</body>
+<script type="text/javascript" src="scripts/general.js"></script>
+</html>
