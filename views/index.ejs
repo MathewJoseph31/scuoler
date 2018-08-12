@@ -7,17 +7,15 @@
 <title>Welcome to Question Answering Portal</title>
 </head>
 <body>
-
-               <% if(userId){ %>
- 		    <div w3-include-html="headerLogged"></div>
-                <% } %>
-		<% if(userId==undefined){ %>
-                    <div w3-include-html="header.ejs"></div>
-                <% } %>
-                <%if(errorMsg) {%>
-                  <label style="float:right;position:absolute;left:80%;color:red"> <%= errorMsg%></label>
-                <%}%>
-
+  <% if(userId){ %>
+<div w3-include-html="headerLogged"></div>
+   <% } %>
+<% if(userId==undefined){ %>
+       <div w3-include-html="header.ejs"></div>
+   <% } %>
+   <%if(errorMsg) {%>
+     <label style="float:right;position:absolute;left:80%;color:red"> <%= errorMsg%></label>
+   <%}%>
  <!--<div w3-include-html="chapter.ejs"></div> -->
 <div class="h1">
 Probability and Statistics
