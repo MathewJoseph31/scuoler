@@ -45,7 +45,7 @@ exports.insertProblemToDB=function(req,res){
   pool.query(sql, [problemId,problemDescription,ansDescription,authorName], function(err,result){
     if (err) throw err;
     console.log("1 record inserted");
-    res.render('insertProblem', {message: 'Problem Inserted'});
+    res.render('insertProblem', {message: 'Problem Inserted',userId:req.session.userId});
   });
 
 }
@@ -94,7 +94,7 @@ exports.displayProblems=function(req,res){
     '<script type="text/javascript" src="scripts/general.js">'+
     '</script>';
 
-
+/*
     fs.open('views/problem.html', 'w', function (err, file) {
       if (err) throw err;
       console.log('Saved!');
@@ -105,7 +105,8 @@ exports.displayProblems=function(req,res){
       console.log('Saved!');
     });
 
-    res.redirect('problem.html');
+    res.redirect('problem.html');*/
+    res.send(str);
   });
 }
 
@@ -169,7 +170,7 @@ exports.insertUserToDB=function(req,res){
   {
     if (err) throw err;
     console.log("1 record inserted");
-    res.render('insertUser', {message: 'User Inserted'});
+    res.render('insertUser', {message: 'User Inserted',userId:req.session.userId});
   });
 }
 
@@ -206,7 +207,7 @@ exports.displayUsers=function(req,res){
     '</tr>';
     var i=0;
     for(i=0;i<result.rows.length;i++){
-      str+='<tr><td><a href="showUser.ejs">'+result.rows[i].id+'</a></td>'+
+      str+='<tr><td><a href="showUser.ejs?id='+result.rows[i].id+'">'+result.rows[i].id+'</a></td>'+
       '<td>'+result.rows[i].first_name+' '+result.rows[i].last_name+'</td>'+
       '<td>'+result.rows[i].address1+' '+result.rows[i].address2+'</td>'+
       '<td>'+result.rows[i].city+'</td>'+'<td>'+result.rows[i].zip+'</td>'+
@@ -220,7 +221,7 @@ exports.displayUsers=function(req,res){
     '</script>'+
     '<script type="text/javascript" src="scripts/general.js">'+
     '</script>';
-    fs.open('views/user.html', 'w', function (err, file) {
+/*    fs.open('views/user.html', 'w', function (err, file) {
       if (err) throw err;
       console.log('Saved!');
     });
@@ -228,7 +229,8 @@ exports.displayUsers=function(req,res){
       if (err) throw err;
       console.log('Saved!');
     });
-    res.redirect('user.html');
+    res.redirect('user.html');*/
+    res.send(str);
   });
 }
 
@@ -254,7 +256,7 @@ exports.insertCourseToDB=function(req,res){
   pool.query(sql, [courseId,courseName,courseDescription,ownerId], function(err,result){
     if (err) throw err;
     console.log("1 record inserted");
-    res.render('insertCourse', {message: 'Course Inserted'});
+    res.render('insertCourse', {message: 'Course Inserted',userId:req.session.userId});
   });
 }
 
@@ -269,7 +271,7 @@ exports.displayCourses=function(req,res){
     port:configuration.getPort(),
     ssl:true
   });
-  var sql = "SELECT name, description, owner_id FROM Course";
+  var sql = "SELECT id,name, description, owner_id FROM Course";
 
   pool.query(sql, function (err, result, fields){
     if (err) throw err;
@@ -295,7 +297,7 @@ exports.displayCourses=function(req,res){
     '</tr>';
     var i=0;
     for(i=0;i<result.rows.length;i++){
-      str+='<tr><td><a href="showCourse.ejs">'+result.rows[i].name+'</a></td>'+
+      str+='<tr><td><a href="showCourse.ejs?id='+result.rows[i].id+'">'+result.rows[i].name+'</a></td>'+
       '<td>'+result.rows[i].description+'</td>'+
       '<td>'+result.rows[i].owner_id+'</td>'+
       '</tr>';
@@ -307,7 +309,7 @@ exports.displayCourses=function(req,res){
     '</script>'+
     '<script type="text/javascript" src="scripts/general.js">'+
     '</script>';
-    fs.open('views/course.html', 'w', function (err, file) {
+/*    fs.open('views/course.html', 'w', function (err, file) {
       if (err) throw err;
       console.log('Saved!');
     });
@@ -315,7 +317,8 @@ exports.displayCourses=function(req,res){
       if (err) throw err;
       console.log('Saved!');
     });
-    res.redirect('course.html');
+    res.redirect('course.html');*/
+    res.send(str);
   });
 }
 
@@ -340,7 +343,7 @@ exports.insertQuizToDB=function(req,res){
   pool.query(sql, [quizId,quizDescription,courseId,authorName], function(err,result){
     if (err) throw err;
     console.log("1 record inserted");
-    res.render('insertQuiz', {message: 'Quiz Inserted'});
+    res.render('insertQuiz', {message: 'Quiz Inserted',userId:req.session.userId});
   });
 }
 
@@ -355,7 +358,7 @@ exports.displayQuizes=function(req,res){
     port:configuration.getPort(),
     ssl:true
   });
-  var sql = "SELECT description, course_id, instructor_id FROM Quiz";
+  var sql = "SELECT id, description, course_id, instructor_id FROM Quiz";
 
   pool.query(sql, function (err, result, fields){
     if (err) throw err;
@@ -380,7 +383,7 @@ exports.displayQuizes=function(req,res){
     '</tr>';
     var i=0;
     for(i=0;i<result.rows.length;i++){
-      str+='<tr><td><a href="showQuiz.ejs">'+result.rows[i].description+'</a></td>'+
+      str+='<tr><td><a href="showQuiz.ejs?id='+result.rows[i].id+'">'+result.rows[i].description+'</a></td>'+
       '<td>'+result.rows[i].course_id+'</td>'+
       '<td>'+result.rows[i].instructor_id+'<td>'+
       '</tr>';
@@ -392,13 +395,14 @@ exports.displayQuizes=function(req,res){
     '<script type="text/javascript" src="scripts/general.js">'+
     '</script>';
 
-    fs.open('views/quiz.html', 'w', function (err, file) {
+/*    fs.open('views/quiz.html', 'w', function (err, file) {
       if (err) throw err;
     });
     fs.appendFile('views/quiz.html', str, function (err) {
       if (err) throw err;
     });
-    res.redirect('quiz.html');
+    res.redirect('quiz.html');*/
+    res.send(str);
   });
 }
 

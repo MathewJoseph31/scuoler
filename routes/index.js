@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-const problemsDB=require('../ProblemsDB');
+const dbController=require('../DBController');
 
 /* GET home page. */
 router.get('/', function (req, res) {
@@ -26,7 +26,7 @@ res.render('headerLogged',{userId:req.session.userId});
 })
 
 router.post('/login',function(req, res){
-  problemsDB.verifyUser(req,res);
+  dbController.verifyUser(req,res);
 })
 
 router.get('/logout',function(req, res){
@@ -44,11 +44,11 @@ router.get('/insertProblem', function (req, res) {
 })
 
 router.post('/insertProblemAction', function(req,res){
-  problemsDB.insertProblemToDB(req,res);
+  dbController.insertProblemToDB(req,res);
 })
 
 router.get('/browseProblem', function (req, res) {
-  problemsDB.displayProblems(req,res);
+  dbController.displayProblems(req,res);
 })
 
 
@@ -61,12 +61,12 @@ router.get('/insertQuiz',function (req, res) {
 })
 
 router.post('/insertQuizAction', function(req,res){
- problemsDB.insertQuizToDB(req,res);
+ dbController.insertQuizToDB(req,res);
 //res.render('problem');
 })
 
 router.get('/browseQuiz', function(req,res){
- problemsDB.displayQuizes(req,res);
+ dbController.displayQuizes(req,res);
 })
 
 //Course
@@ -78,13 +78,13 @@ router.get('/insertCourse',function (req, res) {
 })
 
 router.post('/insertCourseAction', function(req,res){
- problemsDB.insertCourseToDB(req,res);
+ dbController.insertCourseToDB(req,res);
 //res.render('problem');
 })
 
 
 router.get('/browseCourse', function(req,res){
- problemsDB.displayCourses(req,res);
+ dbController.displayCourses(req,res);
 })
 
 
@@ -104,13 +104,13 @@ router.get('/registerUser',function (req, res) {
 })
 
 router.post('/insertUserAction', function(req,res){
- problemsDB.insertUserToDB(req,res);
+ dbController.insertUserToDB(req,res);
 //res.render('problem');
 })
 
 
 router.get('/browseUser', function(req,res){
- problemsDB.displayUsers(req,res);
+ dbController.displayUsers(req,res);
 })
 
 //error handler that matches every other URL
