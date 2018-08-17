@@ -1,3 +1,5 @@
+/* This file primarily contains code for interfacing with the Database (insert and retreival functions)
+*/
 const express = require('express');
 
 //const mysql = require('mysql');
@@ -23,7 +25,9 @@ app.use(session({secret:'secr3',resave:false,saveUninitialized:false, maxAge: 24
 
 const configuration=require('./Configuration');
 
-//PROBLEM
+//----PROBLEM----
+
+/* function for handling  http requests to inserts to the problem table in database*/
 exports.insertProblemToDB=function(req,res){
   let problemDescription=req.body.probDescription;
   let ansDescription=req.body.ansDescription;
@@ -50,6 +54,8 @@ exports.insertProblemToDB=function(req,res){
 
 }
 
+/* function for handling  http requests to retrive and display the records in the
+ problem table in database*/
 exports.displayProblems=function(req,res){
   console.log('reading quizes from db');
   var pool = new pg.Pool({
@@ -94,26 +100,15 @@ exports.displayProblems=function(req,res){
     '<script type="text/javascript" src="scripts/general.js">'+
     '</script>';
 
-/*
-    fs.open('views/problem.html', 'w', function (err, file) {
-      if (err) throw err;
-      console.log('Saved!');
-    });
-
-    fs.appendFile('views/problem.html', str, function (err) {
-      if (err) throw err;
-      console.log('Saved!');
-    });
-
-    res.redirect('problem.html');*/
     res.send(str);
   });
 }
 
 
-//USER
+//--USER/Costumer---
 
-
+/* function for handling  http authentication requests
+to the portal, the credentials are store in Customer table */
 exports.verifyUser=function(req,res){
   let userId=req.body.userId;
   let password=req.body.password;
@@ -141,6 +136,8 @@ exports.verifyUser=function(req,res){
 }
 
 
+/* function for handling  http requests to insert a record to the
+ Customer table in database*/
 exports.insertUserToDB=function(req,res){
   let userId=req.body.userId;
   let password=req.body.password;
@@ -174,6 +171,8 @@ exports.insertUserToDB=function(req,res){
   });
 }
 
+/* function for handling  http requests to retrive and display the records in the
+ Customer table in database*/
 exports.displayUsers=function(req,res){
   var pool = new pg.Pool({
     host: configuration.getHost(),
@@ -221,21 +220,43 @@ exports.displayUsers=function(req,res){
     '</script>'+
     '<script type="text/javascript" src="scripts/general.js">'+
     '</script>';
-/*    fs.open('views/user.html', 'w', function (err, file) {
-      if (err) throw err;
-      console.log('Saved!');
-    });
-    fs.appendFile('views/user.html', str, function (err) {
-      if (err) throw err;
-      console.log('Saved!');
-    });
-    res.redirect('user.html');*/
     res.send(str);
   });
 }
 
 
-//COURSE
+//----COURSE----
+
+/* function for return a Promise object that retrives the set of records in the
+ Course names from course table in database*/
+    exports.getCourseList=function(){
+      var courseList=[];
+        var pool = new pg.Pool({
+          host: configuration.getHost(),
+          user: configuration.getUserId(),
+          password: configuration.getPassword(),
+          database: configuration.getDatabase(),
+          port:configuration.getPort(),
+          ssl:true
+        });
+        var sql = "SELECT id,name FROM Course";
+        return new Promise(function(resolve,reject){
+          pool.query(sql, function (err, result, fields){
+            if (err)
+                  reject(err);
+            else{
+             var i=0;
+             for(i=0;i<result.rows.length;i++){
+               courseList.push(result.rows[i].name);
+             }
+             resolve(courseList);
+           }
+        });
+        });
+      }
+
+
+/* function for handling  http requests to inserts to the course table in database*/
 exports.insertCourseToDB=function(req,res){
 
   let courseName=req.body.courseName;
@@ -261,7 +282,8 @@ exports.insertCourseToDB=function(req,res){
 }
 
 
-
+/* function for handling  http requests to retrive and display the records in the
+ Course table in database*/
 exports.displayCourses=function(req,res){
   var pool = new pg.Pool({
     host: configuration.getHost(),
@@ -309,20 +331,13 @@ exports.displayCourses=function(req,res){
     '</script>'+
     '<script type="text/javascript" src="scripts/general.js">'+
     '</script>';
-/*    fs.open('views/course.html', 'w', function (err, file) {
-      if (err) throw err;
-      console.log('Saved!');
-    });
-    fs.appendFile('views/course.html', str, function (err) {
-      if (err) throw err;
-      console.log('Saved!');
-    });
-    res.redirect('course.html');*/
     res.send(str);
   });
 }
 
-//QUIZ
+//---QUIZ---
+
+/* function for handling  http requests to insert to the quiz table in database*/
 exports.insertQuizToDB=function(req,res){
   let quizDescription=req.body.quizDescription;
   let courseId=req.body.courseId;
@@ -348,7 +363,8 @@ exports.insertQuizToDB=function(req,res){
 }
 
 
-
+/* function for handling  http requests to retrive and display the records in the
+ Quiz table in database*/
 exports.displayQuizes=function(req,res){
   var pool = new pg.Pool({
     host: configuration.getHost(),
@@ -395,13 +411,6 @@ exports.displayQuizes=function(req,res){
     '<script type="text/javascript" src="scripts/general.js">'+
     '</script>';
 
-/*    fs.open('views/quiz.html', 'w', function (err, file) {
-      if (err) throw err;
-    });
-    fs.appendFile('views/quiz.html', str, function (err) {
-      if (err) throw err;
-    });
-    res.redirect('quiz.html');*/
     res.send(str);
   });
 }

@@ -51,13 +51,22 @@ router.get('/browseProblem', function (req, res) {
   dbController.displayProblems(req,res);
 })
 
+var result=[];
+
 
 //QUIZ
 router.get('/insertQuiz',function (req, res) {
-	if(req.session.userId)
-	  res.render('insertQuiz',{message:null,userId:req.session.userId});
-	else
+	if(req.session.userId){
+		var getResultPromise=dbController.getCourseList();
+		getResultPromise.then(function(result){
+				  res.render('insertQuiz',{message:null,userId:req.session.userId,courseList:result});
+		},function(err){
+        res.render('insertQuiz',{message:null,userId:req.session.userId,courseList:['true','false']});
+		})
+	}
+	else{
 	  res.render('index',{userId:null,errorMsg:'Insert Quiz: User not logged In'});
+	}
 })
 
 router.post('/insertQuizAction', function(req,res){

@@ -7,7 +7,7 @@
 </head>
 <body>
                <% if(userId){ %>
- 		    <div w3-include-html="headerLogged"></div> 
+ 		    <div w3-include-html="headerLogged"></div>
                 <% } %>
 <a class="HomeLink" href="/">back to home</a>
 <div class="h1">
@@ -17,12 +17,15 @@ Insert A New Quiz
 <form method="post" action="InsertQuizAction">
 Quiz Description:<br>
 <textarea id="quizDescription" name="quizDescription" type="text" rows="10" cols="150" required="true">
-</textarea> 
+</textarea>
 <br>
 <br>
 Course Id:<br>
-<input id="courseId" name="courseId" type="text" rows="10" cols="150" required="true">
-</textarea> <br>
+<select id="courseId" name="courseId" required="true">
+ <% for(var i=0;i<courseList.length;i++){ %>
+  <option><%= courseList[i]%></option>
+ <%}%>
+</select> <br>
 <br>
 <br>
 Author:<br>
