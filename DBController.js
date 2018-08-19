@@ -229,7 +229,7 @@ exports.displayUsers=function(req,res){
 
 /* function for return a Promise object that retrives the set of records in the
  Course names from course table in database*/
-    exports.getCourseList=function(){
+function getCourseList(){
       var courseList=[];
         var pool = new pg.Pool({
           host: configuration.getHost(),
@@ -247,7 +247,7 @@ exports.displayUsers=function(req,res){
             else{
              var i=0;
              for(i=0;i<result.rows.length;i++){
-               courseList.push(result.rows[i].name);
+               courseList.push(result.rows[i].name+'$,'+result.rows[i].id);
              }
              resolve(courseList);
            }
@@ -255,6 +255,7 @@ exports.displayUsers=function(req,res){
         });
       }
 
+exports.getCourseList=getCourseList;
 
 /* function for handling  http requests to inserts to the course table in database*/
 exports.insertCourseToDB=function(req,res){
@@ -277,6 +278,7 @@ exports.insertCourseToDB=function(req,res){
   pool.query(sql, [courseId,courseName,courseDescription,ownerId], function(err,result){
     if (err) throw err;
     console.log("1 record inserted");
+
     res.render('insertCourse', {message: 'Course Inserted',userId:req.session.userId});
   });
 }
@@ -358,7 +360,16 @@ exports.insertQuizToDB=function(req,res){
   pool.query(sql, [quizId,quizDescription,courseId,authorName], function(err,result){
     if (err) throw err;
     console.log("1 record inserted");
-    res.render('insertQuiz', {message: 'Quiz Inserted',userId:req.session.userId});
+
+    //
+    var getResultPromise=getCourseList();
+    getResultPromise.then(function(result){
+          res.render('insertQuiz',{message:'Course Inserted',userId:req.session.userId,courseList:result});
+    },function(err){
+        res.render('insertQuiz',{message:'Course Inserted',userId:req.session.userId,courseList:null});
+    })
+
+    //res.render('insertQuiz', {message: 'Quiz Inserted',userId:req.session.userId});
   });
 }
 
