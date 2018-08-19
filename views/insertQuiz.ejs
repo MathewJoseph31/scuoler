@@ -21,9 +21,14 @@ Quiz Description:<br>
 <br>
 <br>
 Course Id:<br>
+<!--<input id="courseId" name="courseId" type="text" cols="150" required="true"></input> <br>-->
 <select id="courseId" name="courseId" required="true">
  <% for(var i=0;i<courseList.length;i++){ %>
-  <option><%= courseList[i]%></option>
+ <% var index=courseList[i].indexOf('$,')%>
+ <% var valCourse=courseList[i].substring(index+2) %>
+ <% var textCourse=courseList[i].substring(0,index)%>
+ <% console.log(valCourse+' , '+textCourse) %>
+  <option value="<%= valCourse %>"><%= textCourse%></option>
  <%}%>
 </select> <br>
 <br>

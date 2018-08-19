@@ -61,7 +61,7 @@ router.get('/insertQuiz',function (req, res) {
 		getResultPromise.then(function(result){
 				  res.render('insertQuiz',{message:null,userId:req.session.userId,courseList:result});
 		},function(err){
-        res.render('insertQuiz',{message:null,userId:req.session.userId,courseList:['true','false']});
+        res.render('insertQuiz',{message:null,userId:req.session.userId,courseList:null});
 		})
 	}
 	else{
