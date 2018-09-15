@@ -78,6 +78,11 @@ router.get('/browseQuiz', function(req,res){
  dbController.displayQuizes(req,res);
 })
 
+router.get('/showTheQuiz', function(req,res){
+ dbController.showTheQuiz(req,res);
+})
+
+
 //Course
 router.get('/insertCourse',function (req, res) {
 	 if(req.session.userId)
@@ -94,6 +99,10 @@ router.post('/insertCourseAction', function(req,res){
 
 router.get('/browseCourse', function(req,res){
  dbController.displayCourses(req,res);
+})
+
+router.get('/showTheCourse', function(req,res){
+ dbController.showTheCourse(req,res);
 })
 
 
@@ -120,6 +129,10 @@ router.post('/insertUserAction', function(req,res){
 
 router.get('/browseUser', function(req,res){
  dbController.displayUsers(req,res);
+})
+
+router.get('/showTheUser', function(req,res){
+ dbController.showTheUser(req,res);
 })
 
 //error handler that matches every other URL

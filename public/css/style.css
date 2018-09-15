@@ -104,6 +104,7 @@ font-family:georgina,garamond,serif;
 .Answer{
 color:gray;
 /*visibility:hidden;*/
+display:none;
 }
 
 .showAnswer{

@@ -23,6 +23,8 @@ app.use(session({secret:'secr3',resave:false,saveUninitialized:false, maxAge: 24
 
 //end of session code
 
+const url = require('url');
+
 const configuration=require('./Configuration');
 
 //----PROBLEM----
@@ -206,7 +208,7 @@ exports.displayUsers=function(req,res){
     '</tr>';
     var i=0;
     for(i=0;i<result.rows.length;i++){
-      str+='<tr><td><a href="showUser.ejs?id='+result.rows[i].id+'">'+result.rows[i].id+'</a></td>'+
+      str+='<tr><td><a href="./showTheUser?id='+result.rows[i].id+'">'+result.rows[i].id+'</a></td>'+
       '<td>'+result.rows[i].first_name+' '+result.rows[i].last_name+'</td>'+
       '<td>'+result.rows[i].address1+' '+result.rows[i].address2+'</td>'+
       '<td>'+result.rows[i].city+'</td>'+'<td>'+result.rows[i].zip+'</td>'+
@@ -224,6 +226,51 @@ exports.displayUsers=function(req,res){
   });
 }
 
+/* function for handling  http requests to show details about a selected User*/
+exports.showTheUser=function(req,res){
+
+  var pool = new pg.Pool({
+    host: configuration.getHost(),
+    user: configuration.getUserId(),
+    password: configuration.getPassword(),
+    database: configuration.getDatabase(),
+    port:configuration.getPort(),
+    ssl:true
+  });
+
+var q = url.parse(req.url, true).query;
+let userId=q.id;
+
+var sql = "select first_name, last_name, city, phone, mobile, email from customer where id = '"+userId+"'";
+console.log(' param '+q.id);
+pool.query(sql, function(err,result,fields){
+
+  var str= '<!DOCTYPE html><head>'+
+  '<meta charset="utf-8">'+
+  '<title>Show Individual User</title>'+
+  '<link rel="stylesheet" type="text/css" href="css/style.css">'+
+  '</head>'+
+  '<body>';
+  if(req.session.userId)
+  str+='<div w3-include-html="headerLogged"></div>';
+  else
+  str+='<div w3-include-html="header.ejs"></div>';
+
+  str=str+'<a class="HomeLink" href="/">back to home</a>'+
+  '<div class="h1">'+
+  'Name: '+result.rows[0].first_name+' '+result.rows[0].last_name+
+  '</div>';
+
+  str+='<p> City: '+result.rows[0].city+'</b><br/>'+
+  '<b> Phone:'+result.rows[0].phone+' Mob: '+result.rows[0].mobile+'</b>';
+  str+='<br/>Email: '+result.rows[0].email;
+  str+='</body>';
+  str+='<script type="text/javascript" src="scripts/general.js">'+
+  '</script>';
+
+  res.send(str);
+  });
+}
 
 //----COURSE----
 
@@ -321,7 +368,7 @@ exports.displayCourses=function(req,res){
     '</tr>';
     var i=0;
     for(i=0;i<result.rows.length;i++){
-      str+='<tr><td><a href="showCourse.ejs?id='+result.rows[i].id+'">'+result.rows[i].name+'</a></td>'+
+      str+='<tr><td><a href="./showTheCourse?id='+result.rows[i].id+'">'+result.rows[i].name+'</a></td>'+
       '<td>'+result.rows[i].description+'</td>'+
       '<td>'+result.rows[i].owner_id+'</td>'+
       '</tr>';
@@ -335,6 +382,57 @@ exports.displayCourses=function(req,res){
     '</script>';
     res.send(str);
   });
+}
+
+/* function for handling  http requests to show details about a selected Course*/
+exports.showTheCourse=function(req,res){
+
+  var pool = new pg.Pool({
+    host: configuration.getHost(),
+    user: configuration.getUserId(),
+    password: configuration.getPassword(),
+    database: configuration.getDatabase(),
+    port:configuration.getPort(),
+    ssl:true
+  });
+
+var q = url.parse(req.url, true).query;
+let courseId=q.id;
+
+var sql = "select name, description, owner_id from course where id='"+courseId+"'";
+
+console.log(' param '+q.id);
+
+pool.query(sql, function(err,result,fields){
+  if (err) throw err;
+  console.log("1 record inserted");
+
+
+  var str= '<!DOCTYPE html><head>'+
+  '<meta charset="utf-8">'+
+  '<title>Show Individual Course</title>'+
+  '<link rel="stylesheet" type="text/css" href="css/style.css">'+
+  '</head>'+
+  '<body>';
+  if(req.session.userId)
+  str+='<div w3-include-html="headerLogged"></div>';
+  else
+  str+='<div w3-include-html="header.ejs"></div>';
+
+  str=str+'<a class="HomeLink" href="/">back to home</a>'+
+  '<div class="h1">'+
+  'Course Name:'+result.rows[0].name+
+  '</div>';
+
+  str+='<p> Description: '+result.rows[0].description+'</b><br/>'+
+  '<b> Creator:'+result.rows[0].owner_id+'</b>';
+
+  str+='</body>';
+  str+='<script type="text/javascript" src="scripts/general.js">'+
+  '</script>';
+
+  res.send(str);
+});
 }
 
 //---QUIZ---
@@ -364,9 +462,9 @@ exports.insertQuizToDB=function(req,res){
     //
     var getResultPromise=getCourseList();
     getResultPromise.then(function(result){
-          res.render('insertQuiz',{message:'Course Inserted',userId:req.session.userId,courseList:result});
+          res.render('insertQuiz',{message:'Quiz Inserted',userId:req.session.userId,courseList:result});
     },function(err){
-        res.render('insertQuiz',{message:'Course Inserted',userId:req.session.userId,courseList:null});
+        res.render('insertQuiz',{message:'Quiz Inserted',userId:req.session.userId,courseList:null});
     })
 
     //res.render('insertQuiz', {message: 'Quiz Inserted',userId:req.session.userId});
@@ -385,7 +483,8 @@ exports.displayQuizes=function(req,res){
     port:configuration.getPort(),
     ssl:true
   });
-  var sql = "SELECT id, description, course_id, instructor_id FROM Quiz";
+  var sql = "SELECT Quiz.id, Quiz.description, Course.name, instructor_id FROM Quiz INNER JOIN Course "+
+            "ON Quiz.course_id=Course.id";
 
   pool.query(sql, function (err, result, fields){
     if (err) throw err;
@@ -410,8 +509,8 @@ exports.displayQuizes=function(req,res){
     '</tr>';
     var i=0;
     for(i=0;i<result.rows.length;i++){
-      str+='<tr><td><a href="showQuiz.ejs?id='+result.rows[i].id+'">'+result.rows[i].description+'</a></td>'+
-      '<td>'+result.rows[i].course_id+'</td>'+
+      str+='<tr><td><a href="./showTheQuiz?id='+result.rows[i].id+'">'+result.rows[i].description+'</a></td>'+
+      '<td>'+result.rows[i].name+'</td>'+
       '<td>'+result.rows[i].instructor_id+'<td>'+
       '</tr>';
     }
@@ -426,7 +525,56 @@ exports.displayQuizes=function(req,res){
   });
 }
 
+/* function for handling  http requests to show details about a selected Course*/
+exports.showTheQuiz=function(req,res){
 
+  var pool = new pg.Pool({
+    host: configuration.getHost(),
+    user: configuration.getUserId(),
+    password: configuration.getPassword(),
+    database: configuration.getDatabase(),
+    port:configuration.getPort(),
+    ssl:true
+  });
+
+  var q = url.parse(req.url, true).query;
+  let quizId=q.id;
+
+  var sql =" SELECT Quiz.description, Course.name, Quiz.instructor_id FROM Quiz INNER JOIN Course "+
+            "ON Quiz.course_id=Course.id where Quiz.id='"+quizId+"'";
+
+  "select description, course_id, instructor_id from quiz where id='"+quizId+"'";
+  console.log(' param '+q.id);
+
+  pool.query(sql, function (err, result, fields){
+    if (err) throw err;
+
+   var str= '<!DOCTYPE html><head>'+
+  '<meta charset="utf-8">'+
+  '<title>Show Individual Quiz</title>'+
+  '<link rel="stylesheet" type="text/css" href="css/style.css">'+
+  '</head>'+
+  '<body>';
+  if(req.session.userId)
+  str+='<div w3-include-html="headerLogged"></div>';
+  else
+  str+='<div w3-include-html="header.ejs"></div>';
+
+  str=str+'<a class="HomeLink" href="/">back to home</a>'+
+  '<div class="h1">'+
+  'Quiz Description: '+result.rows[0].description+
+  '</div>';
+
+  str+='<p> Course: '+result.rows[0].name+'</b><br/>'+
+  '<b> Instructor:'+result.rows[0].instructor_id+'</b>';
+
+  str+='</body>';
+  str+='<script type="text/javascript" src="scripts/general.js">'+
+  '</script>';
+
+  res.send(str);
+  });
+}
 
 
 function pad(num){
