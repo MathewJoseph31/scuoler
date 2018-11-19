@@ -593,9 +593,9 @@ exports.showTheQuiz=function(req,res){
 /* function for return a Promise object that retrives the set of records in the
  Course names from course table in database*/
 function getProblemListForQuiz(quizId){
-      var htmlStr='<h1>'+
+      var htmlStr='<h2>'+
                   'Problems:'+
-                  '</h1>';
+                  '</h2>';
         var pool = new pg.Pool({
           host: configuration.getHost(),
           user: configuration.getUserId(),
