@@ -568,13 +568,60 @@ exports.showTheQuiz=function(req,res){
   str+='<p> Course: '+result.rows[0].name+'</b><br/>'+
   '<b> Instructor:'+result.rows[0].instructor_id+'</b>';
 
-  str+='</body>';
-  str+='<script type="text/javascript" src="scripts/general.js">'+
-  '</script>';
+  //
+  var getResultPromise=getProblemListForQuiz(quizId);
 
-  res.send(str);
-  });
+  getResultPromise.then(function(resultHtmlStr){
+        str+=resultHtmlStr;
+        str=str+'</body>';
+        str+='<script type="text/javascript" src="scripts/problem.js">'+
+        '</script>';
+        str+='<script type="text/javascript" src="scripts/general.js">'+
+        '</script>';
+        res.send(str);
+  },function(err){
+    str=str+'</body>';
+    str+='<script type="text/javascript" src="scripts/problem.js">'+
+    '</script>';
+    str+='<script type="text/javascript" src="scripts/general.js">'+
+    '</script>';
+    res.send(str);
+   })
+ });//end of query
 }
+
+/* function for return a Promise object that retrives the set of records in the
+ Course names from course table in database*/
+function getProblemListForQuiz(quizId){
+      var htmlStr='<h1>'+
+                  'Problems:'+
+                  '</h1>';
+        var pool = new pg.Pool({
+          host: configuration.getHost(),
+          user: configuration.getUserId(),
+          password: configuration.getPassword(),
+          database: configuration.getDatabase(),
+          port:configuration.getPort(),
+          ssl:true
+        });
+        var sql = "SELECT description, solution FROM Problem where quiz_id=$1";
+        return new Promise(function(resolve,reject){
+          pool.query(sql, [quizId], function (err, result, fields){
+            if (err)
+                  reject(err);
+            else{
+             var i=0;
+             for(i=0;i<result.rows.length;i++){
+               htmlStr=htmlStr+'<b>Question: </b><div class="Question">'+result.rows[i].description+'</div>'+
+               '<input type="button" class="showAnswer" onclick="showAnswerHandler(this)" id="b'+i+'" value="view solution"/></br>' +
+               '<div id="d'+i+'" class="Answer"><b>Solution: </b>'+result.rows[i].solution+'</div><hr>';
+             }
+             resolve(htmlStr);
+           }
+        });
+        });
+      }
+exports.getProblemListForQuiz=getProblemListForQuiz;
 
 
 function pad(num){

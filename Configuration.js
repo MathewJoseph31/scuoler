@@ -6,7 +6,7 @@ userId:"vyskpwrahuyzia",
 password:"8c2734f8c3522cf405cf22f6836b8c078891867992a857291c842ff9bbec8ff6",
 //password:"password",
 database:"d201samrnq0t0f",
-//database:"ischoools",
+//database:"ischools",
 port:5432,
 getHost: function(){
           return this.host;
