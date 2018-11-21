@@ -31,6 +31,7 @@ const configuration=require('./Configuration');
 
 /* function for handling  http requests to inserts to the problem table in database*/
 exports.insertProblemToDB=function(req,res){
+  let quizId=req.body.quizId;
   let problemDescription=req.body.probDescription;
   let ansDescription=req.body.ansDescription;
   let authorName=req.body.authorName;
@@ -45,13 +46,20 @@ exports.insertProblemToDB=function(req,res){
     ,ssl:true
   });
 
-  var sql = "insert into Problem(id, description, solution, author_id) values($1,$2,$3,$4)";
+  var sql = "insert into Problem(id, description, solution, author_id, quiz_id) values($1,$2,$3,$4,$5)";
 
   var problemId=getUniqueId(authorName);
-  pool.query(sql, [problemId,problemDescription,ansDescription,authorName], function(err,result){
+  pool.query(sql, [problemId,problemDescription,ansDescription,authorName,quizId], function(err,result){
     if (err) throw err;
     console.log("1 record inserted");
-    res.render('insertProblem', {message: 'Problem Inserted',userId:req.session.userId});
+    //
+    var getResultPromise=getQuizList();
+    getResultPromise.then(function(result){
+          res.render('insertProblem',{message:'Problem Inserted',userId:req.session.userId,quizList:result});
+    },function(err){
+        res.render('insertProblem',{message:'Problem Inserted',userId:req.session.userId,quizList:null});
+    })
+    //res.render('insertProblem', {message: 'Problem Inserted',userId:req.session.userId});
   });
 
 }
@@ -69,7 +77,7 @@ exports.displayProblems=function(req,res){
     ssl:true
   });
 
-  var sql = "SELECT description, solution FROM Problem";
+  var sql = "select distinct A.description, A.solution, B.description quiz_description from Problem A inner join Quiz B on A.quiz_id=B.id";
 
   pool.query(sql, function (err, result, fields){
     if (err) throw err;
@@ -92,6 +100,7 @@ exports.displayProblems=function(req,res){
 
     var i=0;
     for(i=0;i<result.rows.length;i++){
+      str=str+'<b>Quiz: </b><div class="Quiz">'+result.rows[i].quiz_description+'</div></br></br>';
       str=str+'<b>Question: </b><div class="Question">'+result.rows[i].description+'</div>'+
       '<input type="button" class="showAnswer" onclick="showAnswerHandler(this)" id="b'+i+'" value="view solution"/></br>' +
       '<div id="d'+i+'" class="Answer"><b>Solution: </b>'+result.rows[i].solution+'</div><hr>';
@@ -272,6 +281,8 @@ pool.query(sql, function(err,result,fields){
   });
 }
 
+
+
 //----COURSE----
 
 /* function for return a Promise object that retrives the set of records in the
@@ -436,6 +447,35 @@ pool.query(sql, function(err,result,fields){
 }
 
 //---QUIZ---
+/* function for returning a Promise object that retrives the set of records in the
+ quiz descriptions from quiz table in database*/
+function getQuizList(){
+      var quizList=['General$,defaultUser'];
+        var pool = new pg.Pool({
+          host: configuration.getHost(),
+          user: configuration.getUserId(),
+          password: configuration.getPassword(),
+          database: configuration.getDatabase(),
+          port:configuration.getPort(),
+          ssl:true
+        });
+        var sql = "SELECT id,description FROM Quiz";
+        return new Promise(function(resolve,reject){
+          pool.query(sql, function (err, result, fields){
+            if (err)
+                  reject(err);
+            else{
+             var i=0;
+             for(i=0;i<result.rows.length;i++){
+               quizList.push(result.rows[i].description+'$,'+result.rows[i].id);
+             }
+             resolve(quizList);
+           }
+        });
+        });
+      }
+
+exports.getQuizList=getQuizList;
 
 /* function for handling  http requests to insert to the quiz table in database*/
 exports.insertQuizToDB=function(req,res){
