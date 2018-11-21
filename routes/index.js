@@ -34,13 +34,21 @@ router.get('/logout',function(req, res){
 	res.render('index',{userId:null,errorMsg:null});
 })
 
+var result=[];
 
 //PROBLEM
 router.get('/insertProblem', function (req, res) {
-  if(req.session.userId)
-			res.render('insertProblem',{message:null,userId:req.session.userId});
-  else
+  if(req.session.userId){
+		var getResultPromise=dbController.getQuizList();
+		getResultPromise.then(function(result){
+			    res.render('insertProblem',{message:null,userId:req.session.userId,quizList:result});
+		},function(err){
+				res.render('insertProblem',{message:null,userId:req.session.userId,quizList:null});
+		})
+	}
+  else{
    res.render('index',{userId:null,errorMsg:'Insert Problem: Please log In!'});
+  }
 })
 
 router.post('/insertProblemAction', function(req,res){
@@ -51,11 +59,12 @@ router.get('/browseProblem', function (req, res) {
   dbController.displayProblems(req,res);
 })
 
-var result=[];
+
 
 
 //QUIZ
 router.get('/insertQuiz',function (req, res) {
+	result=[];
 	if(req.session.userId){
 		var getResultPromise=dbController.getCourseList();
 		getResultPromise.then(function(result){

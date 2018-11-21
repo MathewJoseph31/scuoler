@@ -7,7 +7,7 @@
 </head>
 <body>
                <% if(userId){ %>
- 		    <div w3-include-html="headerLogged"></div> 
+ 		    <div w3-include-html="headerLogged"></div>
                 <% } %>
 <a class="HomeLink" href="/">back to home</a>
 <div class="h1">
@@ -15,9 +15,21 @@ Insert a new problem
 </div>
 <fieldset>
 <form method="post" action="InsertProblemAction">
+  <br>
+  Quiz Id:<br>
+  <!--<input id="courseId" name="courseId" type="text" cols="150" required="true"></input> <br>-->
+  <select id="quizId" name="quizId" required="true">
+   <% for(var i=0;i<quizList.length;i++){ %>
+   <% var index=quizList[i].indexOf('$,')%>
+   <% var valQuiz=quizList[i].substring(index+2) %>
+   <% var textQuiz=quizList[i].substring(0,index)%>
+   <% console.log(valQuiz+' , '+textQuiz) %>
+    <option value="<%= valQuiz %>"><%= textQuiz%></option>
+   <%}%>
+  </select> <br>
 Problem Description:<br>
 <textarea id="probDescription" name="probDescription" type="text" rows="10" cols="150" required="true">
-</textarea> 
+</textarea>
 <br>
 <br>
 Answer Description:<br>
