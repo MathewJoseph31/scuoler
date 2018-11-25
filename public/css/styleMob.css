@@ -74,7 +74,7 @@ color:green;
 }
 
 .tab2Allign{
-margin-left:10em	
+margin-left:10em
 /*float:right;*/
 }
 
@@ -106,6 +106,7 @@ font-family:georgina,garamond,serif;
 .Answer{
 color:gray;
 /*visibility:hidden;*/
+display:none;
 }
 
 .showAnswer{
@@ -177,7 +178,7 @@ background-color: ash;
 }
 
 .problem-dropdown-content {
- 
+
 }
 
 .dropdown-content a {

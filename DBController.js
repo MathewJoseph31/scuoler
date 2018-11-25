@@ -85,7 +85,8 @@ exports.displayProblems=function(req,res){
     var str= '<!DOCTYPE html><head>'+
     '<meta charset="utf-8">'+
     '<title>Browse Problems</title>'+
-    '<link rel="stylesheet" type="text/css" href="css/style.css">'+
+    '<link rel="stylesheet" media="screen and (max-width: 1000px)" type="text/css" href="css/styleMob.css">'+
+    '<link rel="stylesheet" media="screen and (min-width: 1000px)" type="text/css" href="css/style.css">'+
     '</head>'+
     '<body>';
     if(req.session.userId)
@@ -102,7 +103,7 @@ exports.displayProblems=function(req,res){
     for(i=0;i<result.rows.length;i++){
       str=str+'<b>Quiz: </b><div class="Quiz">'+result.rows[i].quiz_description+'</div></br></br>';
       str=str+'<b>Question: </b><div class="Question">'+result.rows[i].description+'</div>'+
-      '<input type="button" class="showAnswer" onclick="showAnswerHandler(this)" id="b'+i+'" value="view solution"/></br>' +
+      '<input type="button" class="showAnswer" onclick="showAnswerHandler(this)" id="b'+i+'$" value="view solution"/></br>' +
       '<div id="d'+i+'" class="Answer"><b>Solution: </b>'+result.rows[i].solution+'</div><hr>';
     }
     str=str+'</body>'+
