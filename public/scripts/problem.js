@@ -33,7 +33,6 @@ var showAnswerElements=document.getElementsByClassName('showAnswer');
 
 function showAnswerHandler(id){
  var index=id.id.indexOf('$')
- //var answerId='d'+id.id.charAt(1);
  var answerId='d'+id.id.substring(1,index);
  //document.getElementById(answerId).style.color='blue';
  if(document.getElementById(answerId).style.display==='none'){
