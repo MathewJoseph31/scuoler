@@ -10,9 +10,9 @@ function makeVisible(){
 
 	qEle.innerHTML=html2;
 	aEle.innerHTML=html1;
-	
+
 	document.getElementById('test').appendChild(qEle);
-	
+
 	document.getElementById('question').style.visibility='visible';
 	document.getElementById('answer').style.visibility='visible';
 	return true;
@@ -32,7 +32,9 @@ var showAnswerElements=document.getElementsByClassName('showAnswer');
 
 
 function showAnswerHandler(id){
- var answerId='d'+id.id.charAt(1);
+ var index=id.id.indexOf('$')
+ //var answerId='d'+id.id.charAt(1);
+ var answerId='d'+id.id.substring(1,index);
  //document.getElementById(answerId).style.color='blue';
  if(document.getElementById(answerId).style.display==='none'){
   // document.getElementById(answerId).style.visibility='hidden';
@@ -42,5 +44,3 @@ function showAnswerHandler(id){
    document.getElementById(answerId).style.display='none';
  }
 }
-
-
