@@ -417,8 +417,6 @@ console.log(' param '+q.id);
 
 pool.query(sql, function(err,result,fields){
   if (err) throw err;
-  console.log("1 record inserted");
-
 
   var str= '<!DOCTYPE html><head>'+
   '<meta charset="utf-8">'+
@@ -436,16 +434,65 @@ pool.query(sql, function(err,result,fields){
   'Course Name:'+result.rows[0].name+
   '</div>';
 
-  str+='<p> Description: '+result.rows[0].description+'</b><br/>'+
-  '<b> Creator:'+result.rows[0].owner_id+'</b>';
-
-  str+='</body>';
-  str+='<script type="text/javascript" src="scripts/general.js">'+
-  '</script>';
-
-  res.send(str);
+  str+='<p style="text-align:left"> Description: '+result.rows[0].description+'</b><br/>'+
+  '<b> Creator:'+result.rows[0].owner_id+'</b></p>';
+str+='<div class="row">';
+str+='<div class="LeftWindow"></br><b>List of Quizes:</b></br></br>';
+var getResultPromise=getQuizListForCourse(courseId);
+getResultPromise.then(function(quizList){
+  //str+='<a href="./showTheQuiz?id=\'1\'">apple</a></br><a href="./showTheQuiz?id=\'2\'">boy</a></br><a href="./showTheQuiz?id=\'3\'">car</a>';
+  for(var i=0;i<quizList.length;i++){
+    var index=quizList[i].indexOf('$,');
+    var valQuiz=quizList[i].substring(index+2);
+    var textQuiz=quizList[i].substring(0,index);
+    str+='<a href="./showTheQuiz?id='+valQuiz+'\">'+textQuiz+"</a>";
+    if(i<quizList.length-1)
+       str+="</br>";
+    console.log(valQuiz+' , '+textQuiz);
+  }
+  str+='</div>';//end of left window
+  str+='</div>';//end of row
+    str+='</body>';
+    str+='<script type="text/javascript" src="scripts/general.js">'+
+    '</script>';
+    res.send(str);
+},function(err){
+  str+='</div>';//end of left window
+  str+='</div>';//end of row
+    str+='</body>';
+    str+='<script type="text/javascript" src="scripts/general.js">'+
+    '</script>';
+    res.send(str);
+});
 });
 }
+
+function getQuizListForCourse(courseId){
+  var quizList=[];
+  var pool = new pg.Pool({
+    host: configuration.getHost(),
+    user: configuration.getUserId(),
+    password: configuration.getPassword(),
+    database: configuration.getDatabase(),
+    port:configuration.getPort(),
+    ssl:true
+  });
+  var sql = "SELECT id,description FROM Quiz where course_id=$1";
+  return new Promise(function(resolve,reject){
+    pool.query(sql, [courseId], function (err, result, fields){
+      if (err)
+            reject(err);
+      else{
+        var i=0;
+        for(i=0;i<result.rows.length;i++){
+          quizList.push(result.rows[i].description+'$,'+result.rows[i].id);
+        }
+        resolve(quizList);
+      }
+    });
+  });
+}
+exports.getQuizListForCourse=getQuizListForCourse;
 
 //---QUIZ---
 /* function for returning a Promise object that retrives the set of records in the
