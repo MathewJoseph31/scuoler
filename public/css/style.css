@@ -1,5 +1,13 @@
 @CHARSET "UTF-8";
 
+/*setting box-sizing to border box enforces borders and padding
+are included in the total height/width of the elements
+*/
+* {
+    box-sizing: border-box;
+}
+
+
 .Header{
 font-size:50px;
 font-style:bold;
@@ -52,12 +60,17 @@ float:right;
 
 .LeftWindow{
 float:left;
-padding-left:20px;
-padding-right:20px;
-height:1000px;
-background-color:#ccff99;
+/*padding-left:20px;
+padding-right:20px;*/
+height:100%;
+/*background-color:#ccff99;*/
 }
 
+.row::after {
+    content: "";
+    clear: both;
+    display: table;
+}
 
 #ShortCut{
 padding-left:1em;
@@ -74,7 +87,7 @@ color:green;
 }
 
 .tab2Allign{
-margin-left:10em	
+margin-left:10em
 /*float:right;*/
 }
 
@@ -175,7 +188,7 @@ background-color: ash;
 }
 
 .problem-dropdown-content {
- 
+
 }
 
 .dropdown-content a {
