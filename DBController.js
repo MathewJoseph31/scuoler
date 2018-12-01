@@ -274,11 +274,35 @@ pool.query(sql, function(err,result,fields){
   str+='<p> City: '+result.rows[0].city+'</b><br/>'+
   '<b> Phone:'+result.rows[0].phone+' Mob: '+result.rows[0].mobile+'</b>';
   str+='<br/>Email: '+result.rows[0].email;
-  str+='</body>';
-  str+='<script type="text/javascript" src="scripts/general.js">'+
-  '</script>';
 
-  res.send(str);
+  str+='<div class="row">';
+  str+='<div class="LeftWindow"></br><b>List of Courses:</b></br></br>';
+  var getResultPromise=getCourseListForUser(userId);
+  getResultPromise.then(function(courseList){
+    //str+='<a href="./showTheQuiz?id=\'1\'">apple</a></br><a href="./showTheQuiz?id=\'2\'">boy</a></br><a href="./showTheQuiz?id=\'3\'">car</a>';
+    for(var i=0;i<courseList.length;i++){
+      var index=courseList[i].indexOf('$,');
+      var valCourse=courseList[i].substring(index+2);
+      var textCourse=courseList[i].substring(0,index);
+      str+='<a href="./showTheCourse?id='+valCourse+'\">'+textCourse+"</a>";
+      if(i<courseList.length-1)
+         str+="</br>";
+      console.log(valCourse+' , '+textCourse);
+    }
+    str+='</div>';//end of left window
+    str+='</div>';//end of row
+      str+='</body>';
+      str+='<script type="text/javascript" src="scripts/general.js">'+
+      '</script>';
+      res.send(str);
+  },function(err){
+    str+='</div>';//end of left window
+    str+='</div>';//end of row
+      str+='</body>';
+      str+='<script type="text/javascript" src="scripts/general.js">'+
+      '</script>';
+      res.send(str);
+  });
   });
 }
 
@@ -315,6 +339,33 @@ function getCourseList(){
       }
 
 exports.getCourseList=getCourseList;
+
+function getCourseListForUser(userId){
+  var courseList=[];
+  var pool = new pg.Pool({
+    host: configuration.getHost(),
+    user: configuration.getUserId(),
+    password: configuration.getPassword(),
+    database: configuration.getDatabase(),
+    port:configuration.getPort(),
+    ssl:true
+  });
+  var sql = "SELECT id,name FROM Course where owner_id=$1";
+  return new Promise(function(resolve,reject){
+    pool.query(sql, [userId], function (err, result, fields){
+      if (err)
+            reject(err);
+      else{
+        var i=0;
+        for(i=0;i<result.rows.length;i++){
+          courseList.push(result.rows[i].name+'$,'+result.rows[i].id);
+        }
+        resolve(courseList);
+      }
+    });
+  });
+}
+exports.getCourseListForUser=getCourseListForUser;
 
 /* function for handling  http requests to inserts to the course table in database*/
 exports.insertCourseToDB=function(req,res){
