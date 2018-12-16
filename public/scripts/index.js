@@ -1,24 +1,24 @@
-/* When the user clicks on the button, 
+/* When the user clicks on the button,
 toggle between hiding and showing the dropdown content */
 function problemClick() {
     document.getElementById("problemMenu").classList.toggle("show");
 }
 
-/* When the user clicks on the button, 
+/* When the user clicks on the button,
 toggle between hiding and showing the dropdown content */
 
 function quizClick() {
     document.getElementById("quizMenu").classList.toggle("show");
 }
 
-/* When the user clicks on the button, 
+/* When the user clicks on the button,
 toggle between hiding and showing the dropdown content */
 
 function courseClick() {
     document.getElementById("courseMenu").classList.toggle("show");
 }
 
-/* When the user clicks on the button, 
+/* When the user clicks on the button,
 toggle between hiding and showing the dropdown content */
 
 function userClick() {

@@ -1,3 +1,28 @@
+function showAnswerHandler(id){
+ var index=id.id.indexOf('$')
+ var answerId='d'+id.id.substring(1,index);
+ //document.getElementById(answerId).style.color='blue';
+ if(document.getElementById(answerId).style.display==='none'){
+  // document.getElementById(answerId).style.visibility='hidden';
+ document.getElementById(answerId).style.display='block';
+ }
+ else{
+   document.getElementById(answerId).style.display='none';
+ }
+}
+
+function changeHandler(){
+
+  var i;
+  var answerElements=document.getElementsByClassName('Answer');
+        for(i=0;i<answerElements.length;i++){
+             answerElements[i].style.display='none';
+         }
+  var showAnswerElements=document.getElementsByClassName('showAnswer');
+  
+}
+
+
 function includeHTML() {
   var z, i, elmnt, file, xhttp;
   /*loop through a collection of all HTML elements:*/
@@ -27,4 +52,3 @@ function includeHTML() {
 }
 
 includeHTML();
-
