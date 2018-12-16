@@ -1,7 +1,11 @@
 var express = require('express');
 var router = express.Router();
 
-const dbController=require('../DBController');
+
+const dbControllerProblem=require('../DBcontrollerProblem');
+const dbControllerQuiz=require('../DBcontrollerQuiz');
+const dbControllerCourse=require('../DBcontrollerCourse');
+const dbControllerUser=require('../DBControllerUser');
 
 /* GET home page. */
 router.get('/', function (req, res) {
@@ -25,21 +29,11 @@ router.get('/headerLogged',function(req,res){
 res.render('headerLogged',{userId:req.session.userId});
 })
 
-router.post('/login',function(req, res){
-  dbController.verifyUser(req,res);
-})
-
-router.get('/logout',function(req, res){
-  req.session.destroy(null);
-	res.render('index',{userId:null,errorMsg:null});
-})
-
-var result=[];
 
 //PROBLEM
 router.get('/insertProblem', function (req, res) {
   if(req.session.userId){
-		var getResultPromise=dbController.getQuizList();
+		var getResultPromise=dbControllerQuiz.getQuizList();
 		getResultPromise.then(function(result){
 			    res.render('insertProblem',{message:null,userId:req.session.userId,quizList:result});
 		},function(err){
@@ -51,22 +45,27 @@ router.get('/insertProblem', function (req, res) {
   }
 })
 
-router.post('/insertProblemAction', function(req,res){
-  dbController.insertProblemToDB(req,res);
+router.post('/insertProblemAction', dbControllerProblem.insertProblemToDB);
+router.get('/browseProblem', dbControllerProblem.displayProblems);
+
+
+
+/* GET users listing. */
+router.post('/login',function(req, res){
+  dbControllerUser.verifyUser(req,res);
 })
 
-router.get('/browseProblem', function (req, res) {
-  dbController.displayProblems(req,res);
+router.get('/logout',function(req, res){
+  req.session.destroy(null);
+	res.render('index',{userId:null,errorMsg:null});
 })
 
-
-
+var result=[];
 
 //QUIZ
 router.get('/insertQuiz',function (req, res) {
-	result=[];
 	if(req.session.userId){
-		var getResultPromise=dbController.getCourseList();
+		var getResultPromise=dbControllerCourse.getCourseList();
 		getResultPromise.then(function(result){
 				  res.render('insertQuiz',{message:null,userId:req.session.userId,courseList:result});
 		},function(err){
@@ -78,18 +77,13 @@ router.get('/insertQuiz',function (req, res) {
 	}
 })
 
-router.post('/insertQuizAction', function(req,res){
- dbController.insertQuizToDB(req,res);
-//res.render('problem');
-})
+router.post('/insertQuizAction', dbControllerQuiz.insertQuizToDB);
 
-router.get('/browseQuiz', function(req,res){
- dbController.displayQuizes(req,res);
-})
+router.get('/browseQuiz', dbControllerQuiz.displayQuizes);
 
-router.get('/showTheQuiz', function(req,res){
- dbController.showTheQuiz(req,res);
-})
+router.get('/showTheQuiz',dbControllerQuiz.showTheQuiz);
+
+router.get('/startTheQuiz',dbControllerQuiz.startTheQuiz);
 
 
 //Course
@@ -100,19 +94,11 @@ router.get('/insertCourse',function (req, res) {
 		res.render('index',{userId:null,errorMsg:'Insert Course: Please log In'});
 })
 
-router.post('/insertCourseAction', function(req,res){
- dbController.insertCourseToDB(req,res);
-//res.render('problem');
-})
+router.post('/insertCourseAction',  dbControllerCourse.insertCourseToDB);
 
+router.get('/browseCourse', dbControllerCourse.displayCourses);
 
-router.get('/browseCourse', function(req,res){
- dbController.displayCourses(req,res);
-})
-
-router.get('/showTheCourse', function(req,res){
- dbController.showTheCourse(req,res);
-})
+router.get('/showTheCourse', dbControllerCourse.showTheCourse)
 
 
 //User
@@ -130,19 +116,9 @@ router.get('/registerUser',function (req, res) {
 		res.render('insertUser',{message:null,userId:null});
 })
 
-router.post('/insertUserAction', function(req,res){
- dbController.insertUserToDB(req,res);
-//res.render('problem');
-})
-
-
-router.get('/browseUser', function(req,res){
- dbController.displayUsers(req,res);
-})
-
-router.get('/showTheUser', function(req,res){
- dbController.showTheUser(req,res);
-})
+router.post('/insertUserAction', dbControllerUser.insertUserToDB);
+router.get('/browseUser',dbControllerUser.displayUsers);
+router.get('/showTheUser', dbControllerUser.showTheUser);
 
 //error handler that matches every other URL
 router.get('*',function(req,res){
