@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="css/style.css">
+<meta charset="UTF-8">
+<title>Edit Existing Problem</title>
+</head>
+<body>
+<!--             <% if(userId){ %>
+ 		    <div w3-include-html="headerLogged"></div>
+                <% } %>
+<a class="HomeLink" href="/">back to home</a>-->
+<button id = "x" onclick="closeUpdateWindow()">
+          X
+</button>
+<fieldset>
+<form method="post" action="EditProblemAction">
+  <br>
+  Quiz Id:<br>
+  <!--<input id="courseId" name="courseId" type="text" cols="150" required="true"></input> <br>-->
+  <select id="quizId" name="quizId" required="true">
+   <% for(var i=0;i<quizList.length;i++){ %>
+   <% var index=quizList[i].indexOf('$,')%>
+   <% var valQuiz=quizList[i].substring(index+2) %>
+   <% var textQuiz=quizList[i].substring(0,index)%>
+   <% console.log(valQuiz+' , '+textQuiz) %>
+    <option value="<%= valQuiz %>"><%= textQuiz%></option>
+   <%}%>
+  </select> <br>
+Problem Description:<br>
+<textarea id="probDescription" name="probDescription" type="text" rows="10" cols="150" required="true">
+</textarea>
+<br>
+<br>
+Answer Description:<br>
+<textarea id="ansDescription" name="ansDescription" type="text" rows="10" cols="150" required="true">
+</textarea> <br>
+<br>
+<br>
+Author:<br>
+<input id="authorName" name="authorName" type="text" cols="150" required="true">
+</input> <br>
+<br>
+<input type="submit" value="Save Updates"/>
+<!--                      <% if(message !== null){ %>
+                   <p class="ActionMessage"><%= message %></p>
+                      <% } %>-->
+</form>
+</fieldset>
+</body>
+<script type="text/javascript" src="scripts/general.js"></script>
+</html>

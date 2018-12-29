@@ -58,6 +58,56 @@ font-size:17px;
 float:right;
 }
 
+.updateWindow{
+   position:absolute;
+   top:10%;
+   left:2%;
+  /* width:90%;*/
+   /*max-width:100%;*/
+   resize:none;
+   padding-top:1%;
+   /*height:650px;  or whatever width you want. */
+   /*max-height:450px;  or whatever width you want. */
+   background-color:#aaaaaa;
+   border:1px solid white;
+   overflow: scroll;
+   display:none;
+}
+
+#x {
+    position: relative;
+    float: right;
+    background: white;
+	  color: black;
+    top: -10px;
+    /*right: -5px;*/
+}
+
+.probParent{
+   width:800px;
+   max-width:100%;
+   resize:none;
+   height:250px; /* or whatever width you want. */
+   max-height:250px; /* or whatever width you want. */
+   display: inline;
+   overflow: scroll;
+}
+
+.EditButton {
+  background-color: transparent;
+   border:2px solid #ddd;
+   padding:5px 20px;
+   width: 5%;
+   min-width: 150px;
+   -webkit-transition: all 0.1s ease-in-out;
+   -moz-transition: all 0.1s ease-in-out;
+   -ms-transition: all 0.1s ease-in-out;
+   -o-transition: all 0.1s ease-in-out;
+   transition: all 0.1s ease-in-out;
+/*font-size:17px;*/
+  float:right;
+}
+
 .LeftWindow{
 float:left;
 /*padding-left:20px;
