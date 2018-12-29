@@ -43,6 +43,20 @@ router.get('/insertProblem', function (req, res) {
   else{
    res.render('index',{userId:null,errorMsg:'Insert Problem: Please log In!'});
   }
+});
+
+router.get('/editProblem', function (req, res) {
+  if(req.session.userId){
+		var getResultPromise=dbControllerQuiz.getQuizList();
+		getResultPromise.then(function(result){
+			    res.render('editProblem',{message:null,userId:req.session.userId,quizList:result});
+		},function(err){
+				res.render('editProblem',{message:null,userId:req.session.userId,quizList:null});
+		})
+	}
+  else{
+   res.render('index',{userId:null,errorMsg:'Insert Problem: Please log In!'});
+  }
 })
 
 router.post('/insertProblemAction', dbControllerProblem.insertProblemToDB);

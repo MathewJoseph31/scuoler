@@ -54,6 +54,29 @@ function getQuizList(){
 
 exports.getQuizList=getQuizList;
 
+const Client=require('pg-native');
+
+  //---QUIZ---
+  /* function for returning a Promise object that retrives the set of records in the
+   quiz descriptions from quiz table in database*/
+  function getQuizListSync(){
+        var quizList=['General$,defaultUser'];
+        var client = Client();
+        var connStr='postgresql://'+configuration.getUserId()+':'+
+        configuration.getPassword()+'@'+configuration.getHost()+':'+
+        configuration.getPort()+'/'+configuration.getDatabase();
+        client.connectSync(connStr);
+        var sql = "SELECT id,description FROM Quiz";
+        var rows=client.querySync(sql);
+        var i=0;
+        for(i=0;i<rows.length;i++){
+            quizList.push(rows[i].description+'$,'+rows[i].id);
+        }
+        return quizList;
+  }
+
+exports.getQuizListSync=getQuizListSync;
+
 /* function for handling  http requests to insert to the quiz table in database*/
 exports.insertQuizToDB=function(req,res){
   let quizDescription=req.body.quizDescription;
