@@ -1,6 +1,6 @@
 function showAnswerHandler(id){
- var index=id.id.indexOf('$')
- var answerId='d'+id.id.substring(1,index);
+// var index=id.id.indexOf('$')
+ var answerId='d'+id.id.substring(1);
  //document.getElementById(answerId).style.color='blue';
  if(document.getElementById(answerId).style.display==='none'){
   // document.getElementById(answerId).style.visibility='hidden';
@@ -19,7 +19,7 @@ function changeHandler(){
              answerElements[i].style.display='none';
          }
   var showAnswerElements=document.getElementsByClassName('showAnswer');
-  
+
 }
 
 

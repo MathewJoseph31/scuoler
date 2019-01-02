@@ -23,7 +23,7 @@ function saveUpdateHandler(){
 
   var updateDiv=document.getElementById("updateWindow");
 
-  var FD  = new FormData();
+  /*var FD  = new FormData();
   FD.append("id", problemId);
   FD.append("description", description);
   FD.append("option1", option1);
@@ -33,7 +33,7 @@ function saveUpdateHandler(){
   FD.append("answerkey", answerkey);
   FD.append("quizId", quizId);
   FD.append("solution", solution);
-  FD.append("authorId", authorId);
+  FD.append("authorId", authorId);*/
 
   var reqBody="id="+encodeURIComponent(problemId)+"&description="+encodeURIComponent(description)+
   "&option1="+encodeURIComponent(option1)+"&option2="+encodeURIComponent(option2)+"&option3="+encodeURIComponent(option3)+"&option4="+encodeURIComponent(option4)+

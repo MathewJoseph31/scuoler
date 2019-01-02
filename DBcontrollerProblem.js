@@ -206,7 +206,7 @@ exports.displayProblems=function(req,res){
       str=str+'<b>Quiz: </b><div id="quizDescription$,'+result.rows[i].id+'" class="Quiz">'+result.rows[i].quiz_description+'</div>';
       str+='</br></br>';
       str=str+'<b>Question: </b><div id="problemDescription$,'+result.rows[i].id+'" class="Question">'+result.rows[i].description+'</div>'+
-      '<input type="button" class="showAnswer" onclick="showAnswerHandler(this)" id="b'+i+'$" value="view solution"/></br>' +
+      '<input type="button" class="showAnswer" onclick="showAnswerHandler(this)" id="b'+i+'" value="view solution"/></br>' +
       '<div id="d'+i+'" name="answerDescription$,'+result.rows[i].id+'" class="Answer"><b>Solution: </b>'+result.rows[i].solution+'</div>';
       str+='</div><!--end of par div-->'
     }

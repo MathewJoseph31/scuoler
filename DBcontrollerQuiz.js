@@ -293,7 +293,7 @@ function getProblemListForQuiz(quizId){
           port:configuration.getPort(),
           ssl:true
         });
-        var sql = "SELECT description, solution FROM Problem where quiz_id=$1";
+        var sql = "SELECT id, description, solution FROM Problem where quiz_id=$1";
         return new Promise(function(resolve,reject){
           pool.query(sql, [quizId], function (err, result, fields){
             if (err)
@@ -302,7 +302,7 @@ function getProblemListForQuiz(quizId){
              var i=0;
              for(i=0;i<result.rows.length;i++){
                htmlStr=htmlStr+'<b>Question: </b><div class="Question">'+result.rows[i].description+'</div>'+
-               '<input type="button" class="showAnswer" onclick="showAnswerHandler(this)" id="b'+i+'$" value="view solution"/></br>' +
+               '<input type="button" class="showAnswer" onclick="showAnswerHandler(this)" id="b'+i+'" value="view solution"/></br>' +
                '<div id="d'+i+'" class="Answer"><b>Solution: </b>'+result.rows[i].solution+'</div><hr>';
              }
              resolve(htmlStr);
