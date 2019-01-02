@@ -45,6 +45,8 @@ router.get('/insertProblem', function (req, res) {
   }
 });
 
+router.post('/updateProblem', dbControllerProblem.editProblemInDB);
+
 router.get('/editProblem', function (req, res) {
   if(req.session.userId){
 		var getResultPromise=dbControllerQuiz.getQuizList();
