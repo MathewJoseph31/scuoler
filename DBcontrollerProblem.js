@@ -26,6 +26,50 @@ const dbControllerQuiz=require('./DBcontrollerQuiz');
 
 //----PROBLEM----
 
+exports.editProblemInDB=function(req,res){
+  //var q = url.parse(req.url, true).query;
+  let problemId=req.body.id;
+  let description=req.body.description;
+  let option1=req.body.option1;
+  let option2=req.body.option2;
+  let option3=req.body.option3;
+  let option4=req.body.option4;
+  let answerkey=req.body.answerkey;
+  let quizId=req.body.quizId;
+  var solution=req.body.solution;
+  var authorId=req.body.authorId;
+
+  if(answerkey==undefined||answerkey==''||anserkye=='null'){
+    answerkey=null;
+  }
+
+  var sql="UPDATE PROBLEM SET  description=$1, option1=$2, option2=$3, option3=$4, "+
+  "option4=$5, answerkey=$6, quiz_id=$7, solution=$8 where id=$9 ";
+
+  var pool = new pg.Pool({
+    host: configuration.getHost(),
+    user: configuration.getUserId(),
+    password: configuration.getPassword(),
+    database: configuration.getDatabase(),
+    port:configuration.getPort(),
+    ssl:true
+  });
+
+  pool.query(sql, [description, option1, option2, option3, option4, answerkey, quizId, solution, problemId], function (err, result, fields){
+    if (err) {
+      throw err;
+      res.json({"updatestatus":"error"});
+    }
+    else{
+      //console.log(description+' '+solution);
+      console.log("problem updated");
+      res.json({"updatestatus":"ok"});
+    }
+  });
+
+}
+
+
 /* function for handling  http requests to inserts to the problem table in database*/
 exports.insertProblemToDB=function(req,res){
   let quizId=req.body.quizId;
@@ -100,9 +144,11 @@ exports.displayProblems=function(req,res){
     <button id = "x" onclick="closeUpdateWindow()">\
               X\
     </button>\
+    <div id="updateWindowHeader" class="updateWindowHeader"></div>\
     <fieldset>\
         <br>\
-      Quiz Id:<br>';
+      Problem Id: <input type="text" id="problemId" readonly/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\
+      Quiz Id:';
 
       var quizList=dbControllerQuiz.getQuizListSync();
         str+='<select id="quizId" name="quizId" required="true">';
@@ -121,39 +167,47 @@ exports.displayProblems=function(req,res){
     </textarea>\
     <br>\
     <br>\
+    Option1: <input type="text" id="option1">&nbsp;&nbsp;\
+    Option2: <input type="text" id="option2">&nbsp;&nbsp;\
+    Option3: <input type="text" id="option3">&nbsp;&nbsp;\
+    <br><br>\
+    Option4: <input type="text" id="option4">&nbsp;&nbsp;\
+    Answer Key: <input type="text" id="answerKey" >&nbsp;&nbsp;\
+    <br><br>\
     Answer Description:<br>\
     <textarea id="ansDescription" name="ansDescription" type="text" rows="10" cols="150" required="true">\
     </textarea> <br>\
     <br>\
-    <br>\
-    Author:<br>\
-    <input id="authorName" name="authorName" type="text" cols="150" required="true">\
+    Author:\
+    <input id="authorName" name="authorName" type="text" cols="150" required="true" readonly>\
     </input> <br>\
     <br>\
-    <input type="button" value="Save Updates"/>\
-    </div>';
+    <input type="button" value="Save Updates" onclick="saveUpdateHandler()"/>\
+    </div><!--end of update window div-->';
     var i=0;
     for(i=0;i<result.rows.length;i++){
-      str+='<hr><div id="par'+result.rows[i].id+'" class="probParent">';
+      str+='<hr><div id="par$,'+result.rows[i].id+'" class="probParent">';
       if(req.session.userId){
         /* replace quotes and double quotes with corresponding html sequences*/
           var desc=result.rows[i].description;
           desc=desc.replace(/\"/g,"&quot;");
           desc=desc.replace(/'/g,"&#39;");
+          desc=desc.replace(/\r\n|\r|\n/g,"<br>")
           var sol=result.rows[i].solution;
           sol=sol.replace(/\"/g,"&quot;");
           sol=sol.replace(/'/g,"&#39;");
+          sol=sol.replace(/\r\n|\r|\n/g,"<br>")
           str+='<input type="button" class="EditButton" onclick="editProblemHandler(\''+
           result.rows[i].id+'\', \''+desc+'\', \''+result.rows[i].option1+'\', \''+
           result.rows[i].option2+'\',\''+result.rows[i].option3+'\',\''+result.rows[i].option4+'\','+
           result.rows[i].answerkey+',\''+sol+'\',\''+result.rows[i].author_id+'\',\''+
           result.rows[i].quiz_id+'\')" id="d'+result.rows[i].id+'" value="Edit Problem"/>';
       }
-      str=str+'<b>Quiz: </b><div class="Quiz">'+result.rows[i].quiz_description+'</div>';
+      str=str+'<b>Quiz: </b><div id="quizDescription$,'+result.rows[i].id+'" class="Quiz">'+result.rows[i].quiz_description+'</div>';
       str+='</br></br>';
-      str=str+'<b>Question: </b><div class="Question">'+result.rows[i].description+'</div>'+
+      str=str+'<b>Question: </b><div id="problemDescription$,'+result.rows[i].id+'" class="Question">'+result.rows[i].description+'</div>'+
       '<input type="button" class="showAnswer" onclick="showAnswerHandler(this)" id="b'+i+'$" value="view solution"/></br>' +
-      '<div id="d'+i+'" class="Answer"><b>Solution: </b>'+result.rows[i].solution+'</div>';
+      '<div id="d'+i+'" name="answerDescription$,'+result.rows[i].id+'" class="Answer"><b>Solution: </b>'+result.rows[i].solution+'</div>';
       str+='</div><!--end of par div-->'
     }
     str=str+'<hr></body>'+
