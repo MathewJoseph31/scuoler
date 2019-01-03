@@ -1,12 +1,11 @@
-function showAnswerHandler(id){
-// var index=id.id.indexOf('$')
- var answerId='d'+id.id.substring(1);
+function showAnswerHandler(ele){
+ var answerId='d'+ele.id.substring(1);
  //document.getElementById(answerId).style.color='blue';
  if(document.getElementById(answerId).style.display==='none'){
   // document.getElementById(answerId).style.visibility='hidden';
- document.getElementById(answerId).style.display='block';
+   document.getElementById(answerId).style.display='block';
  }
- else{
+ else  if(document.getElementById(answerId).style.display==='block'){
    document.getElementById(answerId).style.display='none';
  }
 }

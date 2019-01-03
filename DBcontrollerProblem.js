@@ -39,9 +39,11 @@ exports.editProblemInDB=function(req,res){
   var solution=req.body.solution;
   var authorId=req.body.authorId;
 
-  if(answerkey==undefined||answerkey==''||anserkye=='null'){
+  if(answerkey==undefined||answerkey==''||answerkey=='null'){
     answerkey=null;
   }
+
+  console.log(description+' '+solution);
 
   var sql="UPDATE PROBLEM SET  description=$1, option1=$2, option2=$3, option3=$4, "+
   "option4=$5, answerkey=$6, quiz_id=$7, solution=$8 where id=$9 ";
@@ -187,27 +189,40 @@ exports.displayProblems=function(req,res){
     var i=0;
     for(i=0;i<result.rows.length;i++){
       str+='<hr><div id="par$,'+result.rows[i].id+'" class="probParent">';
+      /* replace quotes and double quotes with corresponding html sequences*/
+      var desc=result.rows[i].description;
+      desc=desc.replace(/\"/g,"&quot;");
+      desc=desc.replace(/'/g,"&#39;");
+      desc=desc.replace(/\r\n|\r|\n/g,"<br>")
+      var sol=result.rows[i].solution;
+      sol=sol.replace(/\"/g,"&quot;");
+      sol=sol.replace(/'/g,"&#39;");
+      sol=sol.replace(/\r\n|\r|\n/g,"<br>")
       if(req.session.userId){
-        /* replace quotes and double quotes with corresponding html sequences*/
-          var desc=result.rows[i].description;
-          desc=desc.replace(/\"/g,"&quot;");
-          desc=desc.replace(/'/g,"&#39;");
-          desc=desc.replace(/\r\n|\r|\n/g,"<br>")
-          var sol=result.rows[i].solution;
-          sol=sol.replace(/\"/g,"&quot;");
-          sol=sol.replace(/'/g,"&#39;");
-          sol=sol.replace(/\r\n|\r|\n/g,"<br>")
-          str+='<input type="button" class="EditButton" onclick="editProblemHandler(\''+
-          result.rows[i].id+'\', \''+desc+'\', \''+result.rows[i].option1+'\', \''+
-          result.rows[i].option2+'\',\''+result.rows[i].option3+'\',\''+result.rows[i].option4+'\','+
-          result.rows[i].answerkey+',\''+sol+'\',\''+result.rows[i].author_id+'\',\''+
-          result.rows[i].quiz_id+'\')" id="d'+result.rows[i].id+'" value="Edit Problem"/>';
+        str+='<input type="button" class="EditButton" onclick="editProblemHandler(\''+
+        result.rows[i].id+//'\', \''+desc+
+        //'\', \''+
+        /*result.rows[i].option1+'\', \''+
+        result.rows[i].option2+'\',\''+result.rows[i].option3+'\',\''+result.rows[i].option4+'\','+*/
+        //result.rows[i].answerkey+',\''+sol+ ',\''
+        //+result.rows[i].author_id+'\',\''+
+        //result.rows[i].quiz_id+
+        '\')" id="e'+result.rows[i].id+'" value="Edit Problem"/>';
       }
       str=str+'<b>Quiz: </b><div id="quizDescription$,'+result.rows[i].id+'" class="Quiz">'+result.rows[i].quiz_description+'</div>';
-      str+='</br></br>';
-      str=str+'<b>Question: </b><div id="problemDescription$,'+result.rows[i].id+'" class="Question">'+result.rows[i].description+'</div>'+
-      '<input type="button" class="showAnswer" onclick="showAnswerHandler(this)" id="b'+i+'" value="view solution"/></br>' +
-      '<div id="d'+i+'" name="answerDescription$,'+result.rows[i].id+'" class="Answer"><b>Solution: </b>'+result.rows[i].solution+'</div>';
+      str+='<input type="hidden" id="quizId$,'+result.rows[i].id+'" value="'+result.rows[i].quiz_id+'">';
+      str+=' </br><b>Author</b> : <label id="authorId$,'+result.rows[i].id+'">'+result.rows[i].author_id+'</label>';
+      str=str+'</br> <b>Question: </b><div id="problemDescription$,'+result.rows[i].id+'" class="Question">'+result.rows[i].description+'</div>';
+      str+='<b>Options:</b>';
+      str+='</br> 1) <label id="option1$,'+result.rows[i].id+'">'+result.rows[i].option1+'</label>';
+      str+='</br> 2) <label id="option2$,'+result.rows[i].id+'">'+result.rows[i].option2+'</label>';
+      str+='</br> 3) <label id="option3$,'+result.rows[i].id+'">'+result.rows[i].option3+'</label>';
+      str+='</br> 4) <label id="option4$,'+result.rows[i].id+'">'+result.rows[i].option4+'</label>';
+      str=str+'</br></br><input type="button" class="showAnswer" onclick="showAnswerHandler(this)" id="b'+result.rows[i].id+'" value="view solution"/></br>' +
+      '<div id="d'+result.rows[i].id+'" name="d'+result.rows[i].id+'" class="Answer"><b>Solution: </b>';
+      str+='<label id="solution$,'+result.rows[i].id+'">'+result.rows[i].solution+'</label>'+'</br>';
+      str+=' Ans Key: <label id="answerkey$,'+result.rows[i].id+'">'+result.rows[i].answerkey+'</label>'+
+      '</div>';
       str+='</div><!--end of par div-->'
     }
     str=str+'<hr></body>'+

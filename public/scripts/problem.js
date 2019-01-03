@@ -8,7 +8,7 @@ function closeUpdateWindow(){
 function saveUpdateHandler(){
   var problemId=document.getElementById('problemId').value;
   var description=document.getElementById('probDescription').value;
-  description=description.replace(/%20/g, '+');
+//  description=description.replace(/%20/g, '+');
 
   var option1=document.getElementById('option1').value;
   var option2=document.getElementById('option2').value;
@@ -20,25 +20,13 @@ function saveUpdateHandler(){
   solution=solution.replace(/%20/g, '+');
 
   var authorId=document.getElementById('authorName').value;
-
   var updateDiv=document.getElementById("updateWindow");
 
-  /*var FD  = new FormData();
-  FD.append("id", problemId);
-  FD.append("description", description);
-  FD.append("option1", option1);
-  FD.append("option2", option2);
-  FD.append("option3", option3);
-  FD.append("option4", option4);
-  FD.append("answerkey", answerkey);
-  FD.append("quizId", quizId);
-  FD.append("solution", solution);
-  FD.append("authorId", authorId);*/
 
   var reqBody="id="+encodeURIComponent(problemId)+"&description="+encodeURIComponent(description)+
   "&option1="+encodeURIComponent(option1)+"&option2="+encodeURIComponent(option2)+"&option3="+encodeURIComponent(option3)+"&option4="+encodeURIComponent(option4)+
   "&answerkey="+encodeURIComponent(answerkey)+"&quizId="+encodeURIComponent(quizId)+"&solution="+encodeURIComponent(solution)+"&authorId="+encodeURIComponent(authorId);
-//  alert(reqBody);
+  //alert(reqBody);
 
   if(updateDiv.style.display!='none')
       updateDiv.style.display='none';
@@ -49,9 +37,17 @@ function saveUpdateHandler(){
       var responseObj=JSON.parse(this.responseText);
       if(responseObj.updatestatus=="ok"){
         var sel=document.getElementById('quizId');
-        document.getElementById('quizDescription$,'+problemId).innerHTML= sel.options[sel.selectedIndex].text;;
+        document.getElementById('quizDescription$,'+problemId).innerHTML= sel.options[sel.selectedIndex].text;
+        document.getElementById("quizId$,"+problemId).value=quizId;
         document.getElementById('problemDescription$,'+problemId).innerHTML=description;
-        document.getElementsByName('answerDescription$,'+problemId).innerHTML=solution;
+        document.getElementById('solution$,'+problemId).innerHTML=solution;
+        document.getElementById("option1$,"+problemId).innerHTML=option1;
+        document.getElementById("option2$,"+problemId).innerHTML=option2;
+        document.getElementById("option3$,"+problemId).innerHTML=option3;
+        document.getElementById("option4$,"+problemId).innerHTML=option4;
+        document.getElementById("answerkey$,"+problemId).innerHTML=answerkey;
+        document.getElementById("authorId$,"+problemId).innerHTML=authorId;
+        //document.getElementsByName('answerDescription$,'+problemId).innerHTML=solution;
         alert("problem updated");
       }
       else{
@@ -68,9 +64,20 @@ function saveUpdateHandler(){
   //xhttp.send(FD);
 }
 
-function editProblemHandler(id, description, option1, option2, option3, option4,
- answerkey, solution, author_id, quiz_id){
+function editProblemHandler(id//, description,
+  //option1, option2, option3, option4,
+ //answerkey, solution, author_id, quiz_id
+){
 
+ var description=document.getElementById("problemDescription$,"+id).innerHTML;
+ var solution=document.getElementById("solution$,"+id).innerHTML;
+ var option1=document.getElementById("option1$,"+id).innerHTML;
+ var option2=document.getElementById("option2$,"+id).innerHTML;
+ var option3=document.getElementById("option3$,"+id).innerHTML;
+ var option4=document.getElementById("option4$,"+id).innerHTML;
+ var answerkey=document.getElementById("answerkey$,"+id).innerHTML;
+ var author_id=document.getElementById("authorId$,"+id).innerHTML;
+ var quiz_id=document.getElementById("quizId$,"+id).value;
  //alert(''+id+' '+description+' \n '+solution+' '+option3+' '+option4+' '+answerkey+' '+author_id+' '+quiz_id);
  var updateDiv=document.getElementById("updateWindow");
  if(updateDiv.style.display!='block')
