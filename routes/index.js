@@ -47,7 +47,7 @@ router.get('/insertProblem', function (req, res) {
 
 router.post('/updateProblem', dbControllerProblem.editProblemInDB);
 
-router.get('/editProblem', function (req, res) {
+/*router.get('/editProblem', function (req, res) {
   if(req.session.userId){
 		var getResultPromise=dbControllerQuiz.getQuizList();
 		getResultPromise.then(function(result){
@@ -59,7 +59,7 @@ router.get('/editProblem', function (req, res) {
   else{
    res.render('index',{userId:null,errorMsg:'Insert Problem: Please log In!'});
   }
-})
+})*/
 
 router.post('/insertProblemAction', dbControllerProblem.insertProblemToDB);
 router.get('/browseProblem', dbControllerProblem.displayProblems);

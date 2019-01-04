@@ -265,3 +265,5 @@ function getUniqueId(userId){
 
   return str;
 }
+
+exports.getUniqueId=getUniqueId;
