@@ -23,6 +23,7 @@ const url = require('url');
 
 const configuration=require('./Configuration');
 const dbControllerQuiz=require('./DBcontrollerQuiz');
+const dbControllerCourse=require('./DBcontrollerCourse');
 
 //----PROBLEM----
 
@@ -76,8 +77,14 @@ exports.editProblemInDB=function(req,res){
 exports.insertProblemToDB=function(req,res){
   let quizId=req.body.quizId;
   let problemDescription=req.body.probDescription;
+  let option1=req.body.option1;
+  let option2=req.body.option2;
+  let option3=req.body.option3;
+  let option4=req.body.option4;
+  let answerKey=req.body.answerKey;
   let ansDescription=req.body.ansDescription;
   let authorName=req.body.authorName;
+
 
   console.log('in problem inserting to db');
   var pool = new pg.Pool({
@@ -89,14 +96,14 @@ exports.insertProblemToDB=function(req,res){
     ,ssl:true
   });
 
-  var sql = "insert into Problem(id, description, solution, author_id, quiz_id) values($1,$2,$3,$4,$5)";
+  var sql = "insert into Problem(id, description, option1, option2, option3, option4, solution, answerkey, author_id, quiz_id) values($1,$2,$3,$4,$5, $6, $7, $8, $9, $10)";
 
-  var problemId=getUniqueId(authorName);
-  pool.query(sql, [problemId,problemDescription,ansDescription,authorName,quizId], function(err,result){
+  var problemId=dbControllerCourse.getUniqueId(authorName);
+  pool.query(sql, [problemId,problemDescription, option1, option2, option3, option4, ansDescription, answerKey, authorName,quizId], function(err,result){
     if (err) throw err;
     console.log("1 record inserted");
     //
-    var getResultPromise=getQuizList();
+    var getResultPromise=dbControllerQuiz.getQuizList();
     getResultPromise.then(function(result){
           res.render('insertProblem',{message:'Problem Inserted',userId:req.session.userId,quizList:result});
     },function(err){

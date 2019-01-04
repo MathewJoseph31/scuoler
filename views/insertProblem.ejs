@@ -14,7 +14,7 @@
 Insert a new problem
 </div>
 <fieldset>
-<form method="post" action="InsertProblemAction">
+<form method="post" onsubmit="return validateInsertProblemForm();" action="InsertProblemAction">
   <br>
   Quiz Id:<br>
   <!--<input id="courseId" name="courseId" type="text" cols="150" required="true"></input> <br>-->
@@ -30,6 +30,14 @@ Insert a new problem
 Problem Description:<br>
 <textarea id="probDescription" name="probDescription" type="text" rows="10" cols="150" required="true">
 </textarea>
+<br>
+<br>
+Option1: <input type="text" name="option1" id="option1">&nbsp;&nbsp;
+Option2: <input type="text" name="option2" id="option2">&nbsp;&nbsp;
+Option3: <input type="text" name="option3" id="option3">&nbsp;&nbsp;
+<br><br>
+Option4: <input type="text" id="option4">&nbsp;&nbsp;
+Answer Key: <input type="text" name="answerKey" id="answerKey" >&nbsp;&nbsp;
 <br>
 <br>
 Answer Description:<br>
@@ -49,4 +57,5 @@ Author:<br>
 </fieldset>
 </body>
 <script type="text/javascript" src="scripts/general.js"></script>
+<script type="text/javascript" src="scripts/insertProblem.js"></script>
 </html>
