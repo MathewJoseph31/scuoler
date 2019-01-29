@@ -179,6 +179,10 @@ color:gray;
 display:none;
 }
 
+.ProblemList{
+display:none;
+}
+
 .showAnswer{
  background-color: transparent;
   border:2px solid #ddd;
