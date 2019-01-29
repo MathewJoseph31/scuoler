@@ -99,7 +99,7 @@ router.get('/browseQuiz', dbControllerQuiz.displayQuizes);
 
 router.get('/showTheQuiz',dbControllerQuiz.showTheQuiz);
 
-router.get('/startTheQuiz',dbControllerQuiz.startTheQuiz);
+//router.get('/startTheQuiz',dbControllerQuiz.startTheQuiz);
 
 
 //Course

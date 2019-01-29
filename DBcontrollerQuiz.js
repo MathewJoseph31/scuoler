@@ -164,7 +164,7 @@ exports.displayQuizes=function(req,res){
   });
 }
 
-exports.startTheQuiz=function(req,res){
+/*exports.startTheQuiz=function(req,res){
 
   var pool = new pg.Pool({
     host: configuration.getHost(),
@@ -210,7 +210,7 @@ exports.startTheQuiz=function(req,res){
     '</script>';
     res.send(str);
   });
-}
+}*/
 
 /* function for handling  http requests to show details about a selected Course*/
 exports.showTheQuiz=function(req,res){
@@ -282,7 +282,8 @@ exports.showTheQuiz=function(req,res){
 /* function for return a Promise object that retrives the set of records in the
  Course names from course table in database*/
 function getProblemListForQuiz(quizId){
-      var htmlStr='<h2>'+
+      var htmlStr='<div id="ProblemList" class="ProblemList"><form method="post" action="submitQuiz">\
+                  <h2>'+
                   'Problems:'+
                   '</h2>';
         var pool = new pg.Pool({
@@ -293,7 +294,7 @@ function getProblemListForQuiz(quizId){
           port:configuration.getPort(),
           ssl:true
         });
-        var sql = "SELECT id, description, solution FROM Problem where quiz_id=$1";
+        var sql = "SELECT id, description, option1, option2, option3, option4, solution FROM Problem where quiz_id=$1";
         return new Promise(function(resolve,reject){
           pool.query(sql, [quizId], function (err, result, fields){
             if (err)
@@ -301,10 +302,16 @@ function getProblemListForQuiz(quizId){
             else{
              var i=0;
              for(i=0;i<result.rows.length;i++){
-               htmlStr=htmlStr+'<b>Question: </b><div class="Question">'+result.rows[i].description+'</div>'+
-               '<input type="button" class="showAnswer" onclick="showAnswerHandler(this)" id="b'+i+'" value="view solution"/></br>' +
-               '<div id="d'+i+'" class="Answer"><b>Solution: </b>'+result.rows[i].solution+'</div><hr>';
+               htmlStr+='<hr><b>Question: </b><div class="Question">'+result.rows[i].description+'</div><b>Options</b></br>';
+               htmlStr+='<input type="radio" id="'+result.rows[i].id+'$option1" name="'+result.rows[i].id+'$'+i+'" value="'+result.rows[i].option1+'">'+result.rows[i].option1+'</br>';
+               htmlStr+='<input type="radio" id="'+result.rows[i].id+'$option2" name="'+result.rows[i].id+'$'+i+'" value="'+result.rows[i].option2+'">'+result.rows[i].option2+'</br>';
+               htmlStr+='<input type="radio" id="'+result.rows[i].id+'$option3" name="'+result.rows[i].id+'$'+i+'" value="'+result.rows[i].option3+'">'+result.rows[i].option3+'</br>';
+               htmlStr+='<input type="radio" id="'+result.rows[i].id+'$option4" name="'+result.rows[i].id+'$'+i+'" value="'+result.rows[i].option4+'">'+result.rows[i].option4+'</br>';
+               //'<input type="button" class="showAnswer" onclick="showAnswerHandler(this)" id="b'+i+'" value="view solution"/></br>' +
+               //'<div id="d'+i+'" class="Answer"><b>Solution: </b>'+result.rows[i].solution+'</div><hr>';
              }
+             htmlStr+='<hr></br></br><input type="submit" value="submit quiz"/>';
+             htmlStr+='</form></div>'
              resolve(htmlStr);
            }
         });
