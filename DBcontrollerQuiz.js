@@ -282,7 +282,8 @@ exports.showTheQuiz=function(req,res){
 /* function for return a Promise object that retrives the set of records in the
  Course names from course table in database*/
 function getProblemListForQuiz(quizId){
-      var htmlStr='<div id="ProblemList" class="ProblemList"><form method="post" action="submitQuiz">\
+      var htmlStr='<div id="ProblemList" class="ProblemList"><form method="post" action="submitQuizAction">\
+                   <input type="hidden" id="quizId" name="quizId" value="'+quizId+'">\
                   <h2>'+
                   'Problems:'+
                   '</h2>';
@@ -303,10 +304,10 @@ function getProblemListForQuiz(quizId){
              var i=0;
              for(i=0;i<result.rows.length;i++){
                htmlStr+='<hr><b>Question: </b><div class="Question">'+result.rows[i].description+'</div><b>Options</b></br>';
-               htmlStr+='<input type="radio" id="'+result.rows[i].id+'$option1" name="'+result.rows[i].id+'$'+i+'" value="'+result.rows[i].option1+'">'+result.rows[i].option1+'</br>';
-               htmlStr+='<input type="radio" id="'+result.rows[i].id+'$option2" name="'+result.rows[i].id+'$'+i+'" value="'+result.rows[i].option2+'">'+result.rows[i].option2+'</br>';
-               htmlStr+='<input type="radio" id="'+result.rows[i].id+'$option3" name="'+result.rows[i].id+'$'+i+'" value="'+result.rows[i].option3+'">'+result.rows[i].option3+'</br>';
-               htmlStr+='<input type="radio" id="'+result.rows[i].id+'$option4" name="'+result.rows[i].id+'$'+i+'" value="'+result.rows[i].option4+'">'+result.rows[i].option4+'</br>';
+               htmlStr+='<input type="radio" id="'+result.rows[i].id+'$option1" name="'+result.rows[i].id+'$'+'" value="1" required="true">'+result.rows[i].option1+'</br>';
+               htmlStr+='<input type="radio" id="'+result.rows[i].id+'$option2" name="'+result.rows[i].id+'$'+'" value="2">'+result.rows[i].option2+'</br>';
+               htmlStr+='<input type="radio" id="'+result.rows[i].id+'$option3" name="'+result.rows[i].id+'$'+'" value="3">'+result.rows[i].option3+'</br>';
+               htmlStr+='<input type="radio" id="'+result.rows[i].id+'$option4" name="'+result.rows[i].id+'$'+'" value="4">'+result.rows[i].option4+'</br>';
                //'<input type="button" class="showAnswer" onclick="showAnswerHandler(this)" id="b'+i+'" value="view solution"/></br>' +
                //'<div id="d'+i+'" class="Answer"><b>Solution: </b>'+result.rows[i].solution+'</div><hr>';
              }
@@ -318,3 +319,45 @@ function getProblemListForQuiz(quizId){
         });
       }
 exports.getProblemListForQuiz=getProblemListForQuiz;
+
+/* function for handling  http form submits by a user who submits a quiz answers*/
+exports.submitQuiz=function(req, res){
+  let quizId=req.body.quizId;
+  var pool = new pg.Pool({
+    host: configuration.getHost(),
+    user: configuration.getUserId(),
+    password: configuration.getPassword(),
+    database: configuration.getDatabase(),
+    port:configuration.getPort(),
+    ssl:true
+  });
+  var sql = "SELECT id, answerkey, maxmarks FROM Problem where quiz_id=$1";
+  pool.query(sql, [quizId], function (err, result, fields){
+    if (err) throw err;
+
+   var str= '<!DOCTYPE html><head>'+
+  '<meta charset="utf-8">'+
+  '<title>Quiz Results</title>'+
+  '<link rel="stylesheet" media="screen and (max-width: 1000px)" type="text/css" href="css/styleMob.css">'+
+  '<link rel="stylesheet" media="screen and (min-width: 1000px)" type="text/css" href="css/style.css">'+
+  '</head>'+
+  '<body>';
+  var i=0, maxMarks=0, marksObtained=0;
+  for(i=0;i<result.rows.length;i++){
+    var marks=result.rows[i].maxmarks;
+    maxMarks+=parseInt(marks);
+    var problemId=result.rows[i].id+'$';
+    var answerKey=result.rows[i].answerkey;
+    var userEnteredKey=req.body[problemId];
+    if(answerKey==userEnteredKey){
+        console.log('matched');
+        marksObtained+=parseInt(marks);
+    }
+  }
+    str+='<b>Your Total Score: '+marksObtained+'/'+maxMarks+'</b>';
+    str=str+'</body>';
+    str+='<script type="text/javascript" src="scripts/general.js">'+
+    '</script>';
+    res.send(str);
+  });
+}

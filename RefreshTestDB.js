@@ -53,22 +53,36 @@ refreshTestDB=function(req,res){
           suffix+=result.rows[i].column_name+ ' ';
           var udt_name=result.rows[i].udt_name;
           if(udt_name.indexOf('num')!=-1){
-            suffix+=udt_name+'('+result.rows[i].numeric_precision+','+result.rows[i].numeric_scale+') )';
+            if(result.rows[i].numeric_precision==null)
+              suffix+=udt_name+' )'
+            else if(result.rows[i].numeric_scale==null)
+               suffix+=udt_name+'('+result.rows[i].numeric_precision+',0) )';
+            else
+               suffix+=udt_name+'('+result.rows[i].numeric_precision+','+result.rows[i].numeric_scale+') )';
           }
           else if(udt_name.indexOf('char')!=-1){
             suffix+=udt_name+'('+result.rows[i].character_maximum_length+') ) ';
           }
+          else//date, .. datatype
+            suffix+=udt_name+')';
         }
         else{
           prefix+=result.rows[i].column_name+', ';
           suffix+=result.rows[i].column_name+ ' ';
           var udt_name=result.rows[i].udt_name;
           if(udt_name.indexOf('num')!=-1){
-            suffix+=udt_name+'('+result.rows[i].numeric_precision+','+result.rows[i].numeric_scale+'), ';
+            if(result.rows[i].numeric_precision==null)
+               suffix+=udt_name+', '
+            else if(result.rows[i].numeric_scale==null)
+               suffix+=udt_name+'('+result.rows[i].numeric_precision+',0), ';
+            else
+               suffix+=udt_name+'('+result.rows[i].numeric_precision+','+result.rows[i].numeric_scale+'), ';
           }
           else if(udt_name.indexOf('char')!=-1){
             suffix+=udt_name+'('+result.rows[i].character_maximum_length+'), ';
           }
+          else//date, .. datatype
+            suffix+=udt_name+', ';
         }
       }
       prefix+=' FROM '+tabName;
