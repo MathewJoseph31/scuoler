@@ -181,7 +181,11 @@ color:gray;
 display:none;
 }
 
-#ProblemList{
+.ProblemList{
+display:none;
+}
+
+.AnswerList{
   display:none;
 }
 
@@ -197,6 +201,19 @@ display:none;
   -ms-transition: all 0.1s ease-in-out;
   -o-transition: all 0.1s ease-in-out;
   transition: all 0.1s ease-in-out;
+}
+
+.quizButton{
+   border:2px solid #ddd;
+   padding:5px 20px;
+   width: 5%;
+   min-width: 150px;
+   float:right;
+/*   -webkit-transition: all 0.1s ease-in-out;
+   -moz-transition: all 0.1s ease-in-out;
+   -ms-transition: all 0.1s ease-in-out;
+   -o-transition: all 0.1s ease-in-out;
+   transition: all 0.1s ease-in-out;*/
 }
 
 fieldSet{

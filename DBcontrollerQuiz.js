@@ -248,17 +248,19 @@ exports.showTheQuiz=function(req,res){
   else
   str+='<div w3-include-html="header.ejs"></div>';
 
+  var quizDescription=result.rows[0].description;
+
   str=str+'<a class="HomeLink" href="/">back to home</a>'+
   '<div class="h1">'+
-  'Quiz Description: '+result.rows[0].description+
+  'Quiz Description: '+quizDescription+
   '</div>';
 
   str+='<p> Course: '+result.rows[0].name+'</b><br/>'+
   '<b> Instructor:'+result.rows[0].instructor_id+'</b>';
-  str+='<input type="button" class="startQuiz" onclick="startQuizHandler(this)" id="btnStartQuiz'+quizId+'" name="btnStartQuiz'+quizId+'" value="Start Quiz"/>';
+  str+='<input type="button" class="quizButton" onclick="startQuizHandler(this)" id="btnStartQuiz'+quizId+'" name="btnStartQuiz'+quizId+'" value="Start Quiz"/>';
 
   //
-  var getResultPromise=getProblemListForQuiz(quizId);
+  var getResultPromise=getProblemListForQuiz(quizId, quizDescription);
 
   getResultPromise.then(function(resultHtmlStr){
         str+=resultHtmlStr;
@@ -281,9 +283,10 @@ exports.showTheQuiz=function(req,res){
 
 /* function for return a Promise object that retrives the set of records in the
  Course names from course table in database*/
-function getProblemListForQuiz(quizId){
+function getProblemListForQuiz(quizId, quizDescription){
       var htmlStr='<div id="ProblemList" class="ProblemList"><form method="post" action="submitQuizAction">\
                    <input type="hidden" id="quizId" name="quizId" value="'+quizId+'">\
+                   <input type="hidden" id="quizDescription" name="quizDescription" value="'+quizDescription+'">\
                   <h2>'+
                   'Problems:'+
                   '</h2>';
@@ -323,6 +326,7 @@ exports.getProblemListForQuiz=getProblemListForQuiz;
 /* function for handling  http form submits by a user who submits a quiz answers*/
 exports.submitQuiz=function(req, res){
   let quizId=req.body.quizId;
+  let quizDescription=req.body.quizDescription;
   var pool = new pg.Pool({
     host: configuration.getHost(),
     user: configuration.getUserId(),
@@ -331,9 +335,11 @@ exports.submitQuiz=function(req, res){
     port:configuration.getPort(),
     ssl:true
   });
-  var sql = "SELECT id, answerkey, maxmarks FROM Problem where quiz_id=$1";
+  var sql = "SELECT id,  description, option1, option2, option3, option4, solution, answerkey, maxmarks FROM Problem where quiz_id=$1";
   pool.query(sql, [quizId], function (err, result, fields){
     if (err) throw err;
+
+
 
    var str= '<!DOCTYPE html><head>'+
   '<meta charset="utf-8">'+
@@ -342,6 +348,18 @@ exports.submitQuiz=function(req, res){
   '<link rel="stylesheet" media="screen and (min-width: 1000px)" type="text/css" href="css/style.css">'+
   '</head>'+
   '<body>';
+
+  if(req.session.userId)
+   str+='<div w3-include-html="headerLogged"></div>';
+  else
+   str+='<div w3-include-html="header.ejs"></div>';
+
+  str=str+'<a class="HomeLink" href="/">back to home</a>'+
+  '<div class="h1">'+
+  quizDescription+': Quiz Results'+
+  '</div>';
+
+  var resStr='<div id="AnswerList" class="AnswerList">';
   var i=0, maxMarks=0, marksObtained=0;
   for(i=0;i<result.rows.length;i++){
     var marks=result.rows[i].maxmarks;
@@ -349,13 +367,57 @@ exports.submitQuiz=function(req, res){
     var problemId=result.rows[i].id+'$';
     var answerKey=result.rows[i].answerkey;
     var userEnteredKey=req.body[problemId];
+    var colorStyle;
     if(answerKey==userEnteredKey){
         console.log('matched');
         marksObtained+=parseInt(marks);
     }
+
+    resStr+='<hr><b>Question: </b><div class="Question">'+result.rows[i].description+'</div><b>Options</b></br>';
+    if(userEnteredKey==1 && answerKey==1)
+      resStr+='<input type="radio" id="'+result.rows[i].id+'$option1" name="'+result.rows[i].id+'$'+'" value="1" checked><span style="color:green">'+result.rows[i].option1+'</span></br>';
+    else if(userEnteredKey!=1 && answerKey==1)
+      resStr+='<input type="radio" id="'+result.rows[i].id+'$option1" name="'+result.rows[i].id+'$'+'" value="1" ><span style="color:green">'+result.rows[i].option1+'</span></br>';
+    else if(userEnteredKey==1 && answerKey!=1)
+      resStr+='<input type="radio" id="'+result.rows[i].id+'$option1" name="'+result.rows[i].id+'$'+'" value="1" checked><span style="color:red">'+result.rows[i].option1+'</span></br>';
+    else
+      resStr+='<input type="radio" id="'+result.rows[i].id+'$option1" name="'+result.rows[i].id+'$'+'" value="1"><span>'+result.rows[i].option1+'</span></br>';
+
+    if(userEnteredKey==2 && answerKey==2)
+      resStr+='<input type="radio" id="'+result.rows[i].id+'$option2" name="'+result.rows[i].id+'$'+'" value="2" checked><span style="color:green">'+result.rows[i].option2+'</span></br>';
+    else if(userEnteredKey!=2 && answerKey==2)
+      resStr+='<input type="radio" id="'+result.rows[i].id+'$option2" name="'+result.rows[i].id+'$'+'" value="2"><span style="color:green">'+result.rows[i].option2+'</span></br>';
+    else if(userEnteredKey==2 && answerKey!=2)
+      resStr+='<input type="radio" id="'+result.rows[i].id+'$option2" name="'+result.rows[i].id+'$'+'" value="2" checked><span style="color:red">'+result.rows[i].option2+'</span></br>';
+    else
+      resStr+='<input type="radio" id="'+result.rows[i].id+'$option2" name="'+result.rows[i].id+'$'+'" value="2"><span>'+result.rows[i].option2+'</span></br>';
+
+    if(userEnteredKey==3 && answerKey==3)
+      resStr+='<input type="radio" id="'+result.rows[i].id+'$option3" name="'+result.rows[i].id+'$'+'" value="3" checked><span style="color:green">'+result.rows[i].option3+'</span></br>';
+    else if(userEnteredKey!=3 && answerKey==3)
+        resStr+='<input type="radio" id="'+result.rows[i].id+'$option3" name="'+result.rows[i].id+'$'+'" value="3"><span style="color:green">'+result.rows[i].option3+'</span></br>';
+    else if(userEnteredKey==3 && answerKey!=3)
+      resStr+='<input type="radio" id="'+result.rows[i].id+'$option3" name="'+result.rows[i].id+'$'+'" value="3" checked><span style="color:red">'+result.rows[i].option3+'</span></br>';
+    else
+      resStr+='<input type="radio" id="'+result.rows[i].id+'$option3" name="'+result.rows[i].id+'$'+'" value="3"><span>'+result.rows[i].option3+'</span></br>';
+
+    if(userEnteredKey==4 && answerKey==4)
+      resStr+='<input type="radio" id="'+result.rows[i].id+'$option4" name="'+result.rows[i].id+'$'+'" value="4" checked><span style="color:green">'+result.rows[i].option4+'</span></br>';
+    else if(userEnteredKey!=4 && answerKey==4)
+          resStr+='<input type="radio" id="'+result.rows[i].id+'$option4" name="'+result.rows[i].id+'$'+'" value="4"><span style="color:green">'+result.rows[i].option4+'</span></br>';
+    else if(userEnteredKey==4 && answerKey!=4)
+      resStr+='<input type="radio" id="'+result.rows[i].id+'$option4" name="'+result.rows[i].id+'$'+'" value="4" checked><span style="color:red">'+result.rows[i].option4+'</span></br>';
+    else
+      resStr+='<input type="radio" id="'+result.rows[i].id+'$option4" name="'+result.rows[i].id+'$'+'" value="4"><span>'+result.rows[i].option4+'</span></br>';
+
   }
-    str+='<b>Your Total Score: '+marksObtained+'/'+maxMarks+'</b>';
+  resStr+="</div>";
+    str+='</br><b>Your Total Score: '+marksObtained+'/'+maxMarks+'</b>';
+    str+='<input type="button" class="quizButton" onclick="showQuizResultHandler(this)" value="Show Result Details"/></br></br>';
+    str+=resStr;
     str=str+'</body>';
+    str+='<script type="text/javascript" src="scripts/submitQuiz.js">'+
+    '</script>';
     str+='<script type="text/javascript" src="scripts/general.js">'+
     '</script>';
     res.send(str);
