@@ -9,7 +9,7 @@ are included in the total height/width of the elements
 
 
 .Header{
-font-size:60px;
+font-size:30px;
 font-style:bold;
 color:#ffbbcc;
 text-align:center;
@@ -146,8 +146,12 @@ color:green;
 }
 
 .tab2Allign{
-margin-left:10em
-/*float:right;*/
+/*margin-left:10em
+float:right;*/
+display: block;
+margin-left: auto;
+margin-right: auto;
+width: 80%;
 }
 
 table{
@@ -187,6 +191,11 @@ display:none;
 
 .AnswerList{
   display:none;
+}
+
+input[type="radio"]{
+  height: 25px;
+  width: 25px;
 }
 
 .showAnswer{
