@@ -131,7 +131,8 @@ exports.displayQuizes=function(req,res){
     var str= '<!DOCTYPE html><head>'+
     '<meta charset="utf-8">'+
     '<title>Browse Quizes</title>'+
-    '<link rel="stylesheet" type="text/css" href="/css/style.css">'+
+    '<link rel="stylesheet" media="screen and (max-width: 1000px)" type="text/css" href="css/styleMob.css">'+
+    '<link rel="stylesheet" media="screen and (min-width: 1000px)" type="text/css" href="css/style.css">'+
     '</head>'+
     '<body>';
     if(req.session.userId)

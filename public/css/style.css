@@ -146,8 +146,11 @@ color:green;
 }
 
 .tab2Allign{
-margin-left:10em
-/*float:right;*/
+/*margin-left:10em
+float:right;*/
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 table{
