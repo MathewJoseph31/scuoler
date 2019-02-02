@@ -183,6 +183,10 @@ display:none;
 display:none;
 }
 
+.AnswerList{
+  display:none;
+}
+
 .showAnswer{
  background-color: transparent;
   border:2px solid #ddd;
@@ -196,7 +200,7 @@ display:none;
   transition: all 0.1s ease-in-out;
 }
 
-.startQuiz{
+.quizButton{
    border:2px solid #ddd;
    padding:5px 20px;
    width: 5%;
