@@ -63,7 +63,7 @@ router.post('/updateProblem', dbControllerProblem.editProblemInDB);
 
 router.post('/insertProblemAction', dbControllerProblem.insertProblemToDB);
 router.get('/browseProblem', dbControllerProblem.displayProblems);
-
+router.get('/api/getProblems', dbControllerProblem.getProblems);
 
 
 /* GET users listing. */
@@ -101,6 +101,8 @@ router.get('/showTheQuiz',dbControllerQuiz.showTheQuiz);
 
 router.post('/submitQuizAction',dbControllerQuiz.submitQuiz);
 
+router.get('/api/getQuizes', dbControllerQuiz.getQuizes);
+
 //router.get('/startTheQuiz',dbControllerQuiz.startTheQuiz);
 
 
@@ -117,7 +119,7 @@ router.post('/insertCourseAction',  dbControllerCourse.insertCourseToDB);
 router.get('/browseCourse', dbControllerCourse.displayCourses);
 
 router.get('/showTheCourse', dbControllerCourse.showTheCourse)
-
+router.get('/api/getCourses', dbControllerCourse.getCourses);
 
 //User
 router.get('/insertUser',function (req, res) {
@@ -135,8 +137,9 @@ router.get('/registerUser',function (req, res) {
 })
 
 router.post('/insertUserAction', dbControllerUser.insertUserToDB);
-router.get('/browseUser',dbControllerUser.displayUsers);
 router.get('/showTheUser', dbControllerUser.showTheUser);
+router.get('/browseUser',dbControllerUser.displayUsers);
+router.get('/api/getUsers', dbControllerUser.getUsers);
 
 //error handler that matches every other URL
 router.get('*',function(req,res){

@@ -146,6 +146,31 @@ exports.displayUsers=function(req,res){
   });
 }
 
+/* function for handling  http requests to retrive list of users in database
+in json format*/
+exports.getUsers=function(req,res){
+  var pool = new pg.Pool({
+    host: configuration.getHost(),
+    user: configuration.getUserId(),
+    password: configuration.getPassword(),
+    database: configuration.getDatabase(),
+    port:configuration.getPort(),
+    ssl:true
+  });
+  var sql = "SELECT id,first_name,last_name,address1,address2,city,zip,phone,mobile,email FROM Customer";
+  pool.query(sql, function (err, result, fields){
+    if (err) throw err;
+
+    var arrResult=[]
+
+    var i=0;
+    for(i=0;i<result.rows.length;i++){
+      arrResult.push(result.rows[i]);
+    }
+    res.send(arrResult);
+  });
+}
+
 /* function for handling  http requests to show details about a selected User*/
 exports.showTheUser=function(req,res){
 

@@ -165,6 +165,32 @@ exports.displayQuizes=function(req,res){
   });
 }
 
+exports.getQuizes=function(req, res){
+  var pool = new pg.Pool({
+    host: configuration.getHost(),
+    user: configuration.getUserId(),
+    password: configuration.getPassword(),
+    database: configuration.getDatabase(),
+    port:configuration.getPort(),
+    ssl:true
+  });
+
+  var sql = "SELECT Quiz.id, Quiz.description, Course.name, instructor_id FROM Quiz INNER JOIN Course "+
+            "ON Quiz.course_id=Course.id";
+  var resultArr=[];
+
+  pool.query(sql, function (err, result, fields){
+    if (err) throw err;
+
+    var i=0;
+    for(i=0;i<result.rows.length;i++){
+      resultArr.push(result.rows[i]);
+    }
+
+    res.json(resultArr);
+  });
+}
+
 /*exports.startTheQuiz=function(req,res){
 
   var pool = new pg.Pool({

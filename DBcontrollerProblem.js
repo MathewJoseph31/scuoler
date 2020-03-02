@@ -242,3 +242,29 @@ exports.displayProblems=function(req,res){
     res.send(str);
   });
 }
+
+exports.getProblems=function(req, res){
+  var pool = new pg.Pool({
+    host: configuration.getHost(),
+    user: configuration.getUserId(),
+    password: configuration.getPassword(),
+    database: configuration.getDatabase(),
+    port:configuration.getPort(),
+    ssl:true
+  });
+
+  var sql = "select distinct A.id, A.description, A.option1, A.option2, A.option3, A.option4, answerkey, "+
+   "A.solution, A.type, A.author_id, A.quiz_id, B.description quiz_description from Problem A inner join Quiz B on A.quiz_id=B.id";
+
+  pool.query(sql, function (err, result, fields){
+    if (err) throw err;
+
+    var resultArr=[];
+    var i=0;
+    for(i=0;i<result.rows.length;i++){
+        resultArr.push(result.rows[i]);
+    }
+
+    res.json(resultArr);
+  });
+}
