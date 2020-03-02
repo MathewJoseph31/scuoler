@@ -55,8 +55,6 @@ function getCourseList(){
 
 exports.getCourseList=getCourseList;
 
-
-
 /* function for handling  http requests to inserts to the course table in database*/
 exports.insertCourseToDB=function(req,res){
 
@@ -132,6 +130,33 @@ exports.displayCourses=function(req,res){
     '</script>';
     res.send(str);
   });
+}
+
+/* function for handling http requests to retrive the records in the
+ Course table in database in json format*/
+exports.getCourses=function(req,res){
+
+    var pool = new pg.Pool({
+      host: configuration.getHost(),
+      user: configuration.getUserId(),
+      password: configuration.getPassword(),
+      database: configuration.getDatabase(),
+      port:configuration.getPort(),
+      ssl:true
+    });
+
+    var sql = "SELECT id,name, description, owner_id FROM Course";
+    var resultArr=[];
+
+    pool.query(sql, function (err, result, fields){
+      if (err) throw err;
+      var i=0;
+      for(i=0;i<result.rows.length;i++){
+        resultArr.push(result.rows[i]);
+      }
+
+      res.json(resultArr);
+    });
 }
 
 /* function for handling  http requests to show details about a selected Course*/
