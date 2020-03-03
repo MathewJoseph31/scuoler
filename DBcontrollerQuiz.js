@@ -187,6 +187,10 @@ exports.getQuizes=function(req, res){
       resultArr.push(result.rows[i]);
     }
 
+    res.setHeader('Access-Control-Allow-Origin','*');
+    res.setHeader('Access-Control-Allow-Methods','GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers','Content-Type');
+    res.setHeader('Access-Control-Allow-Credentials',true);
     res.json(resultArr);
   });
 }
