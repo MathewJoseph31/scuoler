@@ -167,6 +167,11 @@ exports.getUsers=function(req,res){
     for(i=0;i<result.rows.length;i++){
       arrResult.push(result.rows[i]);
     }
+
+    res.setHeader('Access-Control-Allow-Origin','*');
+    res.setHeader('Access-Control-Allow-Methods','GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers','Content-Type');
+    res.setHeader('Access-Control-Allow-Credentials',true);
     res.send(arrResult);
   });
 }
