@@ -176,6 +176,39 @@ exports.getUsers=function(req,res){
   });
 }
 
+exports.getTheUser=function(req,res){
+  let userId=req.body.userId;
+  var pool = new pg.Pool({
+    host: configuration.getHost(),
+    user: configuration.getUserId(),
+    password: configuration.getPassword(),
+    database: configuration.getDatabase(),
+    port:configuration.getPort(),
+    ssl:true
+  });
+
+  var sql = "select first_name, last_name, city, phone, mobile, email from customer where id = '"+userId+"'";
+
+  pool.query(sql, function(err,result,fields){
+    if (err) throw err;
+
+    let resObj={};
+
+    resObj.firstName=result.rows[0].first_name;
+    resObj.lastName=result.rows[0].last_name;
+    resObj.city=result.rows[0].city;
+    resObj.phone=result.rows[0].phone;
+    resObj.mobile=result.rows[0].mobile;
+    resObj.email=result.rows[0].email;
+
+    res.setHeader('Access-Control-Allow-Origin','*');
+    res.setHeader('Access-Control-Allow-Methods','GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers','Content-Type');
+    res.setHeader('Access-Control-Allow-Credentials',true);
+    res.json(resObj);
+  });
+}
+
 /* function for handling  http requests to show details about a selected User*/
 exports.showTheUser=function(req,res){
 

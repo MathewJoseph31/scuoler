@@ -102,6 +102,7 @@ router.get('/showTheQuiz',dbControllerQuiz.showTheQuiz);
 router.post('/submitQuizAction',dbControllerQuiz.submitQuiz);
 
 router.get('/api/getQuizes', dbControllerQuiz.getQuizes);
+router.post('/api/getTheQuiz', dbControllerQuiz.getTheQuiz);
 
 //router.get('/startTheQuiz',dbControllerQuiz.startTheQuiz);
 
@@ -120,6 +121,7 @@ router.get('/browseCourse', dbControllerCourse.displayCourses);
 
 router.get('/showTheCourse', dbControllerCourse.showTheCourse)
 router.get('/api/getCourses', dbControllerCourse.getCourses);
+router.post('/api/getTheCourse', dbControllerCourse.getTheCourse);
 
 //User
 router.get('/insertUser',function (req, res) {
@@ -140,6 +142,7 @@ router.post('/insertUserAction', dbControllerUser.insertUserToDB);
 router.get('/showTheUser', dbControllerUser.showTheUser);
 router.get('/browseUser',dbControllerUser.displayUsers);
 router.get('/api/getUsers', dbControllerUser.getUsers);
+router.post('/api/getTheUser', dbControllerUser.getTheUser);
 
 //error handler that matches every other URL
 router.get('*',function(req,res){

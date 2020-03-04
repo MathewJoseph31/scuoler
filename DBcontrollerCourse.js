@@ -154,13 +154,42 @@ exports.getCourses=function(req,res){
       for(i=0;i<result.rows.length;i++){
         resultArr.push(result.rows[i]);
       }
-	
+
       res.setHeader('Access-Control-Allow-Origin','*');
       res.setHeader('Access-Control-Allow-Methods','GET, POST, PUT, DELETE');
       res.setHeader('Access-Control-Allow-Headers','Content-Type');
       res.setHeader('Access-Control-Allow-Credentials',true);
       res.json(resultArr);
     });
+}
+
+exports.getTheCourse=function(req,res){
+  let courseId=req.body.courseId;
+  var pool = new pg.Pool({
+    host: configuration.getHost(),
+    user: configuration.getUserId(),
+    password: configuration.getPassword(),
+    database: configuration.getDatabase(),
+    port:configuration.getPort(),
+    ssl:true
+  });
+  var sql = "select name, description, owner_id from course where id='"+courseId+"'";
+
+  pool.query(sql, function(err,result,fields){
+    if (err) throw err;
+
+    let resObj={};
+
+    resObj.name=result.rows[0].name;
+    resObj.description=result.rows[0].description;
+    resObj.ownerId=result.rows[0].owner_id;
+
+    res.setHeader('Access-Control-Allow-Origin','*');
+    res.setHeader('Access-Control-Allow-Methods','GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers','Content-Type');
+    res.setHeader('Access-Control-Allow-Credentials',true);
+    res.json(resObj);
+  })
 }
 
 /* function for handling  http requests to show details about a selected Course*/
