@@ -278,7 +278,34 @@ pool.query(sql, function(err,result,fields){
   });
 }
 
-
+exports.getCourseListForUserJson=function(req,res){
+    let userId=req.body.userId;
+    var getResultPromise=getCourseListForUser(userId);
+    var resArr=[];
+  getResultPromise.then(function(courseList){
+    for(var i=0;i<courseList.length;i++){
+      var index=courseList[i].indexOf('$,');
+      var valCourse=courseList[i].substring(index+2);
+      var textCourse=courseList[i].substring(0,index);
+      obj={
+        "id": valCourse,
+        "name": textCourse
+      }
+      resArr.push(obj);
+    }
+    res.setHeader('Access-Control-Allow-Origin','*');
+    res.setHeader('Access-Control-Allow-Methods','GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers','Content-Type');
+    res.setHeader('Access-Control-Allow-Credentials',true);
+    res.json(resArr);
+  },function(err){
+      res.setHeader('Access-Control-Allow-Origin','*');
+      res.setHeader('Access-Control-Allow-Methods','GET, POST, PUT, DELETE');
+      res.setHeader('Access-Control-Allow-Headers','Content-Type');
+      res.setHeader('Access-Control-Allow-Credentials',true);
+      res.send(resArr);
+  });
+}
 
 
 
