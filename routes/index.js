@@ -143,6 +143,7 @@ router.get('/showTheUser', dbControllerUser.showTheUser);
 router.get('/browseUser',dbControllerUser.displayUsers);
 router.get('/api/getUsers', dbControllerUser.getUsers);
 router.post('/api/getTheUser', dbControllerUser.getTheUser);
+router.post('/api/getCourseListForUser',dbControllerUser.getCourseListForUserJson);
 
 //error handler that matches every other URL
 router.get('*',function(req,res){
