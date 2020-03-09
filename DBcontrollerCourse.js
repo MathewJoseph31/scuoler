@@ -263,6 +263,7 @@ getResultPromise.then(function(quizList){
 }
 
 
+
 /* function for returning a Promise object that retrives the set of records in the
  Quiz table in database, related to a selected course*/
 function getQuizListForCourse(courseId){
@@ -291,6 +292,33 @@ function getQuizListForCourse(courseId){
   });
 }
 exports.getQuizListForCourse=getQuizListForCourse;
+
+exports.getQuizListForCourseJson=function(req,res){
+  let courseId=req.body.courseId;
+  var quizList=[];
+  var pool = new pg.Pool({
+    host: configuration.getHost(),
+    user: configuration.getUserId(),
+    password: configuration.getPassword(),
+    database: configuration.getDatabase(),
+    port:configuration.getPort(),
+    ssl:true
+  });
+  var sql = "SELECT id,description FROM Quiz where course_id=$1";
+  pool.query(sql, [courseId], function (err, result, fields){
+    if (err) reject(err);
+    let resultArr=[];
+    var i=0;
+    for(i=0;i<result.rows.length;i++){
+      resultArr.push(result.rows[i]);
+    }
+    res.setHeader('Access-Control-Allow-Origin','*');
+    res.setHeader('Access-Control-Allow-Methods','GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers','Content-Type');
+    res.setHeader('Access-Control-Allow-Credentials',true);
+    res.json(resultArr);
+  });
+}
 
 function pad(num){
   num=num<10?'0'.concat(num):''.concat(num);
