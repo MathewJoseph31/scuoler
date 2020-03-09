@@ -195,37 +195,6 @@ exports.getQuizes=function(req, res){
   });
 }
 
-exports.getTheQuiz=function(req,res){
-    let quizId=req.body.quizId;
-    var pool = new pg.Pool({
-      host: configuration.getHost(),
-      user: configuration.getUserId(),
-      password: configuration.getPassword(),
-      database: configuration.getDatabase(),
-      port:configuration.getPort(),
-      ssl:true
-    });
-
-    var sql =" SELECT Quiz.description, Course.name, Quiz.instructor_id FROM Quiz INNER JOIN Course "+
-              "ON Quiz.course_id=Course.id where Quiz.id='"+quizId+"'";
-
-    let resObj={};
-
-    pool.query(sql, function (err, result, fields){
-      if (err) throw err;
-
-      resObj.description=result.rows[0].description;
-      resObj.name=result.rows[0].name;
-      resObj.instructorId=result.rows[0].instructor_id;
-
-      res.setHeader('Access-Control-Allow-Origin','*');
-      res.setHeader('Access-Control-Allow-Methods','GET, POST, PUT, DELETE');
-      res.setHeader('Access-Control-Allow-Headers','Content-Type');
-      res.setHeader('Access-Control-Allow-Credentials',true);
-      res.json(resObj);
-    });
-
-}
 
 /*exports.startTheQuiz=function(req,res){
 
@@ -344,6 +313,40 @@ exports.showTheQuiz=function(req,res){
  });//end of query
 }
 
+/*Api version of showTheQuiz*/
+exports.getTheQuiz=function(req,res){
+    let quizId=req.body.quizId;
+    var pool = new pg.Pool({
+      host: configuration.getHost(),
+      user: configuration.getUserId(),
+      password: configuration.getPassword(),
+      database: configuration.getDatabase(),
+      port:configuration.getPort(),
+      ssl:true
+    });
+
+    var sql =" SELECT Quiz.description, Course.name, Quiz.instructor_id FROM Quiz INNER JOIN Course "+
+              "ON Quiz.course_id=Course.id where Quiz.id='"+quizId+"'";
+
+    let resObj={};
+
+    pool.query(sql, function (err, result, fields){
+      if (err) throw err;
+
+      resObj.description=result.rows[0].description;
+      resObj.name=result.rows[0].name;
+      resObj.instructorId=result.rows[0].instructor_id;
+
+      res.setHeader('Access-Control-Allow-Origin','*');
+      res.setHeader('Access-Control-Allow-Methods','GET, POST, PUT, DELETE');
+      res.setHeader('Access-Control-Allow-Headers','Content-Type');
+      res.setHeader('Access-Control-Allow-Credentials',true);
+      res.json(resObj);
+    });
+
+}
+
+
 /* function for return a Promise object that retrives the set of records in the
  Course names from course table in database*/
 function getProblemListForQuiz(quizId, quizDescription){
@@ -385,6 +388,35 @@ function getProblemListForQuiz(quizId, quizDescription){
         });
       }
 exports.getProblemListForQuiz=getProblemListForQuiz;
+
+exports.getProblemListForQuizJson=function(req,res){
+  let quizId=req.body.quizId;
+  var pool = new pg.Pool({
+    host: configuration.getHost(),
+    user: configuration.getUserId(),
+    password: configuration.getPassword(),
+    database: configuration.getDatabase(),
+    port:configuration.getPort(),
+    ssl:true
+  });
+  var sql = "SELECT id, description, option1, option2, option3, option4, solution FROM Problem where quiz_id=$1";
+  pool.query(sql, [quizId], function (err, result, fields){
+      if (err) throw err;
+
+      let resultArr=[];
+      var i=0;
+      for(i=0;i<result.rows.length;i++){
+        resultArr.push(result.rows[i]);
+      }
+      res.setHeader('Access-Control-Allow-Origin','*');
+      res.setHeader('Access-Control-Allow-Methods','GET, POST, PUT, DELETE');
+      res.setHeader('Access-Control-Allow-Headers','Content-Type');
+      res.setHeader('Access-Control-Allow-Credentials',true);
+      res.json(resultArr);
+
+  });
+
+}
 
 /* function for handling  http form submits by a user who submits a quiz answers*/
 exports.submitQuiz=function(req, res){

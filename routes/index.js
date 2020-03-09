@@ -103,6 +103,7 @@ router.post('/submitQuizAction',dbControllerQuiz.submitQuiz);
 
 router.get('/api/getQuizes', dbControllerQuiz.getQuizes);
 router.post('/api/getTheQuiz', dbControllerQuiz.getTheQuiz);
+router.post('/api/getProblemListForQuiz',dbControllerQuiz.getProblemListForQuizJson);
 
 //router.get('/startTheQuiz',dbControllerQuiz.startTheQuiz);
 
@@ -122,6 +123,7 @@ router.get('/browseCourse', dbControllerCourse.displayCourses);
 router.get('/showTheCourse', dbControllerCourse.showTheCourse)
 router.get('/api/getCourses', dbControllerCourse.getCourses);
 router.post('/api/getTheCourse', dbControllerCourse.getTheCourse);
+router.post('/api/getQuizListForCourse',dbControllerCourse.getQuizListForCourseJson);
 
 //User
 router.get('/insertUser',function (req, res) {
