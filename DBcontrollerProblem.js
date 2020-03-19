@@ -65,6 +65,10 @@ exports.editProblemInDB=function(req,res){
     }
     else{
       //console.log(description+' '+solution);
+      res.setHeader('Access-Control-Allow-Origin','*');
+      res.setHeader('Access-Control-Allow-Methods','GET, POST, PUT, DELETE');
+      res.setHeader('Access-Control-Allow-Headers','Content-Type');
+      res.setHeader('Access-Control-Allow-Credentials',true);
       console.log("problem updated");
       res.json({"updatestatus":"ok"});
     }
