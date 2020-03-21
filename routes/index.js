@@ -71,6 +71,10 @@ router.post('/login',function(req, res){
   dbControllerUser.verifyUser(req,res);
 })
 
+router.post('/api/login',function(req, res){
+  dbControllerUser.verifyUserJson(req,res);
+})
+
 router.get('/logout',function(req, res){
   req.session.destroy(null);
 	res.render('index',{userId:null,errorMsg:null});
