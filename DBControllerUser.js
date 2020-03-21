@@ -60,6 +60,39 @@ exports.verifyUser=function(req,res){
 }
 
 
+/*Api Json version of verify user*/
+exports.verifyUserJson=function(req,res){
+  let userId=req.body.userId;
+  let password=req.body.password;
+  var pool = new pg.Pool({
+    host: configuration.getHost(),
+    user: configuration.getUserId(),
+    password: configuration.getPassword(),
+    database: configuration.getDatabase(),
+    port:configuration.getPort(),
+    ssl:true
+  });
+
+  var sql = "SELECT count(*) as count FROM Customer where id=$1 and password=$2";
+
+  pool.query(sql, [userId,password], function (err, result, fields){
+    let resObj={};
+    if(result.rows[0].count=="0"){
+      resObj={"login":"failure"};
+    }
+    else{
+      resObj={"login":"ok"};
+    }
+    res.setHeader('Access-Control-Allow-Origin','*');
+    res.setHeader('Access-Control-Allow-Methods','GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers','Content-Type');
+    res.setHeader('Access-Control-Allow-Credentials',true);
+    res.json(resObj);
+  });
+}
+
+
+
 /* function for handling  http requests to insert a record to the
  Customer table in database*/
 exports.insertUserToDB=function(req,res){
