@@ -128,6 +128,47 @@ exports.insertUserToDB=function(req,res){
   });
 }
 
+/* Api verison of InsertUserToDB in database*/
+exports.insertUserToDbJson=function(req,res){
+  let userId=req.body.userId;
+  let password=req.body.password;
+  let firstName=req.body.firstName;
+  let lastName=req.body.lastName;
+  let address1=req.body.address1;
+  let address2=req.body.address2;
+  let city=req.body.city;
+  let zip=req.body.zip;
+  let phone=req.body.phone;
+  let cell=req.body.cell;
+  let email=req.body.email;
+
+  var pool = new pg.Pool({
+    host: configuration.getHost(),
+    user: configuration.getUserId(),
+    password: configuration.getPassword(),
+    database: configuration.getDatabase(),
+    port:configuration.getPort(),
+    ssl:true
+  });
+
+  var sql = "insert into Customer(id,password,first_name,last_name,address1,address2,city,zip,phone,mobile,email) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)";
+
+  pool.query(sql, [userId,password,firstName,lastName,address1,address2,city, zip, phone,cell,email], (err,result)=>
+  {
+    res.setHeader('Access-Control-Allow-Origin','*');
+    res.setHeader('Access-Control-Allow-Methods','GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers','Content-Type');
+    res.setHeader('Access-Control-Allow-Credentials',true);
+    if (err){
+      throw err;
+      res.json({"insertstatus":"error"});
+    }
+    else{
+      res.json({"insertstatus":"ok"});
+    }
+  });
+}
+
 /* function for handling  http requests to retrive and display the records in the
  Customer table in database*/
 exports.displayUsers=function(req,res){

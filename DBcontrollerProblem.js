@@ -59,16 +59,16 @@ exports.editProblemInDB=function(req,res){
   });
 
   pool.query(sql, [description, option1, option2, option3, option4, answerkey, quizId, solution, problemId], function (err, result, fields){
+    res.setHeader('Access-Control-Allow-Origin','*');
+    res.setHeader('Access-Control-Allow-Methods','GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers','Content-Type');
+    res.setHeader('Access-Control-Allow-Credentials',true);
     if (err) {
       throw err;
       res.json({"updatestatus":"error"});
     }
     else{
       //console.log(description+' '+solution);
-      res.setHeader('Access-Control-Allow-Origin','*');
-      res.setHeader('Access-Control-Allow-Methods','GET, POST, PUT, DELETE');
-      res.setHeader('Access-Control-Allow-Headers','Content-Type');
-      res.setHeader('Access-Control-Allow-Credentials',true);
       console.log("problem updated");
       res.json({"updatestatus":"ok"});
     }
@@ -114,6 +114,48 @@ exports.insertProblemToDB=function(req,res){
         res.render('insertProblem',{message:'Problem Inserted',userId:req.session.userId,quizList:null});
     })
     //res.render('insertProblem', {message: 'Problem Inserted',userId:req.session.userId});
+  });
+
+}
+
+/* API version of insertproblemToDB table in database*/
+exports.insertProblemToDbJson=function(req,res){
+  let quizId=req.body.quizId;
+  let problemDescription=req.body.probDescription;
+  let option1=req.body.option1;
+  let option2=req.body.option2;
+  let option3=req.body.option3;
+  let option4=req.body.option4;
+  let answerKey=req.body.answerKey;
+  let ansDescription=req.body.ansDescription;
+  let authorName=req.body.authorName;
+
+  var pool = new pg.Pool({
+    host: configuration.getHost(),
+    user: configuration.getUserId(),
+    password: configuration.getPassword(),
+    database: configuration.getDatabase(),
+    port:configuration.getPort()
+    ,ssl:true
+  });
+
+  var sql = "insert into Problem(id, description, option1, option2, option3, option4, solution, answerkey, author_id, quiz_id) values($1,$2,$3,$4,$5, $6, $7, $8, $9, $10)";
+
+  var problemId=dbControllerCourse.getUniqueId(authorName);
+  pool.query(sql, [problemId,problemDescription, option1, option2, option3, option4, ansDescription, answerKey, authorName,quizId], function(err,result){
+    res.setHeader('Access-Control-Allow-Origin','*');
+    res.setHeader('Access-Control-Allow-Methods','GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers','Content-Type');
+    res.setHeader('Access-Control-Allow-Credentials',true);
+    if (err){
+      throw err;
+      res.json({"insertstatus":"error"});
+    }
+    else{
+      res.json({"insertstatus":"ok", "problemId":problemId});
+    }
+    //
+
   });
 
 }

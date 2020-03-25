@@ -81,6 +81,39 @@ exports.insertCourseToDB=function(req,res){
   });
 }
 
+/* API version of insertCourseToDB inserts to the course table in database*/
+exports.insertCourseToDbJson=function(req,res){
+
+  let courseName=req.body.courseName;
+  let courseDescription=req.body.courseDescription;
+  let ownerId=req.body.ownerId;
+  console.log('in course inserting to db');
+  var pool = new pg.Pool({
+    host: configuration.getHost(),
+    user: configuration.getUserId(),
+    password: configuration.getPassword(),
+    database: configuration.getDatabase(),
+    port:configuration.getPort(),
+    ssl:true
+  });
+  var sql = "insert into Course(id, name, description, owner_id) values($1,$2,$3,$4)";
+
+  var courseId=getUniqueId(ownerId);
+  pool.query(sql, [courseId,courseName,courseDescription,ownerId], function(err,result){
+    res.setHeader('Access-Control-Allow-Origin','*');
+    res.setHeader('Access-Control-Allow-Methods','GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers','Content-Type');
+    res.setHeader('Access-Control-Allow-Credentials',true);
+    if (err){
+      throw err;
+      res.json({"insertstatus":"error"});
+    }
+    else{
+      res.json({"insertstatus":"ok", "courseId":courseId});
+    }
+  });
+}
+
 
 /* function for handling  http requests to retrive and display the records in the
  Course table in database*/
