@@ -1,7 +1,9 @@
    const fetch = require("node-fetch");
 
-    var reqBody="courseId="+encodeURIComponent('Mathew08112018201553');
-    fetch(`https://ischools.herokuapp.com/api/getQuizListForCourse`, {
+   var reqBody="userId="+encodeURIComponent('mathew');
+   reqBody+='&password='+encodeURIComponent('josep');
+
+    fetch(`https://ischools.herokuapp.com/api/login`, {
         headers:{
           'Accept':'application/json',
           'Content-type': 'application/x-www-form-urlencoded'

@@ -62,6 +62,7 @@ router.post('/updateProblem', dbControllerProblem.editProblemInDB);
 })*/
 
 router.post('/insertProblemAction', dbControllerProblem.insertProblemToDB);
+router.post('/api/insertProblemAction', dbControllerProblem.insertProblemToDbJson);
 router.get('/browseProblem', dbControllerProblem.displayProblems);
 router.get('/api/getProblems', dbControllerProblem.getProblems);
 
@@ -121,6 +122,7 @@ router.get('/insertCourse',function (req, res) {
 })
 
 router.post('/insertCourseAction',  dbControllerCourse.insertCourseToDB);
+router.post('/api/insertCourseAction',  dbControllerCourse.insertCourseToDbJson);
 
 router.get('/browseCourse', dbControllerCourse.displayCourses);
 
@@ -145,6 +147,7 @@ router.get('/registerUser',function (req, res) {
 })
 
 router.post('/insertUserAction', dbControllerUser.insertUserToDB);
+router.post('/api/insertUserAction', dbControllerUser.insertUserToDbJson);
 router.get('/showTheUser', dbControllerUser.showTheUser);
 router.get('/browseUser',dbControllerUser.displayUsers);
 router.get('/api/getUsers', dbControllerUser.getUsers);
