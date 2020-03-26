@@ -261,7 +261,7 @@ exports.getTheUser=function(req,res){
     ssl:true
   });
 
-  var sql = "select first_name, last_name, city, phone, mobile, email from customer where id = '"+userId+"'";
+  var sql = "select first_name, last_name, address1, address2, city, zip, phone, mobile, email from customer where id = '"+userId+"'";
 
   pool.query(sql, function(err,result,fields){
     if (err) throw err;
@@ -270,7 +270,10 @@ exports.getTheUser=function(req,res){
 
     resObj.firstName=result.rows[0].first_name;
     resObj.lastName=result.rows[0].last_name;
+    resObj.address1=result.rows[0].address1;
+    resObj.address2=result.rows[0].address2;
     resObj.city=result.rows[0].city;
+    resObj.zip=result.rows[0].zip;
     resObj.phone=result.rows[0].phone;
     resObj.mobile=result.rows[0].mobile;
     resObj.email=result.rows[0].email;
