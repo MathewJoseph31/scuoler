@@ -295,6 +295,44 @@ getResultPromise.then(function(quizList){
 });
 }
 
+/*api method for updating a course*/
+exports.editCourseInDbJson=function(req,res){
+  //var q = url.parse(req.url, true).query;
+  let courseId=req.body.courseId;
+  let description=req.body.description;
+  let name=req.body.name;
+
+
+  var sql="UPDATE COURSE SET  name=$1, description=$2, modified_timestamp=now() "+
+  " where id=$3 ";
+
+  var pool = new pg.Pool({
+    host: configuration.getHost(),
+    user: configuration.getUserId(),
+    password: configuration.getPassword(),
+    database: configuration.getDatabase(),
+    port:configuration.getPort(),
+    ssl:true
+  });
+
+  pool.query(sql, [name, description, courseId], function (err, result, fields){
+    res.setHeader('Access-Control-Allow-Origin','*');
+    res.setHeader('Access-Control-Allow-Methods','GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers','Content-Type');
+    res.setHeader('Access-Control-Allow-Credentials',true);
+    if (err) {
+      throw err;
+      res.json({"updatestatus":"error"});
+    }
+    else{
+      //console.log(description+' '+solution);
+      console.log("problem updated");
+      res.json({"updatestatus":"ok"});
+    }
+  });
+
+}
+
 
 
 /* function for returning a Promise object that retrives the set of records in the

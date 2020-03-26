@@ -131,6 +131,7 @@ router.get('/showTheCourse', dbControllerCourse.showTheCourse)
 router.get('/api/getCourses', dbControllerCourse.getCourses);
 router.post('/api/getTheCourse', dbControllerCourse.getTheCourse);
 router.post('/api/getQuizListForCourse',dbControllerCourse.getQuizListForCourseJson);
+router.post('/api/updateCourse',dbControllerCourse.editCourseInDbJson);
 
 //User
 router.get('/insertUser',function (req, res) {

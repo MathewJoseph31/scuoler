@@ -47,7 +47,7 @@ exports.editProblemInDB=function(req,res){
   console.log(description+' '+solution);
 
   var sql="UPDATE PROBLEM SET  description=$1, option1=$2, option2=$3, option3=$4, "+
-  "option4=$5, answerkey=$6, quiz_id=$7, solution=$8 where id=$9 ";
+  "option4=$5, answerkey=$6, quiz_id=$7, solution=$8, modified_timestamp=now() where id=$9 ";
 
   var pool = new pg.Pool({
     host: configuration.getHost(),
