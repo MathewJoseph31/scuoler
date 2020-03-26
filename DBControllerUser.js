@@ -286,6 +286,51 @@ exports.getTheUser=function(req,res){
   });
 }
 
+/*api method for updating a course*/
+exports.editUserInDbJson=function(req,res){
+  //var q = url.parse(req.url, true).query;
+  let id=req.body.id;
+  let firstName=req.body.firstName;
+  let lastName=req.body.lastName;
+  let address1=req.body.address1;
+  let address2=req.body.address2;
+  let city=req.body.city;
+  let zip=req.body.zip;
+  let phone=req.body.phone;
+  let mobile=req.body.mobile;
+  let email=req.body.email;
+
+  var sql="UPDATE CUSTOMER SET  first_name=$1, last_name=$2, address1=$3, address2=$4, city=$5, "+
+  " zip=$6, phone=$7, mobile=$8, email=$9, modified_timestamp=now() "+
+  " where id=$10 ";
+
+  var pool = new pg.Pool({
+    host: configuration.getHost(),
+    user: configuration.getUserId(),
+    password: configuration.getPassword(),
+    database: configuration.getDatabase(),
+    port:configuration.getPort(),
+    ssl:true
+  });
+
+  pool.query(sql, [firstName, lastName, address1, address2, city, zip, phone, mobile, email, id], function (err, result, fields){
+    res.setHeader('Access-Control-Allow-Origin','*');
+    res.setHeader('Access-Control-Allow-Methods','GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers','Content-Type');
+    res.setHeader('Access-Control-Allow-Credentials',true);
+    if (err) {
+      throw err;
+      res.json({"updatestatus":"error"});
+    }
+    else{
+      //console.log(description+' '+solution);
+      console.log("user updated");
+      res.json({"updatestatus":"ok"});
+    }
+  });
+
+}
+
 /* function for handling  http requests to show details about a selected User*/
 exports.showTheUser=function(req,res){
 
