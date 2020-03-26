@@ -99,6 +99,7 @@ router.get('/insertQuiz',function (req, res) {
 })
 
 router.post('/insertQuizAction', dbControllerQuiz.insertQuizToDB);
+router.post('/api/insertQuizAction', dbControllerQuiz.insertQuizToDbJson);
 
 router.get('/browseQuiz', dbControllerQuiz.displayQuizes);
 

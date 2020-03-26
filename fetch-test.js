@@ -1,9 +1,10 @@
    const fetch = require("node-fetch");
 
-   var reqBody="userId="+encodeURIComponent('mathew');
-   reqBody+='&password='+encodeURIComponent('josep');
+   var reqBody="quizDescription="+encodeURIComponent('mathew');
+   reqBody+='&courseId='+encodeURIComponent('joseph');
+   reqBody+='&authorName='+encodeURIComponent('joseph');
 
-    fetch(`https://ischools.herokuapp.com/api/login`, {
+    fetch(`http://localhost:3000/api/insertQuizAction`, {
         headers:{
           'Accept':'application/json',
           'Content-type': 'application/x-www-form-urlencoded'
@@ -11,7 +12,7 @@
         method: 'POST',
         body: reqBody
       })
-      .then(res=>res.json())
+      .then(res=>{console.log(res);res.json()})
       .then(data1=>{
           console.log(data1);
        })
