@@ -22,6 +22,7 @@ app.use(session({secret:'secr3',resave:false,saveUninitialized:false, maxAge: 24
 const url = require('url');
 
 const configuration=require('./Configuration');
+const dbControllerCourse=require('./DBcontrollerCourse');
 
 //---QUIZ---
 /* function for returning a Promise object that retrives the set of records in the
@@ -100,7 +101,7 @@ exports.insertQuizToDB=function(req,res){
     console.log("1 record inserted");
 
     //
-    var getResultPromise=getCourseList();
+    var getResultPromise=dbControllerCourse.getCourseList();
     getResultPromise.then(function(result){
           res.render('insertQuiz',{message:'Quiz Inserted',userId:req.session.userId,courseList:result});
     },function(err){
@@ -108,6 +109,39 @@ exports.insertQuizToDB=function(req,res){
     })
 
     //res.render('insertQuiz', {message: 'Quiz Inserted',userId:req.session.userId});
+  });
+}
+
+/* Api version of insertQuizToDB*/
+exports.insertQuizToDbJson=function(req,res){
+  let quizDescription=req.body.quizDescription;
+  let courseId=req.body.courseId;
+  let authorName=req.body.authorName;
+
+  var pool = new pg.Pool({
+    host: configuration.getHost(),
+    user: configuration.getUserId(),
+    password: configuration.getPassword(),
+    database: configuration.getDatabase(),
+    port:configuration.getPort(),
+    ssl:true
+  });
+  var sql = "insert into quiz(id, description, course_id, instructor_id) values($1,$2,$3,$4)";
+
+  var quizId=getUniqueId(authorName);
+  pool.query(sql, [quizId,quizDescription,courseId,authorName], function(err,result){
+    res.setHeader('Access-Control-Allow-Origin','*');
+    res.setHeader('Access-Control-Allow-Methods','GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers','Content-Type');
+    res.setHeader('Access-Control-Allow-Credentials',true);
+    if (err){
+      throw err;
+      res.json({"insertstatus":"error"});
+    }
+    else{
+      console.log('in quiz inserting to db and return json');
+      res.json({"insertstatus":"ok", "quizId":quizId});
+    }
   });
 }
 
@@ -518,3 +552,37 @@ exports.submitQuiz=function(req, res){
     res.send(str);
   });
 }
+
+function pad(num){
+  num=num<10?'0'.concat(num):''.concat(num);
+  return num;
+}
+
+function getUniqueId(userId){
+  var v= new Date();
+  var day=v.getDate();
+  day=pad(day)
+
+  var mon= v.getMonth();
+  mon+=1;
+  mon=pad(mon);
+
+  var year= v.getFullYear();
+  year=pad(year);
+
+  var hour=v.getHours();
+  hour=pad(hour);
+
+  var minute=v.getMinutes();
+  minute=pad(minute);
+
+  var second=v.getSeconds();
+  second=pad(second);
+
+  //console.log(day+'month:'+mon+'year:'+year);
+  var str=userId.concat(mon).concat(day).concat(year).concat(hour).concat(minute).concat(second)
+
+  return str;
+}
+
+exports.getUniqueId=getUniqueId;
