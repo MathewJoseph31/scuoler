@@ -231,7 +231,8 @@ exports.getUsers=function(req,res){
     port:configuration.getPort(),
     ssl:true
   });
-  var sql = "SELECT id,first_name,last_name,address1,address2,city,zip,phone,mobile,email FROM Customer";
+  var sql = "SELECT id,first_name,last_name,address1,address2,city,zip,phone,mobile, "+
+  " email FROM Customer  where deleted=false ";
   pool.query(sql, function (err, result, fields){
     if (err) throw err;
 
@@ -444,7 +445,7 @@ function getCourseListForUser(userId){
     port:configuration.getPort(),
     ssl:true
   });
-  var sql = "SELECT id,name FROM Course where owner_id=$1";
+  var sql = "SELECT id,name FROM Course where owner_id=$1  where deleted=false ";
   return new Promise(function(resolve,reject){
     pool.query(sql, [userId], function (err, result, fields){
       if (err)
