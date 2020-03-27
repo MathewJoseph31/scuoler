@@ -110,7 +110,7 @@ router.post('/submitQuizAction',dbControllerQuiz.submitQuiz);
 router.get('/api/getQuizes', dbControllerQuiz.getQuizes);
 router.post('/api/getTheQuiz', dbControllerQuiz.getTheQuiz);
 router.post('/api/getProblemListForQuiz',dbControllerQuiz.getProblemListForQuizJson);
-
+router.post('/api/updateQuiz',dbControllerQuiz.editQuizInDbJson);
 //router.get('/startTheQuiz',dbControllerQuiz.startTheQuiz);
 
 
