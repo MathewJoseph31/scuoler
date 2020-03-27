@@ -474,7 +474,7 @@ exports.getProblemListForQuizJson=function(req,res){
     ssl:true
   });
   var sql = "SELECT id, description, option1, option2, option3, option4, solution "+
-            " FROM Problem where quiz_id=$1 where deleted=false ";
+            " FROM Problem where quiz_id=$1 and deleted=false ";
   pool.query(sql, [quizId], function (err, result, fields){
       if (err) throw err;
 
