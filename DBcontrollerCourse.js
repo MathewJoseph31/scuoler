@@ -178,7 +178,7 @@ exports.getCourses=function(req,res){
       ssl:true
     });
 
-    var sql = "SELECT id,name, description, owner_id FROM Course  where deleted=false ";
+    var sql = "SELECT id,name, description, owner_id FROM Course where deleted=false ";
     var resultArr=[];
 
     pool.query(sql, function (err, result, fields){
