@@ -347,6 +347,44 @@ exports.showTheQuiz=function(req,res){
  });//end of query
 }
 
+/*api method for updating a quiz*/
+exports.editQuizInDbJson=function(req,res){
+  //var q = url.parse(req.url, true).query;
+  let id=req.body.id;
+  let description=req.body.description;
+  let course_id=req.body.course_id;
+
+
+  var sql="UPDATE QUIZ SET  description=$1, course_id=$2, modified_timestamp=now() "+
+  " where id=$3 ";
+
+  var pool = new pg.Pool({
+    host: configuration.getHost(),
+    user: configuration.getUserId(),
+    password: configuration.getPassword(),
+    database: configuration.getDatabase(),
+    port:configuration.getPort(),
+    ssl:true
+  });
+
+  pool.query(sql, [description, course_id, id], function (err, result, fields){
+    res.setHeader('Access-Control-Allow-Origin','*');
+    res.setHeader('Access-Control-Allow-Methods','GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers','Content-Type');
+    res.setHeader('Access-Control-Allow-Credentials',true);
+    if (err) {
+      throw err;
+      res.json({"updatestatus":"error"});
+    }
+    else{
+      //console.log(description+' '+solution);
+      console.log("quiz updated");
+      res.json({"updatestatus":"ok"});
+    }
+  });
+
+}
+
 /*Api version of showTheQuiz*/
 exports.getTheQuiz=function(req,res){
     let quizId=req.body.quizId;
@@ -359,7 +397,7 @@ exports.getTheQuiz=function(req,res){
       ssl:true
     });
 
-    var sql =" SELECT Quiz.description, Course.name, Quiz.instructor_id FROM Quiz INNER JOIN Course "+
+    var sql =" SELECT Quiz.description, Quiz.course_id, Course.name, Quiz.instructor_id FROM Quiz INNER JOIN Course "+
               "ON Quiz.course_id=Course.id where Quiz.id='"+quizId+"'";
 
     let resObj={};
