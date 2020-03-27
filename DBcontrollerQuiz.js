@@ -406,6 +406,7 @@ exports.getTheQuiz=function(req,res){
       if (err) throw err;
 
       resObj.description=result.rows[0].description;
+      resObj.course_id=result.rows[0].course_id;
       resObj.name=result.rows[0].name;
       resObj.instructorId=result.rows[0].instructor_id;
 
