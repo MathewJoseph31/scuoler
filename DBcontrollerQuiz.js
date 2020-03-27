@@ -347,6 +347,39 @@ exports.showTheQuiz=function(req,res){
  });//end of query
 }
 
+exports.deleteQuizInDB=function(req,res){
+  //var q = url.parse(req.url, true).query;
+  let quizId=req.body.id;
+
+  var sql="UPDATE QUIZ SET  deleted=true, modified_timestamp=now() where id=$1 ";
+
+  var pool = new pg.Pool({
+    host: configuration.getHost(),
+    user: configuration.getUserId(),
+    password: configuration.getPassword(),
+    database: configuration.getDatabase(),
+    port:configuration.getPort(),
+    ssl:true
+  });
+
+  pool.query(sql, [quizId], function (err, result, fields){
+    res.setHeader('Access-Control-Allow-Origin','*');
+    res.setHeader('Access-Control-Allow-Methods','GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers','Content-Type');
+    res.setHeader('Access-Control-Allow-Credentials',true);
+    if (err) {
+      throw err;
+      res.json({"deletestatus":"error"});
+    }
+    else{
+      //console.log(description+' '+solution);
+      console.log("quiz deleted");
+      res.json({"deletestatus":"ok"});
+    }
+  });
+
+}
+
 /*api method for updating a quiz*/
 exports.editQuizInDbJson=function(req,res){
   //var q = url.parse(req.url, true).query;

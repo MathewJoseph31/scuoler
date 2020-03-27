@@ -111,6 +111,7 @@ router.get('/api/getQuizes', dbControllerQuiz.getQuizes);
 router.post('/api/getTheQuiz', dbControllerQuiz.getTheQuiz);
 router.post('/api/getProblemListForQuiz',dbControllerQuiz.getProblemListForQuizJson);
 router.post('/api/updateQuiz',dbControllerQuiz.editQuizInDbJson);
+router.post('/api/deleteQuiz',dbControllerQuiz.deleteQuizInDB);
 //router.get('/startTheQuiz',dbControllerQuiz.startTheQuiz);
 
 
