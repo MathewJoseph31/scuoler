@@ -76,6 +76,40 @@ exports.editProblemInDB=function(req,res){
 
 }
 
+exports.deleteProblemInDB=function(req,res){
+  //var q = url.parse(req.url, true).query;
+  let problemId=req.body.id;
+
+  console.log(problemId);
+
+  var sql="UPDATE PROBLEM SET  deleted=true, modified_timestamp=now() where id=$1 ";
+
+  var pool = new pg.Pool({
+    host: configuration.getHost(),
+    user: configuration.getUserId(),
+    password: configuration.getPassword(),
+    database: configuration.getDatabase(),
+    port:configuration.getPort(),
+    ssl:true
+  });
+
+  pool.query(sql, [problemId], function (err, result, fields){
+    res.setHeader('Access-Control-Allow-Origin','*');
+    res.setHeader('Access-Control-Allow-Methods','GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers','Content-Type');
+    res.setHeader('Access-Control-Allow-Credentials',true);
+    if (err) {
+      throw err;
+      res.json({"deletestatus":"error"});
+    }
+    else{
+      //console.log(description+' '+solution);
+      console.log("problem deleted");
+      res.json({"deletestatus":"ok"});
+    }
+  });
+
+}
 
 /* function for handling  http requests to inserts to the problem table in database*/
 exports.insertProblemToDB=function(req,res){
@@ -300,7 +334,8 @@ exports.getProblems=function(req, res){
   });
 
   var sql = "select distinct A.id, A.description, A.option1, A.option2, A.option3, A.option4, answerkey, "+
-   "A.solution, A.type, A.author_id, A.quiz_id, B.description quiz_description from Problem A inner join Quiz B on A.quiz_id=B.id";
+   "A.solution, A.type, A.author_id, A.quiz_id, B.description quiz_description from Problem A inner join Quiz B "+
+   " on A.quiz_id=B.id where A.deleted=false ";
 
   pool.query(sql, function (err, result, fields){
     if (err) throw err;

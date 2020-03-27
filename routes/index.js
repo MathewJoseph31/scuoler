@@ -46,7 +46,7 @@ router.get('/insertProblem', function (req, res) {
 });
 
 router.post('/updateProblem', dbControllerProblem.editProblemInDB);
-
+router.post('/api/deleteProblem', dbControllerProblem.deleteProblemInDB);
 /*router.get('/editProblem', function (req, res) {
   if(req.session.userId){
 		var getResultPromise=dbControllerQuiz.getQuizList();
@@ -132,6 +132,7 @@ router.get('/api/getCourses', dbControllerCourse.getCourses);
 router.post('/api/getTheCourse', dbControllerCourse.getTheCourse);
 router.post('/api/getQuizListForCourse',dbControllerCourse.getQuizListForCourseJson);
 router.post('/api/updateCourse',dbControllerCourse.editCourseInDbJson);
+router.post('/api/deleteCourse',dbControllerCourse.deleteCourseInDB);
 
 //User
 router.get('/insertUser',function (req, res) {

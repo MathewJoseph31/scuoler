@@ -178,7 +178,7 @@ exports.getCourses=function(req,res){
       ssl:true
     });
 
-    var sql = "SELECT id,name, description, owner_id FROM Course";
+    var sql = "SELECT id,name, description, owner_id FROM Course  where deleted=false ";
     var resultArr=[];
 
     pool.query(sql, function (err, result, fields){
@@ -333,6 +333,38 @@ exports.editCourseInDbJson=function(req,res){
 
 }
 
+exports.deleteCourseInDB=function(req,res){
+  //var q = url.parse(req.url, true).query;
+  let courseId=req.body.id;
+
+  var sql="UPDATE COURSE SET  deleted=true, modified_timestamp=now() where id=$1 ";
+
+  var pool = new pg.Pool({
+    host: configuration.getHost(),
+    user: configuration.getUserId(),
+    password: configuration.getPassword(),
+    database: configuration.getDatabase(),
+    port:configuration.getPort(),
+    ssl:true
+  });
+
+  pool.query(sql, [courseId], function (err, result, fields){
+    res.setHeader('Access-Control-Allow-Origin','*');
+    res.setHeader('Access-Control-Allow-Methods','GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers','Content-Type');
+    res.setHeader('Access-Control-Allow-Credentials',true);
+    if (err) {
+      throw err;
+      res.json({"deletestatus":"error"});
+    }
+    else{
+      //console.log(description+' '+solution);
+      console.log("problem deleted");
+      res.json({"deletestatus":"ok"});
+    }
+  });
+
+}
 
 
 /* function for returning a Promise object that retrives the set of records in the

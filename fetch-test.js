@@ -1,10 +1,8 @@
    const fetch = require("node-fetch");
 
-   var reqBody="quizDescription="+encodeURIComponent('mathew');
-   reqBody+='&courseId='+encodeURIComponent('joseph');
-   reqBody+='&authorName='+encodeURIComponent('joseph');
+   var reqBody='id='+encodeURIComponent('joseph');
 
-    fetch(`http://localhost:3000/api/insertQuizAction`, {
+    fetch(`http://localhost:3000/api/deleteProblem`, {
         headers:{
           'Accept':'application/json',
           'Content-type': 'application/x-www-form-urlencoded'
