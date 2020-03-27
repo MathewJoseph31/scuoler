@@ -397,7 +397,8 @@ exports.getTheQuiz=function(req,res){
       ssl:true
     });
 
-    var sql =" SELECT Quiz.description, Quiz.course_id, Course.name, Quiz.instructor_id FROM Quiz INNER JOIN Course "+
+    var sql =" SELECT Quiz.description, Quiz.course_id, Course.name courseName, "+
+             " Quiz.instructor_id FROM Quiz INNER JOIN Course "+
               "ON Quiz.course_id=Course.id where Quiz.id='"+quizId+"'";
 
     let resObj={};
@@ -407,7 +408,7 @@ exports.getTheQuiz=function(req,res){
 
       resObj.description=result.rows[0].description;
       resObj.course_id=result.rows[0].course_id;
-      resObj.name=result.rows[0].name;
+      resObj.courseName=result.rows[0].courseName;
       resObj.instructorId=result.rows[0].instructor_id;
 
       res.setHeader('Access-Control-Allow-Origin','*');
