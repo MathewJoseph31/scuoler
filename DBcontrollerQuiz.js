@@ -93,7 +93,7 @@ exports.insertQuizToDB=function(req,res){
     port:configuration.getPort(),
     ssl:true
   });
-  var sql = "insert into Quiz(id, description, course_id, instructor_id) values($1,$2,$3,$4)";
+  var sql = "insert into Quiz(id, description, course_id, author_id) values($1,$2,$3,$4)";
 
   var quizId=getUniqueId(authorName);
   pool.query(sql, [quizId,quizDescription,courseId,authorName], function(err,result){
@@ -126,7 +126,7 @@ exports.insertQuizToDbJson=function(req,res){
     port:configuration.getPort(),
     ssl:true
   });
-  var sql = "insert into quiz(id, description, course_id, instructor_id) values($1,$2,$3,$4)";
+  var sql = "insert into quiz(id, description, course_id, author_id) values($1,$2,$3,$4)";
 
   var quizId=getUniqueId(authorName);
   pool.query(sql, [quizId,quizDescription,courseId,authorName], function(err,result){
@@ -156,7 +156,7 @@ exports.displayQuizes=function(req,res){
     port:configuration.getPort(),
     ssl:true
   });
-  var sql = "SELECT Quiz.id, Quiz.description, Course.name, instructor_id FROM Quiz INNER JOIN Course "+
+  var sql = "SELECT Quiz.id, Quiz.description, Course.name, Quiz.author_id FROM Quiz INNER JOIN Course "+
             "ON Quiz.course_id=Course.id";
 
   pool.query(sql, function (err, result, fields){
@@ -185,7 +185,7 @@ exports.displayQuizes=function(req,res){
     for(i=0;i<result.rows.length;i++){
       str+='<tr><td><a href="./showTheQuiz?id='+result.rows[i].id+'">'+result.rows[i].description+'</a></td>'+
       '<td>'+result.rows[i].name+'</td>'+
-      '<td>'+result.rows[i].instructor_id+'<td>'+
+      '<td>'+result.rows[i].author_id+'<td>'+
       '</tr>';
     }
     str+='</table>'+
@@ -209,7 +209,7 @@ exports.getQuizes=function(req, res){
     ssl:true
   });
 
-  var sql = "SELECT Quiz.id, Quiz.description, Course.name, instructor_id FROM Quiz INNER JOIN Course "+
+  var sql = "SELECT Quiz.id, Quiz.description, Course.name, Quiz.author_id FROM Quiz INNER JOIN Course "+
             " ON Quiz.course_id=Course.id where Quiz.deleted=false and Course.deleted=false ";
   var resultArr=[];
 
@@ -244,10 +244,10 @@ exports.getQuizes=function(req, res){
   var q = url.parse(req.url, true).query;
   let quizId=q.id;
 
-  var sql =" SELECT Quiz.description, Course.name, Quiz.instructor_id FROM Quiz INNER JOIN Course "+
+  var sql =" SELECT Quiz.description, Course.name, Quiz.author_id FROM Quiz INNER JOIN Course "+
             "ON Quiz.course_id=Course.id where Quiz.id='"+quizId+"'";
 
-  "select description, course_id, instructor_id from quiz where id='"+quizId+"'";
+  "select description, course_id, author_id from quiz where id='"+quizId+"'";
   console.log(' param '+q.id);
 
   pool.query(sql, function (err, result, fields){
@@ -270,7 +270,7 @@ exports.getQuizes=function(req, res){
     '</div>';
 
     str+='<p> Course: '+result.rows[0].name+'</b><br/>'+
-    '<b> Instructor:'+result.rows[0].instructor_id+'</b>';
+    '<b> Instructor:'+result.rows[0].author_id+'</b>';
     str=str+'</body>';
     str+='<script type="text/javascript" src="scripts/general.js">'+
     '</script>';
@@ -293,10 +293,10 @@ exports.showTheQuiz=function(req,res){
   var q = url.parse(req.url, true).query;
   let quizId=q.id;
 
-  var sql =" SELECT Quiz.description, Course.name, Quiz.instructor_id FROM Quiz INNER JOIN Course "+
+  var sql =" SELECT Quiz.description, Course.name, Quiz.author_id FROM Quiz INNER JOIN Course "+
             "ON Quiz.course_id=Course.id where Quiz.id='"+quizId+"'";
 
-  "select description, course_id, instructor_id from quiz where id='"+quizId+"'";
+  "select description, course_id, author_id from quiz where id='"+quizId+"'";
   console.log(' param '+q.id);
 
   pool.query(sql, function (err, result, fields){
@@ -322,7 +322,7 @@ exports.showTheQuiz=function(req,res){
   '</div>';
 
   str+='<p> Course: '+result.rows[0].name+'</b><br/>'+
-  '<b> Instructor:'+result.rows[0].instructor_id+'</b>';
+  '<b> Instructor:'+result.rows[0].author_id+'</b>';
   str+='<input type="button" class="quizButton" onclick="startQuizHandler(this)" id="btnStartQuiz'+quizId+'" name="btnStartQuiz'+quizId+'" value="Start Quiz"/>';
 
   //
@@ -431,7 +431,7 @@ exports.getTheQuiz=function(req,res){
     });
 
     var sql =" SELECT Quiz.description, Quiz.course_id, Course.name , "+
-             " Quiz.instructor_id FROM Quiz INNER JOIN Course "+
+             " Quiz.author_id FROM Quiz INNER JOIN Course "+
               "ON Quiz.course_id=Course.id where Quiz.id='"+quizId+"'";
 
     let resObj={};
@@ -442,7 +442,7 @@ exports.getTheQuiz=function(req,res){
       resObj.description=result.rows[0].description;
       resObj.course_id=result.rows[0].course_id;
       resObj.courseName=result.rows[0].name;
-      resObj.instructorId=result.rows[0].instructor_id;
+      resObj.instructorId=result.rows[0].author_id;
 
       res.setHeader('Access-Control-Allow-Origin','*');
       res.setHeader('Access-Control-Allow-Methods','GET, POST, PUT, DELETE');
