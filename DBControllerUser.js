@@ -73,7 +73,8 @@ exports.verifyUserJson=function(req,res){
     ssl:true
   });
 
-  var sql = "SELECT count(*) as count FROM Customer where id=$1 and password=$2";
+  var sql = "SELECT count(*) as count, max(case when admin=true then 1 else 0 end) as admin "+
+            "FROM Customer where id=$1 and password=$2";
 
   pool.query(sql, [userId,password], function (err, result, fields){
     let resObj={};
@@ -81,7 +82,7 @@ exports.verifyUserJson=function(req,res){
       resObj={"login":"failure"};
     }
     else{
-      resObj={"login":"ok"};
+      resObj={"login":"ok", "admin": result.rows[0].admin};
     }
     res.setHeader('Access-Control-Allow-Origin','*');
     res.setHeader('Access-Control-Allow-Methods','GET, POST, PUT, DELETE');
