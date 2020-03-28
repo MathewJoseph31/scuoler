@@ -70,7 +70,7 @@ exports.insertCourseToDB=function(req,res){
     port:configuration.getPort(),
     ssl:true
   });
-  var sql = "insert into Course(id, name, description, owner_id) values($1,$2,$3,$4)";
+  var sql = "insert into Course(id, name, description, author_id) values($1,$2,$3,$4)";
 
   var courseId=getUniqueId(ownerId);
   pool.query(sql, [courseId,courseName,courseDescription,ownerId], function(err,result){
@@ -96,7 +96,7 @@ exports.insertCourseToDbJson=function(req,res){
     port:configuration.getPort(),
     ssl:true
   });
-  var sql = "insert into Course(id, name, description, owner_id) values($1,$2,$3,$4)";
+  var sql = "insert into Course(id, name, description, author_id) values($1,$2,$3,$4)";
 
   var courseId=getUniqueId(ownerId);
   pool.query(sql, [courseId,courseName,courseDescription,ownerId], function(err,result){
@@ -126,7 +126,7 @@ exports.displayCourses=function(req,res){
     port:configuration.getPort(),
     ssl:true
   });
-  var sql = "SELECT id,name, description, owner_id FROM Course";
+  var sql = "SELECT id,name, description, author_id FROM Course";
 
   pool.query(sql, function (err, result, fields){
     if (err) throw err;
@@ -154,7 +154,7 @@ exports.displayCourses=function(req,res){
     for(i=0;i<result.rows.length;i++){
       str+='<tr><td><a href="./showTheCourse?id='+result.rows[i].id+'">'+result.rows[i].name+'</a></td>'+
       '<td>'+result.rows[i].description+'</td>'+
-      '<td>'+result.rows[i].owner_id+'</td>'+
+      '<td>'+result.rows[i].author_id+'</td>'+
       '</tr>';
     }
     str+='</table>'+
@@ -178,7 +178,7 @@ exports.getCourses=function(req,res){
       ssl:true
     });
 
-    var sql = "SELECT id,name, description, owner_id FROM Course where deleted=false ";
+    var sql = "SELECT id,name, description, author_id FROM Course where deleted=false ";
     var resultArr=[];
 
     pool.query(sql, function (err, result, fields){
@@ -206,7 +206,7 @@ exports.getTheCourse=function(req,res){
     port:configuration.getPort(),
     ssl:true
   });
-  var sql = "select name, description, owner_id from course where id='"+courseId+"'";
+  var sql = "select name, description, author_id from course where id='"+courseId+"'";
 
   pool.query(sql, function(err,result,fields){
     if (err) throw err;
@@ -215,7 +215,7 @@ exports.getTheCourse=function(req,res){
 
     resObj.name=result.rows[0].name;
     resObj.description=result.rows[0].description;
-    resObj.ownerId=result.rows[0].owner_id;
+    resObj.ownerId=result.rows[0].author_id;
 
     res.setHeader('Access-Control-Allow-Origin','*');
     res.setHeader('Access-Control-Allow-Methods','GET, POST, PUT, DELETE');
@@ -240,7 +240,7 @@ exports.showTheCourse=function(req,res){
 var q = url.parse(req.url, true).query;
 let courseId=q.id;
 
-var sql = "select name, description, owner_id from course where id='"+courseId+"'";
+var sql = "select name, description, author_id from course where id='"+courseId+"'";
 
 console.log(' param '+q.id);
 
@@ -264,7 +264,7 @@ pool.query(sql, function(err,result,fields){
   '</div>';
 
   str+='<p style="text-align:left"> Description: '+result.rows[0].description+'</b><br/>'+
-  '<b> Creator:'+result.rows[0].owner_id+'</b></p>';
+  '<b> Creator:'+result.rows[0].author_id+'</b></p>';
 str+='<div class="row">';
 str+='<div class="LeftWindow"></br><b>List of Quizes:</b></br></br>';
 var getResultPromise=getQuizListForCourse(courseId);
