@@ -445,7 +445,7 @@ function getCourseListForUser(userId){
     port:configuration.getPort(),
     ssl:true
   });
-  var sql = "SELECT id,name FROM Course where owner_id=$1  where deleted=false ";
+  var sql = "SELECT id,name FROM Course where author_id=$1  where deleted=false ";
   return new Promise(function(resolve,reject){
     pool.query(sql, [userId], function (err, result, fields){
       if (err)
