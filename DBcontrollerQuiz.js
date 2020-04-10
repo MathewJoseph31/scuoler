@@ -386,10 +386,11 @@ exports.editQuizInDbJson=function(req,res){
   let id=req.body.id;
   let description=req.body.description;
   let course_id=req.body.course_id;
+  let duration_minutes=req.body.duration_minutes;
 
 
-  var sql="UPDATE QUIZ SET  description=$1, course_id=$2, modified_timestamp=now() "+
-  " where id=$3 ";
+  var sql="UPDATE QUIZ SET  description=$1, course_id=$2, duration_minutes=$3, modified_timestamp=now() "+
+  " where id=$4 ";
 
   var pool = new pg.Pool({
     host: configuration.getHost(),
@@ -400,7 +401,7 @@ exports.editQuizInDbJson=function(req,res){
     ssl:true
   });
 
-  pool.query(sql, [description, course_id, id], function (err, result, fields){
+  pool.query(sql, [description, course_id, duration_minutes, id], function (err, result, fields){
     res.setHeader('Access-Control-Allow-Origin','*');
     res.setHeader('Access-Control-Allow-Methods','GET, POST, PUT, DELETE');
     res.setHeader('Access-Control-Allow-Headers','Content-Type');
