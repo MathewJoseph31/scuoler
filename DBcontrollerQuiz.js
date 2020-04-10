@@ -209,7 +209,8 @@ exports.getQuizes=function(req, res){
     ssl:true
   });
 
-  var sql = "SELECT Quiz.id, Quiz.description, Course.name, Quiz.author_id FROM Quiz INNER JOIN Course "+
+  var sql = "SELECT Quiz.id, Quiz.description, Course.name, Quiz.author_id, Quiz.duration_minutes "+
+            " FROM Quiz INNER JOIN Course "+
             " ON Quiz.course_id=Course.id where Quiz.deleted=false and Course.deleted=false ";
   var resultArr=[];
 
