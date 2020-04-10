@@ -32,7 +32,7 @@ Reader.prototype.addChunk = function(chunk) {
     while (newLength >= newBufferLength) {
       newBufferLength *= 2
     }
-    var newBuffer = new Buffer(newBufferLength)
+    var newBuffer = Buffer.alloc(newBufferLength)
     this.chunk.copy(newBuffer)
     this.chunk = newBuffer
   }

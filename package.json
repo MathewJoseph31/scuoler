@@ -10,18 +10,19 @@
     "devstart": "nodemon ./bin/www"
   },
   "dependencies": {
-    "cookie-parser": "~1.4.3",
+    "cookie-parser": "^1.4.5",
     "debug": "~2.6.9",
     "ejs": "~2.5.7",
-    "express": "~4.16.0",
+    "express": "^4.17.1",
     "express-session": "1.15.6",
     "http-errors": "~1.6.2",
-    "morgan": "^1.9.1",
+    "libpq": "^1.8.9",
+    "morgan": "^1.10.0",
     "node-fetch": "^2.6.0",
-    "pg": "^7.4.3",
+    "pg": "^7.18.2",
     "pg-native": "^3.0.0"
   },
   "devDependencies": {
-    "nodemon": "^1.17.5"
+    "nodemon": "^1.19.4"
   }
 }
