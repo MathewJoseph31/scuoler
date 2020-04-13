@@ -146,12 +146,40 @@ exports.insertQuizToDbJson=function(req,res){
   });
 }
 
-exports.quizAnwersSubmit=function(req,res){
+exports.quizStart=function(req,res){
   let quizId=req.body.quizId;
   let startTime=req.body.startTime;
-  let minsRemaining=req.body.minsRemaining;
-  let answersObject=JSON.parse(req.body.answersObject);
   let userId=req.body.userId;
+  let sql = "insert into quiz_instance(quiz_instance_id, quiz_id,  user_id) values($1,$2,$3)";
+  let quizInstanceId=getUniqueId(quizId);
+  var pool = new pg.Pool({
+    host: configuration.getHost(),
+    user: configuration.getUserId(),
+    password: configuration.getPassword(),
+    database: configuration.getDatabase(),
+    port:configuration.getPort(),
+    ssl:true
+  });
+  pool.query(sql, [quizInstanceId,quizId,userId], function(err,result){
+      res.setHeader('Access-Control-Allow-Origin','*');
+      res.setHeader('Access-Control-Allow-Methods','GET, POST, PUT, DELETE');
+      res.setHeader('Access-Control-Allow-Headers','Content-Type');
+      res.setHeader('Access-Control-Allow-Credentials',true);
+      if (err){
+        throw err;
+        res.json({"insertstatus":"error"});
+      }
+      else{
+        console.log('in inserting quizInstance to db and return json');
+        res.json({"insertstatus":"ok", "quizInstanceId": quizInstanceId });
+      }
+  });
+}
+
+exports.quizAnwersSubmit=function(req,res){
+  let quizId=req.body.quizId;
+  let quizInstanceId=req.body.quizInstanceId;
+  let answersObject=JSON.parse(req.body.answersObject);
 
   var pool = new pg.Pool({
     host: configuration.getHost(),
@@ -161,9 +189,9 @@ exports.quizAnwersSubmit=function(req,res){
     port:configuration.getPort(),
     ssl:true
   });
-  let sql = "insert into quiz_instance(quiz_instance_id, quiz_id,  user_id) values($1,$2,$3)";
+  let sql = "update quiz_instance set end_timestamp=now() where quiz_instance_id=$1";
   let sql1="insert into quiz_instance_answers(quiz_instance_id, problem_id, marked_answerKey) values ";
-  let quizInstanceId=getUniqueId(quizId);
+
   if(answersObject!==null && Object.keys(answersObject).length>0){
       Object.keys(answersObject).forEach((val, index)=>{
         if(index===0)
@@ -173,7 +201,7 @@ exports.quizAnwersSubmit=function(req,res){
       })
  }
 
-  pool.query(sql, [quizInstanceId,quizId,userId], function(err,result){
+  pool.query(sql, [quizInstanceId], function(err,result){
       res.setHeader('Access-Control-Allow-Origin','*');
       res.setHeader('Access-Control-Allow-Methods','GET, POST, PUT, DELETE');
       res.setHeader('Access-Control-Allow-Headers','Content-Type');
