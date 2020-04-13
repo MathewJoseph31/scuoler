@@ -145,6 +145,62 @@ exports.insertQuizToDbJson=function(req,res){
   });
 }
 
+exports.quizAnwersSubmit=function(req,res){
+  let quizId=req.body.quizId;
+  let startTime=req.body.startTime;
+  let minsRemaining=req.body.minsRemaining;
+  let answersObject=JSON.parse(req.body.answersObject);
+  let userId=req.body.userId;
+
+  var pool = new pg.Pool({
+    host: configuration.getHost(),
+    user: configuration.getUserId(),
+    password: configuration.getPassword(),
+    database: configuration.getDatabase(),
+    port:configuration.getPort(),
+    ssl:true
+  });
+  let sql = "insert into quiz_instance(quiz_instance_id, quiz_id,  user_id) values($1,$2,$3)";
+  let sql1="insert into quiz_instance_answers(quiz_instance_id, problem_id, marked_answerKey) values ";
+  let quizInstanceId=getUniqueId(quizId);
+  if(answersObject!==null && Object.keys(answersObject).length>0){
+      Object.keys(answersObject).forEach((val, index)=>{
+        if(index===0)
+            sql1+="('"+quizInstanceId+"','"+val+"',"+answersObject[val]+")"
+        else
+            sql1+=",('"+quizInstanceId+"','"+val+"',"+answersObject[val]+")"
+      })
+ }
+
+  pool.query(sql, [quizInstanceId,quizId,userId], function(err,result){
+      res.setHeader('Access-Control-Allow-Origin','*');
+      res.setHeader('Access-Control-Allow-Methods','GET, POST, PUT, DELETE');
+      res.setHeader('Access-Control-Allow-Headers','Content-Type');
+      res.setHeader('Access-Control-Allow-Credentials',true);
+      if (err){
+        throw err;
+        res.json({"insertstatus":"error"});
+      }
+      else{
+            console.log('in inserting quizInstance to db and return json');
+            if(answersObject==null||Object.keys(answersObject).length==0)
+              res.json({"insertstatus":"ok"})
+            else{
+                pool.query(sql1, function(err, result){
+                  if (err){
+                    throw err;
+                    res.json({"insertstatus":"error"});
+                  }
+                  else{
+                        res.json({"insertstatus":"ok"});
+                  }
+                })
+            }
+      }
+  });
+
+}
+
 /* function for handling  http requests to retrive and display the records in the
  Quiz table in database*/
 exports.displayQuizes=function(req,res){
