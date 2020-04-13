@@ -115,6 +115,7 @@ exports.insertQuizToDB=function(req,res){
 /* Api version of insertQuizToDB*/
 exports.insertQuizToDbJson=function(req,res){
   let quizDescription=req.body.quizDescription;
+  let duration_minutes=req.body.duration_minutes;
   let courseId=req.body.courseId;
   let authorName=req.body.authorName;
 
@@ -126,10 +127,10 @@ exports.insertQuizToDbJson=function(req,res){
     port:configuration.getPort(),
     ssl:true
   });
-  var sql = "insert into quiz(id, description, course_id, author_id) values($1,$2,$3,$4)";
+  var sql = "insert into quiz(id, description, duration_minutes, course_id, author_id) values($1,$2,$3,$4,$5)";
 
   var quizId=getUniqueId(authorName);
-  pool.query(sql, [quizId,quizDescription,courseId,authorName], function(err,result){
+  pool.query(sql, [quizId,quizDescription, duration_minutes, courseId,authorName], function(err,result){
     res.setHeader('Access-Control-Allow-Origin','*');
     res.setHeader('Access-Control-Allow-Methods','GET, POST, PUT, DELETE');
     res.setHeader('Access-Control-Allow-Headers','Content-Type');
