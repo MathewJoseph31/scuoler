@@ -1,6 +1,0 @@
-problem
-quiz
-course
-customer
-quiz_instance
-quiz_instance_answers

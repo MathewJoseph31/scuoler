@@ -1,4 +1,0 @@
-heroku config:get DATABASE_URL
-
-PGUSER=testing1 PGPASSWORD=password PGHOST=localhost heroku pg:push ischools DATABASE_URL --app ischools
-
