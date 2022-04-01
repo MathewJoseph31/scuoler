@@ -1,44 +1,38 @@
 {
-  "name": "ischools-react",
-  "version": "0.1.0",
+  "name": "webapp",
+  "version": "0.0.0",
+  "private": true,
   "engines": {
     "node": "12.16.1"
   },
-  "private": true,
-  "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.0-14",
-    "@fortawesome/free-solid-svg-icons": "^5.1.0-11",
-    "@fortawesome/react-fontawesome": "0.1.0-11",
-    "react": "^16.10.1",
-    "react-dom": "^16.10.1",
-    "react-facebook-login": "^4.1.1",
-    "react-google-login": "^5.1.20",
-    "react-quickstore": "^2.0.1",
-    "react-router-dom": "^5.1.2",
-    "react-scripts": "^3.4.1",
-    "socket.io-client": "^2.3.0",
-    "crypto-js": "^4.0.0"
-  },
   "scripts": {
-    "start": "export HTTPS=true && react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "node ./bin/www",
+    "devstart": "nodemon ./bin/www",
+    "client": "cd client && npm start",
+    "dev": "npm run devstart & npm run client"
   },
-  "eslintConfig": {
-    "extends": "react-app"
+  "dependencies": {
+    "cloudinary": "^1.25.2",
+    "cookie-parser": "^1.4.5",
+    "crypto-js": "^4.0.0",
+    "debug": "~2.6.9",
+    "ejs": "~2.5.7",
+    "express": "^4.17.1",
+    "express-form-data": "^2.0.17",
+    "express-session": "1.15.6",
+    "express-sslify": "^1.2.0",
+    "http-errors": "~1.6.2",
+    "https": "^1.0.0",
+    "libpq": "^1.8.9",
+    "morgan": "^1.10.0",
+    "node-fetch": "^2.6.1",
+    "nodemailer": "^6.6.2",
+    "pg": "^8.6.0",
+    "pg-native": "^3.0.0",
+    "pg-sync": "^0.2.0",
+    "socket.io": "^2.4.1"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "proxy": "http://localhost:5000/"
+  "devDependencies": {
+    "nodemon": "^1.19.4"
+  }
 }

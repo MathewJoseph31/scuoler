@@ -1,0 +1,12 @@
+--to run the app using nodemon, so that any changes in edit are detected and app is automatically restarted,
+--the following line should be appended in package.json's script object    , "devstart": "nodemon ./bin/www"
+
+SET DEBUG=express-locallibrary-tutorial:* & npm run devstart
+
+
+--to run the app when pwd is the root directory of app, that contains the package.json, the following command 
+npm start
+
+
+--generate openssl certificates for https
+openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365
