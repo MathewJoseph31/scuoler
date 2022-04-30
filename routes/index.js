@@ -134,7 +134,7 @@ router.post("/api/addQuizToCourse", dbControllerQuiz.addQuizToCourse);
 router.post("/api/deleteQuiz", dbControllerQuiz.deleteQuizInDB);
 router.post("/api/quizAnwersSubmit", dbControllerQuiz.quizAnwersSubmit);
 router.post("/api/quizStart", dbControllerQuiz.quizStart);
-router.post("/api/quizGetScores", dbControllerQuiz.quizGetScores);
+router.post("/api/quizGetInstances", dbControllerQuiz.quizGetInstances);
 router.post(
   "/api/getQuizInstanceProblems",
   dbControllerQuiz.getQuizInstanceProblems
@@ -184,6 +184,7 @@ router.post("/api/updateUser", dbControllerUser.editUserInDbJson);
 router.post("/api/profileImageUpload", dbControllerUser.profileImageUpload);
 router.post("/api/mergeUser", dbControllerUser.mergeUser);
 router.post("/api/mergeUserRating", dbControllerUser.mergeUserRating);
+router.post("/api/userLikeUnlike", dbControllerUser.userLikeUnlike);
 router.post("/api/encryptPass", dbControllerUser.encryptPass);
 
 //error handler that matches every other URL
@@ -205,8 +206,7 @@ router.post("/api/deleteEmployee", dbControllerEmployee.deleteEmployeeInDB);
 router.post("/api/attachmentUpload", dbControllerEmployee.attachmentUpload);
 
 //User Posts
-router.get("/api/getPostsForCourse", dbControllerPost.getPostsForCourse);
-router.get("/api/getCommentsForPost", dbControllerPost.getCommentsForPost);
+router.get("/api/getPostsForSource", dbControllerPost.getPostsForSource);
 router.post("/api/insertPostAction", dbControllerPost.insertPostToDbJson);
 router.post("/api/deletePost", dbControllerPost.deletePostInDB);
 router.post("/api/updatePost", dbControllerPost.editPostInDbJson);

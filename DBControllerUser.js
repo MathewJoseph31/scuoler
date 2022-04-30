@@ -96,6 +96,43 @@ exports.mergeUserRating = function (req, res, next) {
   );
 };
 
+/*api method for (un)liking a post*/
+exports.userLikeUnlike = function (req, res, next) {
+  let id = req.body.id;
+  let user_id = req.body.user_id;
+  let like_flag = req.body.like_flag;
+
+  var sql;
+
+  if (like_flag === "true") {
+    //console.log(like_flag);
+    sql = "select user_like_unlike(p_id:=$1, u_id:=$2, like_flag:=true) ";
+  } else {
+    sql = "select user_like_unlike(p_id:=$1, u_id:=$2, like_flag:=false) ";
+  }
+
+  var pool = new pg.Pool({
+    host: configuration.getHost(),
+    user: configuration.getUserId(),
+    password: configuration.getPassword(),
+    database: configuration.getDatabase(),
+    port: configuration.getPort(),
+    ssl: { rejectUnauthorized: false },
+  });
+
+  pool.query(sql, [id, user_id], function (err, result, fields) {
+    if (err) {
+      next(err);
+      //res.json({ updatestatus: "error" });
+    } else {
+      //console.log(description+' '+solution);
+      //console.log("post updated");
+      setCorsHeaders(res);
+      res.json({ updatestatus: "ok" });
+    }
+  });
+};
+
 exports.mergeUser = function (req, res, next) {
   let userId = req.body.userId;
   let firstName = req.body.firstName;

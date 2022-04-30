@@ -27,8 +27,8 @@ function getCourseList() {
     ssl: { rejectUnauthorized: false },
   });
   var sql = "SELECT id,name FROM Course ORDER by name ASC";
-  return new Promise(function (resolve, reject) {
-    pool.query(sql, function (err, result, fields) {
+  return new Promise((resolve, reject) => {
+    pool.query(sql, (err, result, fields) => {
       if (err) reject(err);
       else {
         var i = 0;
@@ -49,6 +49,22 @@ exports.insertCourseToDbJson = function (req, res, next) {
   let courseDescription = req.body.courseDescription;
   let ownerId = req.body.ownerId;
   let thumbnail = req.body.thumbnail;
+  let quizesArray = JSON.parse(req.body.quizesArray);
+  let categoriesArray = [];
+
+  if (req.body.categoriesArray)
+    categoriesArray = JSON.parse(req.body.categoriesArray);
+
+  let categoriesId = [];
+
+  Object.values(categoriesArray).forEach((item, i) => {
+    categoriesId.push(item.id);
+  });
+
+  let quizesId = [];
+  Object.values(quizesArray).forEach((item, i) => {
+    quizesId.push(item.id);
+  });
 
   console.log("in course inserting to db");
   var pool = new pg.Pool({
@@ -61,12 +77,20 @@ exports.insertCourseToDbJson = function (req, res, next) {
   });
 
   var sql =
-    "insert into Course(id, name, description, author_id, thumbnail) values($1,$2,$3,$4,$5)";
+    "select course_insertDB(p_id:=$1, p_name:=$2, p_description:=$3, p_author_id:=$4, p_thumbnail:=$5, p_categories_id:=$6, p_quizes_id:=$7)";
 
   var courseId = utils.getUniqueId(ownerId);
   pool.query(
     sql,
-    [courseId, courseName, courseDescription, ownerId, thumbnail],
+    [
+      courseId,
+      courseName,
+      courseDescription,
+      ownerId,
+      thumbnail,
+      categoriesId,
+      quizesId,
+    ],
     function (err, result) {
       if (err) {
         next(err);
@@ -185,12 +209,27 @@ exports.getTheCourse = function (req, res, next) {
     port: configuration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
-  var sql =
-    "select name, description, author_id, rating from course " +
-    " left join user_rating B on course.id=B.id and B.user_id=$1 " +
-    " where course.id=$2";
+  let sql =
+    "select A.name, A.description, A.author_id, A.thumbnail, " +
+    " avg(B.rating) rating, count(distinct C.*) likes,  " +
+    " case when exists(select 1 from user_like where id=$1 and user_id=$2 and deleted=false) then true else false end liked " +
+    " from course A " +
+    " left join user_rating B on A.id=B.id   " +
+    " left join user_like C on A.id=C.id and C.deleted=false " +
+    " where A.id=$1 " +
+    " group by A.name, A.description, A.author_id, A.thumbnail ";
 
-  pool.query(sql, [authorName, courseId], function (err, result, fields) {
+  let sql1 =
+    "SELECT Quiz.id, Quiz.description, Quiz.name, Quiz.author_id FROM Quiz " +
+    " inner join Quiz_Course on Quiz.id=Quiz_Course.quiz_id where Quiz_Course.course_id=$1 " +
+    " and Quiz_Course.deleted=false";
+
+  let sql2 =
+    "select B.ID, B.name  from category_association A " +
+    " inner join category B on A.category_id=B.id and A.DELETED=false and B.deleted=false " +
+    " where A.id=$1 ";
+
+  pool.query(sql, [courseId, authorName], function (err, result, fields) {
     if (err) next(err);
     else {
       let resObj = {};
@@ -198,10 +237,60 @@ exports.getTheCourse = function (req, res, next) {
       resObj.name = result.rows[0].name;
       resObj.description = result.rows[0].description;
       resObj.ownerId = result.rows[0].author_id;
+      resObj.thumbnail = result.rows[0].thumbnail;
       resObj.rating = result.rows[0].rating;
+      resObj.likes = result.rows[0].likes;
+      resObj.liked = result.rows[0].liked;
+      resObj.quizesArray = [];
 
+      pool.query(sql1, [courseId], function (err, result1, fields) {
+        if (err) next(err);
+        else {
+          resObj.quizesArray = result1.rows;
+          resObj.categoriesArray = [];
+
+          pool.query(sql2, [courseId], function (err, result2, fields) {
+            if (err) next(err);
+            else {
+              resObj.categoriesArray = result2.rows;
+              setCorsHeaders(res);
+              res.json(resObj);
+            }
+          });
+        }
+      });
+    }
+  });
+};
+
+/* function for returning a Promise object that retrives the set of records in the
+ Quiz table in database, related to a selected course*/
+
+exports.getQuizListForCourseJson = function (req, res, next) {
+  let courseId = req.body.courseId;
+  var quizList = [];
+  var pool = new pg.Pool({
+    host: configuration.getHost(),
+    user: configuration.getUserId(),
+    password: configuration.getPassword(),
+    database: configuration.getDatabase(),
+    port: configuration.getPort(),
+    ssl: { rejectUnauthorized: false },
+  });
+  let sql =
+    "SELECT Quiz.id, Quiz.description, Quiz.name, Quiz.author_id FROM Quiz " +
+    " inner join Quiz_Course on Quiz.id=Quiz_Course.quiz_id where Quiz_Course.course_id=$1 " +
+    " and Quiz_Course.deleted=false";
+  pool.query(sql, [courseId], function (err, result, fields) {
+    if (err) next(err);
+    else {
+      let resultArr = [];
+      var i = 0;
+      for (i = 0; i < result.rows.length; i++) {
+        resultArr.push(result.rows[i]);
+      }
       setCorsHeaders(res);
-      res.json(resObj);
+      res.json(resultArr);
     }
   });
 };
@@ -213,6 +302,7 @@ exports.editCourseInDbJson = function (req, res, next) {
   let courseId = req.body.courseId;
   let description = req.body.description;
   let name = req.body.name;
+  let thumbnail = req.body.thumbnail;
   let quizesArray = [],
     categoriesArray = [];
   if (req.body.quizesArray) quizesArray = JSON.parse(req.body.quizesArray);
@@ -235,7 +325,7 @@ exports.editCourseInDbJson = function (req, res, next) {
   /*var sql="UPDATE COURSE SET  name=$1, description=$2, p_quizes_id:=$3, modified_timestamp=now() "+
   " where id=$4 ";*/
   var sql =
-    "select course_update(p_id:=$1, p_name:=$2, p_description:=$3, p_quizes_id:=$4, p_categories_id:=$5)";
+    "select course_update(p_id:=$1, p_name:=$2, p_description:=$3, p_thumbnail:=$4,p_quizes_id:=$5, p_categories_id:=$6)";
 
   var pool = new pg.Pool({
     host: configuration.getHost(),
@@ -248,9 +338,10 @@ exports.editCourseInDbJson = function (req, res, next) {
 
   pool.query(
     sql,
-    [courseId, name, description, quizesId, categoriesId],
+    [courseId, name, description, thumbnail, quizesId, categoriesId],
     function (err, result, fields) {
       if (err) {
+        console.log(err);
         next(err);
         //res.json({ updatestatus: "error" });
       } else {
@@ -287,38 +378,6 @@ exports.deleteCourseInDB = function (req, res, next) {
       console.log("problem deleted");
       setCorsHeaders(res);
       res.json({ deletestatus: "ok" });
-    }
-  });
-};
-
-/* function for returning a Promise object that retrives the set of records in the
- Quiz table in database, related to a selected course*/
-
-exports.getQuizListForCourseJson = function (req, res, next) {
-  let courseId = req.body.courseId;
-  var quizList = [];
-  var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
-    ssl: { rejectUnauthorized: false },
-  });
-  var sql =
-    "SELECT Quiz.id, Quiz.description, Quiz.author_id FROM Quiz " +
-    " inner join Quiz_Course on Quiz.id=Quiz_Course.quiz_id where Quiz_Course.course_id=$1 " +
-    " and Quiz_Course.deleted=false";
-  pool.query(sql, [courseId], function (err, result, fields) {
-    if (err) next(err);
-    else {
-      let resultArr = [];
-      var i = 0;
-      for (i = 0; i < result.rows.length; i++) {
-        resultArr.push(result.rows[i]);
-      }
-      setCorsHeaders(res);
-      res.json(resultArr);
     }
   });
 };

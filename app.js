@@ -1,91 +1,91 @@
-const express = require('express');
+const express = require("express");
 const app = express();
 //const enforce = require('express-sslify');
 
-const bodyParser = require('body-parser');
+const bodyParser = require("body-parser");
 
 //session code
-const cookieParser = require('cookie-parser');
-const session = require('express-session');
+const cookieParser = require("cookie-parser");
+const session = require("express-session");
 
 //additional
-var createError = require('http-errors');
-var path = require('path');
-var logger = require('morgan');
-
+var createError = require("http-errors");
+var path = require("path");
+var logger = require("morgan");
 
 // Use enforce.HTTPS({ trustProtoHeader: true }) in case you are behind
 // a load balancer (e.g. Heroku). See further comments below
 //app.use(enforce.HTTPS({ trustProtoHeader: true}));
 
 app.use(cookieParser());
-app.use(session({secret:'secr3',resave:false,saveUninitialized:false, maxAge: 24 * 60 * 60 * 1000}));
+app.use(
+  session({
+    secret: "secr3",
+    resave: false,
+    saveUninitialized: false,
+    maxAge: 24 * 60 * 60 * 1000,
+  })
+);
 //end of session code
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
-app.set('view engine', 'ejs');
-app.use(express.static('public'));
-app.use(express.static('views'));
-
+//app.set("view engine", "ejs");
+//app.use(express.static("public"));
+//app.use(express.static("views"));
 
 //additional
 //app.set('views', path.join(__dirname, 'views'));
 //app.set('view engine', 'ejs');
 
-
-app.use(logger('dev'));
+app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 //app.use(express.static(path.join(__dirname, 'public')));
-const formData = require('express-form-data');
+const formData = require("express-form-data");
 app.use(formData.parse());
 
+var indexRouter = require("./routes/index");
 
-var indexRouter = require('./routes/index');
+app.use("/", indexRouter);
 
-app.use('/', indexRouter);
-
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === "production") {
   // Serve any static files
-  app.use(express.static(path.join(__dirname, 'client/build')));
+  app.use(express.static(path.join(__dirname, "client/build")));
 
   // Handle React routing, return all requests to React app
-  app.get('*', function(req, res) {
-    res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+  app.get("*", function (req, res) {
+    res.sendFile(path.join(__dirname, "client/build", "index.html"));
   });
 }
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
+app.use(function (err, req, res, next) {
+  next(createError(404, err.toString()));
 });
 
-const dbControllerError=require('./DBcontrollerError');
+const dbControllerError = require("./DBcontrollerError");
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
-  dbControllerError.insertErrorToDb(err,req).then();
+  dbControllerError.insertErrorToDb(err, req).then();
   res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  res.locals.error = req.app.get("env") === "development" ? err : {};
 
   // render the error page
   res.status(err.status || 500);
   if (req.xhr) {
-    res.send({ error: 'Something failed!'+err.toString() })
-  }
-  else {
+    res.send({ error: "Something failed!" + err.toString() });
+  } else {
     //res.render('error',{message:err.toString(),error:err});
-    res.setHeader('Access-Control-Allow-Origin','*');
-    res.setHeader('Access-Control-Allow-Methods','GET, POST, PUT, DELETE');
-    res.setHeader('Access-Control-Allow-Headers','Content-Type');
-    res.setHeader('Access-Control-Allow-Credentials',true);
-    res.json('error, description: '+ err.toString());
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    res.setHeader("Access-Control-Allow-Credentials", true);
+    res.json("Error!, description: " + err.toString());
   }
 });
-
 
 module.exports = app;

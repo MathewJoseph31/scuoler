@@ -41,7 +41,6 @@ const refreshDb = async () => {
     " dbname=" +
     configuration.getDatabase() +
     "'";
-  var dblinkQuery = "select dblink_connect('s3'," + connStr + ")";
 
   for (let k = 0; k < lines.length; k++) {
     var tableName = lines[k];

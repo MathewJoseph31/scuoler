@@ -3,11 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "engines": {
-    "node": "12.16.1"
+    "node": "17.9.0"
   },
   "scripts": {
     "start": "node ./bin/www",
     "devstart": "nodemon ./bin/www",
+    "heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build",
     "client": "cd client && npm start",
     "dev": "npm run devstart & npm run client"
   },
@@ -16,7 +17,6 @@
     "cookie-parser": "^1.4.5",
     "crypto-js": "^4.0.0",
     "debug": "~2.6.9",
-    "ejs": "~2.5.7",
     "express": "^4.17.1",
     "express-form-data": "^2.0.17",
     "express-session": "1.15.6",

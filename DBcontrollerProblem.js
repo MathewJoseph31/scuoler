@@ -60,6 +60,17 @@ exports.insertProblemToDbJson = function (req, res, next) {
     answerKey = -1;
   }
 
+  let categoriesArray = [];
+
+  if (req.body.categoriesArray)
+    categoriesArray = JSON.parse(req.body.categoriesArray);
+
+  let categoriesId = [];
+
+  Object.values(categoriesArray).forEach((item, i) => {
+    categoriesId.push(item.id);
+  });
+
   let quizesId = [];
   Object.values(quizesArray).forEach((item, i) => {
     quizesId.push(item.id);
@@ -74,17 +85,14 @@ exports.insertProblemToDbJson = function (req, res, next) {
     ssl: { rejectUnauthorized: false },
   });
 
-  //console.log("Dbcontroller insert problem "+quizId);
-  /*var sql = "insert into Problem(id, description, option1, option2, option3, option4, solution, answerkey, author_id) values($1,$2,$3,$4,$5, $6, $7, $8, $9)";
-  var sql1 = "insert into problem_quiz(problem_id, quiz_id) values($1, $2)";*/
-
   /*var sql =
     "select problem_insert(p_id :=$1, p_description:=$2, p_option1:=$3, p_option2:=$4," +
     " p_option3:=$5, p_option4:=$6, p_solution:=$7, p_answerkey:=$8, p_author_id:=$9, p_quizes_id:=$10, p_type:=$11);";*/
 
   var sql =
     "select problem_insert(p_id :=$1, p_description:=$2, p_options:=$3, " +
-    "  p_solution:=$4, p_answerkey:=$5, p_author_id:=$6, p_quizes_id:=$7, p_type:=$8);";
+    "  p_solution:=$4, p_answerkey:=$5, p_author_id:=$6, p_quizes_id:=$7, " +
+    " p_categories_id:=$8, p_type:=$9);";
 
   var problemId = utils.getUniqueId(authorName);
 
@@ -98,6 +106,7 @@ exports.insertProblemToDbJson = function (req, res, next) {
       answerKey,
       authorName,
       quizesId,
+      categoriesId,
       problemType,
     ],
     function (err, result) {
@@ -128,6 +137,17 @@ exports.editProblemInDB = function (req, res, next) {
   var solution = req.body.solution;
   var authorId = req.body.authorId;
 
+  let categoriesArray = [];
+
+  if (req.body.categoriesArray)
+    categoriesArray = JSON.parse(req.body.categoriesArray);
+
+  let categoriesId = [];
+
+  Object.values(categoriesArray).forEach((item, i) => {
+    categoriesId.push(item.id);
+  });
+
   if (answerkey == undefined || answerkey == "" || answerkey == "null") {
     answerkey = null;
   }
@@ -144,7 +164,7 @@ exports.editProblemInDB = function (req, res, next) {
 
   var sql =
     "select problem_update(p_id:=$1,p_description:=$2,p_options:=$3, " +
-    " p_solution:=$4, p_answerkey:=$5, p_quizes_id:=$6, p_type:=$7);";
+    " p_solution:=$4, p_answerkey:=$5, p_quizes_id:=$6, p_categories_id:=$7, p_type:=$8);";
 
   var pool = new pg.Pool({
     host: configuration.getHost(),
@@ -157,7 +177,16 @@ exports.editProblemInDB = function (req, res, next) {
 
   pool.query(
     sql,
-    [problemId, description, options, solution, answerkey, quizesId, type],
+    [
+      problemId,
+      description,
+      options,
+      solution,
+      answerkey,
+      quizesId,
+      categoriesId,
+      type,
+    ],
     function (err, result, fields) {
       if (err) {
         //console.log(err);
@@ -205,6 +234,7 @@ exports.deleteProblemInDB = function (req, res, next) {
 
 exports.getTheProblem = function (req, res, next) {
   let problemId = req.body.problemId;
+  let authorId = req.body.authorId;
 
   var pool = new pg.Pool({
     host: configuration.getHost(),
@@ -216,46 +246,66 @@ exports.getTheProblem = function (req, res, next) {
   });
 
   var sql =
-    "select distinct A.id, A.description, A.options, A.option1, A.option2, A.option3, A.option4, A.answerkey, " +
-    "A.solution, A.type, A.author_id, A.source from Problem A " +
-    " where A.deleted=false and A.id=$1";
+    "select A.id, A.description, A.options, " +
+    " A.answerkey, " +
+    " A.solution, A.type, A.author_id, A.source,  " +
+    " avg(B.rating) rating, count(distinct C.*) likes,  " +
+    " case when exists(select 1 from user_like where id=$1 and user_id=$2 and deleted=false) then true else false end liked " +
+    " from Problem A " +
+    " left join user_rating B on A.id=B.id   " +
+    " left join user_like C on A.id=C.id and C.deleted=false " +
+    " where A.deleted=false and A.id=$1" +
+    " GROUP BY A.id, A.description, A.options, A.answerkey, A.solution, A.type, A.author_id, A.source ";
 
   var sql1 =
     "SELECT Quiz.id, Quiz.description, Quiz.author_id, Quiz.duration_minutes " +
     " FROM Quiz inner join Problem_Quiz on Quiz.id=Problem_Quiz.quiz_id " +
     " where Quiz.deleted=false and Problem_Quiz.deleted=false and Problem_Quiz.problem_id=$1";
 
+  let sql2 =
+    "select B.ID, B.name  from category_association A " +
+    " inner join category B on A.category_id=B.id and A.DELETED=false and B.deleted=false " +
+    " where A.id=$1 ";
+
   let resObj = {};
-  pool.query(sql, [problemId], function (err, result, fields) {
+  pool.query(sql, [problemId, authorId], function (err, result, fields) {
     if (err) next(err);
-
-    if (result.rows !== undefined && result.rows.length > 0) {
-      resObj.id = result.rows[0].id;
-      resObj.description = result.rows[0].description;
-      resObj.options = result.rows[0].options;
-      if (!resObj.options) resObj.options = [];
-      resObj.option1 = result.rows[0].option1;
-      resObj.option2 = result.rows[0].option2;
-      resObj.option3 = result.rows[0].option3;
-      resObj.option4 = result.rows[0].option4;
-      resObj.answerkey = result.rows[0].answerkey;
-      resObj.solution = result.rows[0].solution;
-      resObj.type = result.rows[0].type;
-      resObj.author_id = result.rows[0].author_id;
-      resObj.source = result.rows[0].source;
-      resObj.quizesArray = [];
-    }
-
-    pool.query(sql1, [problemId], function (err, result, fields) {
-      if (err) {
-        next(err);
-        //res.json(resObj);
-      } else {
-        resObj.quizesArray = result.rows;
-        setCorsHeaders(res);
-        res.json(resObj);
+    else {
+      if (result.rows !== undefined && result.rows.length > 0) {
+        resObj.id = result.rows[0].id;
+        resObj.description = result.rows[0].description;
+        resObj.options = result.rows[0].options;
+        if (!resObj.options) resObj.options = [];
+        resObj.answerkey = result.rows[0].answerkey;
+        resObj.solution = result.rows[0].solution;
+        resObj.type = result.rows[0].type;
+        resObj.author_id = result.rows[0].author_id;
+        resObj.source = result.rows[0].source;
+        resObj.rating = result.rows[0].rating;
+        resObj.likes = result.rows[0].likes;
+        resObj.liked = result.rows[0].liked;
+        resObj.quizesArray = [];
       }
-    });
+
+      pool.query(sql1, [problemId], function (err, result1, fields) {
+        if (err) {
+          next(err);
+          //res.json(resObj);
+        } else {
+          resObj.quizesArray = result1.rows;
+          resObj.categoriesArray = [];
+
+          pool.query(sql2, [problemId], function (err, result2, fields) {
+            if (err) next(err);
+            else {
+              resObj.categoriesArray = result2.rows;
+              setCorsHeaders(res);
+              res.json(resObj);
+            }
+          });
+        }
+      });
+    }
   });
 };
 

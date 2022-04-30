@@ -79,20 +79,24 @@ exports.getQuizListSync = getQuizListSync;
 /* Api version of insertQuizToDB*/
 exports.insertQuizToDbJson = function (req, res, next) {
   let quizDescription = req.body.quizDescription;
+  let quizName = req.body.quizName;
   let duration_minutes = req.body.duration_minutes;
-  //let courseId=req.body.courseId;
+  let quizType = req.body.quizType;
   let authorName = req.body.authorName;
-  let coursesArray = JSON.parse(req.body.coursesArray);
-  let problemsArray = JSON.parse(req.body.problemsArray);
   let thumbnail = req.body.thumbnail;
 
-  var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
-    ssl: { rejectUnauthorized: false },
+  let coursesArray = JSON.parse(req.body.coursesArray);
+  let problemsArray = JSON.parse(req.body.problemsArray);
+
+  let categoriesArray = [];
+
+  if (req.body.categoriesArray)
+    categoriesArray = JSON.parse(req.body.categoriesArray);
+
+  let categoriesId = [];
+
+  Object.values(categoriesArray).forEach((item, i) => {
+    categoriesId.push(item.id);
   });
 
   let coursesId = [];
@@ -105,9 +109,19 @@ exports.insertQuizToDbJson = function (req, res, next) {
     problemsId.push(item.id);
   });
 
+  var pool = new pg.Pool({
+    host: configuration.getHost(),
+    user: configuration.getUserId(),
+    password: configuration.getPassword(),
+    database: configuration.getDatabase(),
+    port: configuration.getPort(),
+    ssl: { rejectUnauthorized: false },
+  });
+
   let sql =
-    "select quiz_insert(p_id:=$1, p_description:=$2, p_duration_minutes:=$3," +
-    "p_author_id:=$4, p_courses_id:=$5, p_problems_id:=$6, p_thumbnail :=$7)";
+    "select quiz_insert(p_id:=$1, p_description:=$2, p_name:=$3, p_duration_minutes:=$4," +
+    " p_type:=$5, p_author_id:=$6, p_courses_id:=$7, p_problems_id:=$8,   " +
+    " p_categories_id:=$9, p_thumbnail :=$10)";
 
   //console.log("Dbcontroller insert Quiz "+courseId);
 
@@ -118,16 +132,19 @@ exports.insertQuizToDbJson = function (req, res, next) {
     [
       quizId,
       quizDescription,
+      quizName,
       duration_minutes,
+      quizType,
       authorName,
       coursesId,
       problemsId,
+      categoriesId,
       thumbnail,
     ],
     function (err, result) {
       if (err) {
-        //console.log(err);
-        // res.json({ insertstatus: "error" });
+        console.log(err);
+        //res.json({ insertstatus: "error" });
         next(err);
       } else {
         setCorsHeaders(res);
@@ -186,57 +203,18 @@ exports.quizAnwersSubmit = function (req, res, next) {
   let sql =
     "update quiz_instance set end_timestamp=now() where quiz_instance_id=$1";
 
-  let sql1 = "";
-  if (quizType === "m")
-    sql1 =
-      "insert into quiz_instance_answers(quiz_instance_id, problem_id, marked_answerKey) values ";
-  else
-    sql1 =
-      "insert into quiz_instance_answers(quiz_instance_id, problem_id, solution) values ";
+  let answersArr = [];
 
-  if (
-    answersObject !== null &&
-    quizType === "m" &&
-    Object.keys(answersObject).length > 0
-  ) {
+  let sql1 =
+    "insert into quiz_instance_answers(quiz_instance_id, problem_id, solution) values ";
+
+  if (answersObject !== null && Object.keys(answersObject).length > 0) {
     Object.keys(answersObject).forEach((val, index) => {
+      answersArr.push(quizInstanceId, val, answersObject[val]);
+
       if (index === 0)
-        sql1 +=
-          "('" + quizInstanceId + "','" + val + "'," + answersObject[val] + ")";
-      else
-        sql1 +=
-          ",('" +
-          quizInstanceId +
-          "','" +
-          val +
-          "'," +
-          answersObject[val] +
-          ")";
-    });
-  } else if (
-    answersObject !== null &&
-    quizType === "d" &&
-    Object.keys(answersObject).length > 0
-  ) {
-    Object.keys(answersObject).forEach((val, index) => {
-      if (index === 0)
-        sql1 +=
-          "('" +
-          quizInstanceId +
-          "','" +
-          val +
-          "','" +
-          answersObject[val] +
-          "')";
-      else
-        sql1 +=
-          ",('" +
-          quizInstanceId +
-          "','" +
-          val +
-          "','" +
-          answersObject[val] +
-          "')";
+        sql1 += `($${3 * index + 1}, $${3 * index + 2}, $${3 * index + 3})`;
+      else sql1 += `,($${3 * index + 1}, $${3 * index + 2}, $${3 * index + 3})`;
     });
   }
 
@@ -245,12 +223,11 @@ exports.quizAnwersSubmit = function (req, res, next) {
       next(err);
       //res.json({ insertstatus: "error" });
     } else {
-      console.log("in inserting quizInstance to db and return json");
       if (answersObject == null || Object.keys(answersObject).length == 0) {
         setCorsHeaders(res);
         res.json({ insertstatus: "ok" });
       } else {
-        pool.query(sql1, function (err, result) {
+        pool.query(sql1, answersArr, function (err, result) {
           if (err) {
             next(err);
             //res.json({ insertstatus: "error" });
@@ -299,18 +276,18 @@ exports.getQuizInstanceProblems = function (req, res, next) {
   let quizInstanceId = req.body.quizInstanceId;
 
   let sql =
-    " select quiz_instance.quiz_instance_id, quiz.description as quiz_description, quiz_instance.quiz_id, quiz.duration_minutes, quiz.author_id,  quiz_instance.user_id, " +
+    " select quiz_instance.quiz_instance_id, quiz.description as quiz_description, quiz.name quiz_name, quiz_instance.quiz_id, quiz.duration_minutes, quiz.author_id,  quiz_instance.user_id, " +
     " quiz_instance.create_timestamp start_timestamp, " +
     " coalesce(quiz_instance.end_timestamp, quiz_instance.create_timestamp+quiz.duration_minutes* INTERVAL '1 minutes') as end_timestamp, " +
     " problem_quiz.problem_id, problem.answerkey, problem.type, " +
     " problem.description as problem_description, problem.solution as problem_solution, " +
-    " problem.option1, problem.option2, problem.option3, problem.option4, " +
-    " problem.maxmarks, quiz_instance_answers.marked_answerkey, quiz_instance_answers.create_timestamp, " +
+    " problem.option1, problem.option2, problem.option3, problem.option4, problem.options, " +
+    " problem.maxmarks,  quiz_instance_answers.create_timestamp, " +
     " quiz_instance_answers.solution as user_solution, " +
     " coalesce(quiz_instance_answers.marks_awarded,0) marks_awarded, " +
-    " case when quiz.type='m' and problem.answerkey = quiz_instance_answers.marked_answerkey then problem.maxmarks when quiz.type='d' then coalesce(quiz_instance_answers.marks_awarded,0)  else 0 end marks_scored " +
+    " case when problem.type='m' and problem.answerkey = CAST(quiz_instance_answers.solution as integer) then problem.maxmarks when problem.type='d' then coalesce(quiz_instance_answers.marks_awarded,0)  else 0 end marks_scored " +
     " from quiz " +
-    " inner join problem_quiz on problem_quiz.quiz_id=quiz.id " +
+    " inner join problem_quiz on problem_quiz.quiz_id=quiz.id and problem_quiz.deleted=false " +
     " inner join problem on problem_quiz.problem_id=problem.id " +
     " inner join quiz_instance on quiz_instance.quiz_id=quiz.id " +
     " left join quiz_instance_answers on quiz_instance.quiz_instance_id=quiz_instance_answers.quiz_instance_id and problem.id=quiz_instance_answers.problem_id " +
@@ -334,18 +311,17 @@ exports.getQuizInstanceProblems = function (req, res, next) {
   });
 };
 
-exports.quizGetScores = function (req, res, next) {
+exports.quizGetInstances = function (req, res, next) {
   let quizId = req.body.quizId;
 
   let sql =
-    " select quiz_instance.quiz_instance_id, quiz.description, quiz_instance.quiz_id, quiz.duration_minutes, quiz.author_id,  quiz_instance.user_id, " +
+    " select quiz_instance.quiz_instance_id, quiz.description, quiz.name, quiz_instance.quiz_id, quiz.duration_minutes, quiz.author_id,  quiz_instance.user_id, " +
     " quiz.type as quiz_type, quiz_instance.create_timestamp start_timestamp, " +
     " coalesce(quiz_instance.end_timestamp, quiz_instance.create_timestamp+quiz.duration_minutes* INTERVAL '1 minutes') as end_timestamp, " +
     //'--problem_quiz.problem_id, problem.answerkey, problem.type'+
-    //'--,quiz_instance_answers.marked_answerkey, quiz_instance_answers.create_timestamp, '+
+    //'--, quiz_instance_answers.create_timestamp, '+
     " SUM(problem.maxmarks) maxmarks,  " +
-    " SUM(case when quiz.type='m' and problem.answerkey = quiz_instance_answers.marked_answerkey then problem.maxmarks when quiz.type='d' then coalesce(quiz_instance_answers.marks_awarded,0)  else 0 end) marks_scored " +
-    //' SUM(case when problem.answerkey = quiz_instance_answers.marked_answerkey then problem.maxmarks else 0 end) marks_scored '+
+    " SUM(case when problem.type='m' and problem.answerkey = CAST(quiz_instance_answers.solution as integer) then problem.maxmarks when problem.type='d' then coalesce(quiz_instance_answers.marks_awarded,0)  else 0 end) marks_scored " +
     " from quiz " +
     " inner join problem_quiz on problem_quiz.quiz_id=quiz.id " +
     " inner join problem on problem_quiz.problem_id=problem.id " +
@@ -353,7 +329,7 @@ exports.quizGetScores = function (req, res, next) {
     " left join quiz_instance_answers on quiz_instance.quiz_instance_id=quiz_instance_answers.quiz_instance_id and problem.id=quiz_instance_answers.problem_id " +
     " where quiz.id=$1 " +
     " group by " +
-    " quiz_instance.quiz_instance_id, quiz.description, quiz_instance.quiz_id, quiz.duration_minutes, quiz.author_id,  quiz_instance.user_id, " +
+    " quiz_instance.quiz_instance_id, quiz.description, quiz.name, quiz_instance.quiz_id, quiz.duration_minutes, quiz.author_id,  quiz_instance.user_id, " +
     " quiz.type, quiz_instance.create_timestamp, quiz_instance.end_timestamp " +
     " order by  quiz_instance.create_timestamp desc, quiz_instance.quiz_instance_id, quiz_instance.quiz_id  ";
 
@@ -379,14 +355,13 @@ exports.quizGetScoresForUser = function (req, res, next) {
   let userId = req.body.userId;
 
   let sql =
-    " select quiz_instance.quiz_instance_id, quiz.description, quiz_instance.quiz_id, quiz.duration_minutes, quiz.author_id,  quiz_instance.user_id, " +
+    " select quiz_instance.quiz_instance_id, quiz.name, quiz.description, quiz_instance.quiz_id, quiz.duration_minutes, quiz.author_id,  quiz_instance.user_id, " +
     " quiz.type as quiz_type, quiz_instance.create_timestamp start_timestamp, " +
     " coalesce(quiz_instance.end_timestamp, quiz_instance.create_timestamp+quiz.duration_minutes* INTERVAL '1 minutes') as end_timestamp, " +
     //'--problem_quiz.problem_id, problem.answerkey, problem.type'+
-    //'--,quiz_instance_answers.marked_answerkey, quiz_instance_answers.create_timestamp, '+
+    //'--, quiz_instance_answers.create_timestamp, '+
     " SUM(problem.maxmarks) maxmarks,  " +
-    " SUM(case when quiz.type='m' and problem.answerkey = quiz_instance_answers.marked_answerkey then problem.maxmarks when quiz.type='d' then coalesce(quiz_instance_answers.marks_awarded,0)  else 0 end) marks_scored " +
-    //' SUM(case when problem.answerkey = quiz_instance_answers.marked_answerkey then problem.maxmarks else 0 end) marks_scored '+
+    " SUM(case when problem.type='m' and problem.answerkey = CAST(quiz_instance_answers.solution as integer) then problem.maxmarks when problem.type='d' then coalesce(quiz_instance_answers.marks_awarded,0)  else 0 end) marks_scored " +
     " from quiz " +
     " inner join problem_quiz on problem_quiz.quiz_id=quiz.id " +
     " inner join problem on problem_quiz.problem_id=problem.id " +
@@ -394,7 +369,7 @@ exports.quizGetScoresForUser = function (req, res, next) {
     " left join quiz_instance_answers on quiz_instance.quiz_instance_id=quiz_instance_answers.quiz_instance_id and problem.id=quiz_instance_answers.problem_id " +
     " where quiz_instance.user_id=$1 " +
     " group by " +
-    " quiz_instance.quiz_instance_id, quiz.description, quiz_instance.quiz_id, quiz.duration_minutes, quiz.author_id,  quiz_instance.user_id, " +
+    " quiz_instance.quiz_instance_id, quiz.description, quiz.name, quiz_instance.quiz_id, quiz.duration_minutes, quiz.author_id,  quiz_instance.user_id, " +
     " quiz.type, quiz_instance.create_timestamp, quiz_instance.end_timestamp " +
     " order by  quiz_instance.create_timestamp desc, quiz_instance.quiz_instance_id, quiz_instance.quiz_id  ";
 
@@ -418,7 +393,7 @@ exports.quizGetScoresForUser = function (req, res, next) {
 
 /*Global variable for shared select list between getQuizes and searchQuizesForPrefix*/
 const sqlSubstringForGetAndSearch =
-  " SELECT Quiz.id, Quiz.description,  Quiz.author_id, Quiz.duration_minutes, Quiz.type, Quiz.thumbnail ";
+  " SELECT Quiz.id, Quiz.description, Quiz.name,  Quiz.author_id, Quiz.duration_minutes, Quiz.type, Quiz.thumbnail ";
 
 exports.getQuizes = function (req, res, next) {
   var queryObject = url.parse(req.url, true).query;
@@ -467,7 +442,7 @@ exports.searchQuizesForPrefix = function (req, res, next) {
   var sql =
     sqlSubstringForGetAndSearch +
     " from Quiz  " +
-    " where deleted=false and description ilike  $1";
+    " where deleted=false and name ilike  $1";
 
   pool.query(sql, [searchKey], function (err, result, fields) {
     if (err) next(err);
@@ -492,6 +467,7 @@ exports.searchQuizes = function (req, res, next) {
 
   var sql =
     "select distinct A.id, ts_headline('english', A.description, query, 'HighlightAll=true') description, " +
+    " ts_headline('english', A.name, query, 'HighlightAll=true') as name, " +
     "  A.type, A.author_id, A.duration_minutes, ts_rank_cd(search_tsv, query, 32) rank  " +
     " from Quiz A, plainto_tsquery('english', $1) query " +
     " where A.deleted=false and search_tsv@@query  order by rank desc ";
@@ -570,6 +546,8 @@ exports.editQuizInDbJson = function (req, res, next) {
   let id = req.body.id;
   let type = req.body.type;
   let description = req.body.description;
+  let name = req.body.name;
+  let thumbnail = req.body.thumbnail;
   let coursesArray = [];
   if (req.body.coursesArray) coursesArray = JSON.parse(req.body.coursesArray);
   let problemsArray = [];
@@ -610,7 +588,9 @@ exports.editQuizInDbJson = function (req, res, next) {
   res.json({"updatestatus":"ok"});*/
 
   let sql =
-    "select quiz_update(p_id:=$1, p_description:=$2, p_duration_minutes:=$3, p_type:=$4, p_courses_id:=$5, p_problems_id:=$6, p_categories_id:=$7)";
+    "select quiz_update(p_id:=$1, p_description:=$2, p_name:=$3, " +
+    " p_duration_minutes:=$4, p_type:=$5, p_courses_id:=$6, p_problems_id:=$7, " +
+    " p_categories_id:=$8, p_thumbnail:=$9)";
 
   var pool = new pg.Pool({
     host: configuration.getHost(),
@@ -626,11 +606,13 @@ exports.editQuizInDbJson = function (req, res, next) {
     [
       id,
       description,
+      name,
       duration_minutes,
       type,
       coursesId,
       problemsId,
       categoriesId,
+      thumbnail,
     ],
     function (err, result, fields) {
       if (err) {
@@ -659,38 +641,72 @@ exports.getTheQuiz = function (req, res, next) {
   });
 
   var sql =
-    " SELECT Quiz.description,  " +
-    " Quiz.author_id, Quiz.duration_minutes, Quiz.type, B.rating FROM Quiz " +
-    " left join user_rating B on Quiz.id=B.id and B.user_id=$1 " +
-    " where Quiz.id=$2";
+    " SELECT A.description, A.name, " +
+    " A.author_id, A.duration_minutes, A.type, A.thumbnail,  " +
+    " avg(B.rating) rating, count(distinct C.*) likes,  " +
+    " case when exists(select 1 from user_like where id=$1 and user_id=$2 and deleted=false) then true else false end liked " +
+    " FROM Quiz A " +
+    " left join user_rating B on A.id=B.id  " +
+    " left join user_like C on A.id=C.id and C.deleted=false " +
+    " where A.id=$1 " +
+    " GROUP BY A.description, A.name, A.author_id, A.duration_minutes, A.type, A.thumbnail ";
 
   var sql1 =
     "SELECT id,name, description, author_id FROM Course " +
     " inner join Quiz_Course on Course.id=Quiz_Course.course_id " +
     " where Course.deleted=false and Quiz_Course.deleted=false and Quiz_Course.Quiz_id=$1";
 
+  let sql2 =
+    "SELECT id, description, options, solution, author_id, type " +
+    " FROM Problem " +
+    " INNER JOIN Problem_Quiz on Problem.id=Problem_Quiz.problem_id " +
+    " where Problem_Quiz.quiz_id=$1 and Problem.deleted=false and Problem_Quiz.deleted=false";
+
+  let sql3 =
+    "select B.ID, B.name  from category_association A " +
+    " inner join category B on A.category_id=B.id and A.DELETED=false and B.deleted=false " +
+    " where A.id=$1 ";
+
   let resObj = {};
 
-  pool.query(sql, [authorName, quizId], function (err, result, fields) {
-    if (err) next(err);
-    else {
-      if (result.rows !== undefined && result.rows.length > 0) {
-        resObj.description = result.rows[0].description;
-        resObj.instructorId = result.rows[0].author_id;
-        resObj.duration_minutes = result.rows[0].duration_minutes;
-        resObj.type = result.rows[0].type;
-        resObj.rating = result.rows[0].rating;
-        resObj.coursesArray = [];
-      }
+  pool.query(sql, [quizId, authorName], function (err, result, fields) {
+    if (err) {
+      console.log(err);
+      next(err);
+    } else {
+      resObj.description = result.rows[0]?.description;
+      resObj.name = result.rows[0]?.name;
+      resObj.author_id = result.rows[0]?.author_id;
+      resObj.duration_minutes = result?.rows[0]?.duration_minutes;
+      resObj.thumbnail = result?.rows[0]?.thumbnail;
+      resObj.type = result?.rows[0]?.type;
+      resObj.rating = result?.rows[0]?.rating;
+      resObj.likes = result?.rows[0]?.likes;
+      resObj.liked = result?.rows[0]?.liked;
+      resObj.coursesArray = [];
 
       pool.query(sql1, [quizId], function (err, result1, fields) {
         if (err) {
           next(err);
           //res.json(resObj);
         } else {
-          setCorsHeaders(res);
           resObj.coursesArray = result1.rows;
-          res.json(resObj);
+          resObj.problemsArray = [];
+          pool.query(sql2, [quizId], function (err, result2, fields) {
+            if (err) next(err);
+            else {
+              resObj.problemsArray = result2?.rows;
+              resObj.categoriesArray = [];
+              pool.query(sql3, [quizId], function (err, result3, fields) {
+                if (err) next(err);
+                else {
+                  resObj.categoriesArray = result3.rows;
+                  setCorsHeaders(res);
+                  res.json(resObj);
+                }
+              });
+            }
+          });
         }
       });
     }
@@ -708,10 +724,10 @@ exports.getProblemListForQuizJson = function (req, res, next) {
     ssl: { rejectUnauthorized: false },
   });
   var sql =
-    "SELECT id, description, option1, option2, option3, option4, solution, author_id, type " +
+    "SELECT id, description, options, solution, author_id, type " +
     " FROM Problem " +
     " INNER JOIN Problem_Quiz on Problem.id=Problem_Quiz.problem_id " +
-    " where Problem_Quiz.quiz_id=$1 and Problem.deleted=false ";
+    " where Problem_Quiz.quiz_id=$1 and Problem.deleted=false and Problem_Quiz.deleted=false";
   pool.query(sql, [quizId], function (err, result, fields) {
     if (err) next(err);
     else {
