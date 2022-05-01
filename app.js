@@ -46,10 +46,6 @@ app.use(cookieParser());
 const formData = require("express-form-data");
 app.use(formData.parse());
 
-const { requestsController } = require("./RequestsController");
-
-app.use(requestsController);
-
 var apiRouter = require("./routes/api");
 
 app.use("/api", apiRouter);

@@ -12,7 +12,9 @@ const dbControllerRoom = require("../DBcontrollerRoom");
 const dbControllerChat = require("../DBcontrollerChat");
 const contactMailer = require("../contactMailer");
 
-//router.all("/*", requestsController);
+const { securityController } = require("../SecurityController");
+
+router.all("/*", securityController);
 //#####################################################################
 
 //MEETING

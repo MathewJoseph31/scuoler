@@ -1,13 +1,14 @@
 const ipRequests = {};
 const suspiciousIPs = [];
 const checkWindow = 60 * 1000; //duration in secs converted to milliseconds
-const requestLimit = 80; //Max requests that can be made in the checkWindow duration
+const requestLimit = 60; //Max requests that can be made in the checkWindow duration
 const resetTime = 60 * 60 * 1000; //duration to clear the suscpicious IPs list in milliseconds
 
 //################################### DOS ATTACK MEASURES ###########################################
 
-exports.requestsController = (req, res, next) => {
-  if (!suspiciousIPs.includes(req.ip))
+exports.securityController = (req, res, next) => {
+  let err = new Error(`Dos Attach suspected from IP ${req.ip}`);
+  if (!suspiciousIPs.includes(req.ip)) {
     if (ipRequests.hasOwnProperty(req.ip)) {
       // Check if the incoming IP exists in ipRequests Object
       //If it already exists,Check if the end time is greater than current time
@@ -37,6 +38,7 @@ exports.requestsController = (req, res, next) => {
             req.ip,
             ipRequests[req.ip].count
           );
+          next(err);
           // next();
         }
         //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ELSE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -58,6 +60,9 @@ exports.requestsController = (req, res, next) => {
       // console.log("ipRequests: ", ipRequests);
       next();
     }
+  } else {
+    next(err);
+  }
 };
 
 function checkEndTime() {
