@@ -46,9 +46,13 @@ app.use(cookieParser());
 const formData = require("express-form-data");
 app.use(formData.parse());
 
-var indexRouter = require("./routes/index");
+const { requestsController } = require("./RequestsController");
 
-app.use("/", indexRouter);
+app.use(requestsController);
+
+var apiRouter = require("./routes/api");
+
+app.use("/api", apiRouter);
 
 if (process.env.NODE_ENV === "production") {
   // Serve any static files
