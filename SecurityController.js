@@ -1,5 +1,5 @@
 const ipRequests = {};
-const suspiciousIPs = [];
+const suspiciousIPs = {};
 const checkWindow = 60 * 1000; //duration in secs converted to milliseconds
 const requestLimit = 60; //Max requests that can be made in the checkWindow duration
 const resetTime = 60 * 60 * 1000; //duration to clear the suscpicious IPs list in milliseconds
@@ -7,8 +7,8 @@ const resetTime = 60 * 60 * 1000; //duration to clear the suscpicious IPs list i
 //################################### DOS ATTACK MEASURES ###########################################
 
 exports.securityController = (req, res, next) => {
-  let err = new Error(`Dos Attach suspected from IP ${req.ip}`);
-  if (!suspiciousIPs.includes(req.ip)) {
+  let err = new Error(`Dos Attack suspected from IP ${req.ip}`);
+  if (!suspiciousIPs.hasOwnProperty(req.ip)) {
     if (ipRequests.hasOwnProperty(req.ip)) {
       // Check if the incoming IP exists in ipRequests Object
       //If it already exists,Check if the end time is greater than current time
@@ -32,7 +32,9 @@ exports.securityController = (req, res, next) => {
           console.log(
             "Count is" + ipRequests[req.ip].count + ". Count Exceeded!"
           );
-          suspiciousIPs.push(req.ip); //log suspicious IPs
+          suspiciousIPs[req.ip] =
+            Date.now() + 2 * 60 * 60 * 1000; /*log suspicious IPs
+          so that it is blocked for 2 hours*/
           console.log(
             "You have exceeded the max requests in a give time period! Please try after sometime", //Send suitable response
             req.ip,
@@ -77,14 +79,17 @@ function checkEndTime() {
   });
 }
 let interval1 = setInterval(checkEndTime, checkWindow);
-console.log(parseInt(interval1));
 
 //#####################################################################
 function clearSuspiciousIPs() {
   console.log("Clearing Suspicious IPs arrays");
-  suspiciousIPs = [];
+  /*const asArray = Object.entries(suspiciousIPs);
+  const filtered = asArray.filter(([key, value]) => value < Date.now());
+  suspiciousIPs = Object.fromEntries(filtered);*/
+  for (let ip of Object.keys(suspiciousIPs)) {
+    if (suspiciousIPs[ip] <= Date.now()) delete suspiciousIPs[ip];
+  }
 }
 
 let interval2 = setInterval(clearSuspiciousIPs, resetTime);
-console.log(parseInt(interval2));
 //###########################################################################################################
