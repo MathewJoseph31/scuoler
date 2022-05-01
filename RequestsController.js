@@ -1,7 +1,7 @@
 const ipRequests = {};
 const suspiciousIPs = [];
 const checkWindow = 60 * 1000; //duration in secs converted to milliseconds
-const requestLimit = 20; //Max requests that can be made in the checkWindow duration
+const requestLimit = 80; //Max requests that can be made in the checkWindow duration
 const resetTime = 60 * 60 * 1000; //duration to clear the suscpicious IPs list in milliseconds
 
 //################################### DOS ATTACK MEASURES ###########################################
