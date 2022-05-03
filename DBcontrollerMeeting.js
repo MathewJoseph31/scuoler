@@ -53,7 +53,7 @@ exports.getMeetings = function (req, res, next) {
   pool.query(sql, [offset, pageSize], function (err, result, fields) {
     if (err) next(err);
     else {
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json(result.rows);
     }
   });
@@ -81,7 +81,7 @@ exports.insertMeetingToDbJson = function (req, res, next) {
       next(err);
       //res.json({"insertstatus":"error"});
     } else {
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json({ insertstatus: "ok", meetingId: meetingId });
     }
   });

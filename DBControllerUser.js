@@ -24,7 +24,7 @@ to the portal, the credentials are store in Customer table */
 exports.encryptPass = function (req, res, next) {
   let text = req.body.userId;
   let result = util.encryptPass(text, 10);
-  setCorsHeaders(res);
+  setCorsHeaders(req, res);
   // console.log("result_encrypt: ", result);
   res.json(result);
 };
@@ -59,7 +59,7 @@ exports.verifyUserJson = function (req, res, next) {
           full_name: result.rows[0].full_name,
         };
       }
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json(resObj);
     }
   });
@@ -89,7 +89,7 @@ exports.mergeUserRating = function (req, res, next) {
         next(err);
         //res.json({"mergestatus":"error"});
       } else {
-        setCorsHeaders(res);
+        setCorsHeaders(req, res);
         res.json({ mergestatus: "ok" });
       }
     }
@@ -127,7 +127,7 @@ exports.userLikeUnlike = function (req, res, next) {
     } else {
       //console.log(description+' '+solution);
       //console.log("post updated");
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json({ updatestatus: "ok" });
     }
   });
@@ -161,7 +161,7 @@ exports.mergeUser = function (req, res, next) {
         next(err);
         //res.json({"mergestatus":"error"});
       } else {
-        setCorsHeaders(res);
+        setCorsHeaders(req, res);
         res.json({ mergestatus: "ok" });
       }
     }
@@ -198,7 +198,7 @@ exports.getUsers = function (req, res, next) {
         arrResult.push(result.rows[i]);
       }
 
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.send(arrResult);
     }
   });
@@ -234,7 +234,7 @@ exports.searchUsers = function (req, res, next) {
   pool.query(sql, [searchKey], function (err, result, fields) {
     if (err) next(err);
     else {
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json(result.rows);
     }
   });
@@ -273,7 +273,7 @@ exports.getTheUser = function (req, res, next) {
         resObj.sex_male = result.rows[0].sex_male;
         resObj.profile_image_url = result.rows[0].profile_image_url;
       }
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json(resObj);
     }
   });
@@ -367,7 +367,7 @@ exports.editUserInDbJson = function (req, res, next) {
         )
           utils.delete_images(image_urls_for_delete);
 
-        setCorsHeaders(res);
+        setCorsHeaders(req, res);
         res.json({ updatestatus: "ok" });
       }
     }
@@ -433,7 +433,7 @@ exports.insertUserToDbJson = function (req, res, next) {
           Object.keys(image_urls_for_delete).length > 0
         )
           utils.delete_images(image_urls_for_delete);
-        setCorsHeaders(res);
+        setCorsHeaders(req, res);
         res.json({ insertstatus: "ok" });
       }
     }
@@ -456,11 +456,11 @@ exports.getCourseListForUserJson = function (req, res, next) {
         };
         resArr.push(obj);
       }
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json(resArr);
     },
     function (err) {
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.send(resArr);
     }
   );

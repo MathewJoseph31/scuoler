@@ -48,7 +48,7 @@ exports.mergeEmployee = function (req, res, next) {
         next(err);
         //res.json({"mergestatus":"error"});
       } else {
-        setCorsHeaders(res);
+        setCorsHeaders(req, res);
         res.json({ mergestatus: "ok" });
       }
     }
@@ -85,7 +85,7 @@ exports.searchEmployees = function (req, res, next) {
   pool.query(sql, [searchKey], function (err, result, fields) {
     if (err) next(err);
     else {
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json(result.rows);
     }
   });
@@ -122,7 +122,7 @@ exports.getEmployees = function (req, res, next) {
         arrResult.push(result.rows[i]);
       }
 
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.send(arrResult);
     }
   });
@@ -165,7 +165,7 @@ exports.getTheEmployee = function (req, res, next) {
         resObj.start_date = result.rows[0].start_date;
         resObj.term_date = result.rows[0].term_date;
       }
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json(resObj);
     }
   });
@@ -237,7 +237,7 @@ exports.editEmployeeInDbJson = function (req, res, next) {
         )
           util.delete_images(attachments_for_delete);
 
-        setCorsHeaders(res);
+        setCorsHeaders(req, res);
         res.json({ updatestatus: "ok" });
       }
     }
@@ -309,7 +309,7 @@ exports.insertEmployeeToDbJson = function (req, res, next) {
         )
           util.delete_images(attachments_for_delete);
 
-        setCorsHeaders(res);
+        setCorsHeaders(req, res);
         res.json({ insertstatus: "ok" });
       }
     }
@@ -339,7 +339,7 @@ exports.deleteEmployeeInDB = function (req, res, next) {
     } else {
       //console.log(description+' '+solution);
       console.log("employee deleted");
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json({ deletestatus: "ok" });
     }
   });

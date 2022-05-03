@@ -55,7 +55,7 @@ exports.getPostsForSource = function (req, res, next) {
     function (err, result, fields) {
       if (err) next(err);
       else {
-        setCorsHeaders(res);
+        setCorsHeaders(req, res);
         res.send(result.rows);
       }
     }
@@ -86,7 +86,7 @@ exports.insertPostToDbJson = function (req, res, next) {
       next(err);
       //res.json({"insertstatus":"error "+err.toString()});
     } else {
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json({ insertstatus: "ok", postId: id });
     }
   });
@@ -123,7 +123,7 @@ exports.postLikeUnlike = function (req, res, next) {
     } else {
       //console.log(description+' '+solution);
       console.log("post updated");
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json({ updatestatus: "ok" });
     }
   });
@@ -152,7 +152,7 @@ exports.editPostInDbJson = function (req, res, next) {
       next(err);
       //res.json({"updatestatus":"error"});
     } else {
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json({ updatestatus: "ok" });
     }
   });
@@ -180,7 +180,7 @@ exports.deletePostInDB = function (req, res, next) {
       res.json({ deletestatus: "error" });
     } else {
       console.log("post deleted");
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json({ deletestatus: "ok" });
     }
   });

@@ -30,7 +30,7 @@ exports.getRooms = function (req, res, next) {
   pool.query(sql, [offset, pageSize], function (err, result, fields) {
     if (err) next(err);
     else {
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json(result.rows);
     }
   });
@@ -69,7 +69,7 @@ exports.insertRoomToDbJson = function (req, res, next) {
           }
         });
       }
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json({ insertstatus: "ok", room_id: id });
     }
   });
@@ -97,7 +97,7 @@ exports.addCustomersToRoom = function (req, res, next) {
       next(err);
       //res.json({"insertstatus":"error "+err.toString()});
     } else {
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json({ insertstatus: "ok" });
     }
   });
@@ -124,7 +124,7 @@ exports.deleteCustomersFromRoom = function (req, res, next) {
       next(err);
       //res.json({"insertstatus":"error "+err.toString()});
     } else {
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json({ deletestatus: "ok" });
     }
   });
@@ -155,7 +155,7 @@ exports.editRoomInDbJson = function (req, res, next) {
       next(err);
       //res.json({"updatestatus":"error"});
     } else {
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json({ updatestatus: "ok" });
     }
   });
@@ -183,7 +183,7 @@ exports.deleteRoomInDB = function (req, res, next) {
       //res.json({ deletestatus: "error" });
     } else {
       //console.log("room deleted");
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json({ deletestatus: "ok" });
     }
   });

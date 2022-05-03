@@ -147,7 +147,7 @@ exports.insertQuizToDbJson = function (req, res, next) {
         //res.json({ insertstatus: "error" });
         next(err);
       } else {
-        setCorsHeaders(res);
+        setCorsHeaders(req, res);
         console.log("in quiz inserting to db and return json");
         res.json({ insertstatus: "ok", quizId: quizId });
       }
@@ -176,7 +176,7 @@ exports.quizStart = function (req, res, next) {
       next(err);
       //res.json({ insertstatus: "error" });
     } else {
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       console.log("in inserting quizInstance to db and return json");
       res.json({ insertstatus: "ok", quizInstanceId: quizInstanceId });
     }
@@ -224,7 +224,7 @@ exports.quizAnwersSubmit = function (req, res, next) {
       //res.json({ insertstatus: "error" });
     } else {
       if (answersObject == null || Object.keys(answersObject).length == 0) {
-        setCorsHeaders(res);
+        setCorsHeaders(req, res);
         res.json({ insertstatus: "ok" });
       } else {
         pool.query(sql1, answersArr, function (err, result) {
@@ -232,7 +232,7 @@ exports.quizAnwersSubmit = function (req, res, next) {
             next(err);
             //res.json({ insertstatus: "error" });
           } else {
-            setCorsHeaders(res);
+            setCorsHeaders(req, res);
             res.json({ insertstatus: "ok" });
           }
         });
@@ -264,7 +264,7 @@ exports.updateQuizMarksAwarded = function (req, res, next) {
     function (err, result, fields) {
       if (err) next(err);
       else {
-        setCorsHeaders(res);
+        setCorsHeaders(req, res);
         console.log(result);
         res.json('{"updatestatus":"ok"}');
       }
@@ -305,7 +305,7 @@ exports.getQuizInstanceProblems = function (req, res, next) {
   pool.query(sql, [quizInstanceId], function (err, result, fields) {
     if (err) next(err);
     else {
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json(result.rows);
     }
   });
@@ -345,7 +345,7 @@ exports.quizGetInstances = function (req, res, next) {
   pool.query(sql, [quizId], function (err, result, fields) {
     if (err) next(err);
     else {
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json(result.rows);
     }
   });
@@ -385,7 +385,7 @@ exports.quizGetScoresForUser = function (req, res, next) {
   pool.query(sql, [userId], function (err, result, fields) {
     if (err) next(err);
     else {
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json(result.rows);
     }
   });
@@ -420,7 +420,7 @@ exports.getQuizes = function (req, res, next) {
   pool.query(sql, [offset, pageSize], function (err, result, fields) {
     if (err) next(err);
     else {
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json(result.rows);
     }
   });
@@ -447,7 +447,7 @@ exports.searchQuizesForPrefix = function (req, res, next) {
   pool.query(sql, [searchKey], function (err, result, fields) {
     if (err) next(err);
     else {
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json(result.rows);
     }
   });
@@ -475,7 +475,7 @@ exports.searchQuizes = function (req, res, next) {
   pool.query(sql, [searchKey], function (err, result, fields) {
     if (err) next(err);
     else {
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json(result.rows);
     }
   });
@@ -503,7 +503,7 @@ exports.deleteQuizInDB = function (req, res, next) {
       next(err);
       //res.json({ deletestatus: "error" });
     } else {
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       console.log("quiz deleted");
       res.json({ deletestatus: "ok" });
     }
@@ -532,7 +532,7 @@ exports.addQuizToCourse = function (req, res, next) {
       next(err);
       //res.json({ addstatus: "error" });
     } else {
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       if (result.rows != undefined && result.rows.length > 0)
         res.json({ addstatus: result.rows[0].quiz_addto_course });
       else res.json({ addstatus: "ok" });
@@ -619,7 +619,7 @@ exports.editQuizInDbJson = function (req, res, next) {
         next(err);
         //res.json({ updatestatus: "error" });
       } else {
-        setCorsHeaders(res);
+        setCorsHeaders(req, res);
         console.log("quiz updated");
         res.json({ updatestatus: "ok" });
       }
@@ -701,7 +701,7 @@ exports.getTheQuiz = function (req, res, next) {
                 if (err) next(err);
                 else {
                   resObj.categoriesArray = result3.rows;
-                  setCorsHeaders(res);
+                  setCorsHeaders(req, res);
                   res.json(resObj);
                 }
               });
@@ -736,7 +736,7 @@ exports.getProblemListForQuizJson = function (req, res, next) {
       for (i = 0; i < result.rows.length; i++) {
         resultArr.push(result.rows[i]);
       }
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json(resultArr);
     }
   });
@@ -766,7 +766,7 @@ exports.getCategoryListForQuizJson = function (req, res, next) {
       for (i = 0; i < result.rows.length; i++) {
         resultArr.push(result.rows[i]);
       }
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json(resultArr);
     }
   });

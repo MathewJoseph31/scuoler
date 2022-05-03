@@ -104,9 +104,16 @@ exports.delete_images = function (image_urls_for_delete) {
   return "ok";
 };
 
-exports.setCorsHeaders = function (res) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-  res.setHeader("Access-Control-Allow-Credentials", true);
+const whiteListedIps = ["72.230.86.18", "127.0.0.1"];
+
+exports.setCorsHeaders = function (req, res) {
+  whiteListedIps.forEach((val) => {
+    if (req.ip.includes(val)) {
+      res.setHeader("Access-Control-Allow-Origin", "*");
+      res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+      res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+      res.setHeader("Access-Control-Allow-Credentials", true);
+      return;
+    }
+  });
 };

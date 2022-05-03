@@ -32,7 +32,7 @@ exports.addProblemToQuiz = function (req, res, next) {
   });
 
   pool.query(sql, [problemId, quizId], function (err, result, fields) {
-    setCorsHeaders(res);
+    setCorsHeaders(req, res);
     if (err) {
       next(err);
       //res.json({ addstatus: "error" });
@@ -114,7 +114,7 @@ exports.insertProblemToDbJson = function (req, res, next) {
         next(err);
         //res.json({ insertstatus: "error" });
       } else {
-        setCorsHeaders(res);
+        setCorsHeaders(req, res);
         res.json({ insertstatus: "ok", problemId: problemId });
       }
     }
@@ -194,7 +194,7 @@ exports.editProblemInDB = function (req, res, next) {
         //res.json({ updatestatus: "error" });
       } else {
         //console.log(result);
-        setCorsHeaders(res);
+        setCorsHeaders(req, res);
         res.json({ updatestatus: "ok" });
       }
     }
@@ -225,7 +225,7 @@ exports.deleteProblemInDB = function (req, res, next) {
       next(err);
       //res.json({ deletestatus: "error" });
     } else {
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       console.log("problem deleted");
       res.json({ deletestatus: "ok" });
     }
@@ -299,7 +299,7 @@ exports.getTheProblem = function (req, res, next) {
             if (err) next(err);
             else {
               resObj.categoriesArray = result2.rows;
-              setCorsHeaders(res);
+              setCorsHeaders(req, res);
               res.json(resObj);
             }
           });
@@ -341,7 +341,7 @@ exports.getProblems = function (req, res, next) {
       }
       const jsonStr = JSON.stringify(resultArr);
       const encStr = util.encrypt(jsonStr);
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json(encStr);
       //res.json(resultArr);
     }
@@ -370,7 +370,7 @@ exports.searchProblems = function (req, res, next) {
   pool.query(sql, [searchKey], function (err, result, fields) {
     if (err) next(err);
     else {
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json(result.rows);
     }
   });

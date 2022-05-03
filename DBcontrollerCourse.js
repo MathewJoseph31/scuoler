@@ -96,7 +96,7 @@ exports.insertCourseToDbJson = function (req, res, next) {
         next(err);
         //res.json({ insertstatus: "error" });
       } else {
-        setCorsHeaders(res);
+        setCorsHeaders(req, res);
         res.json({ insertstatus: "ok", courseId: courseId });
       }
     }
@@ -138,7 +138,7 @@ exports.getCourses = function (req, res, next) {
         resultArr.push(result.rows[i]);
       }
 
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json(resultArr);
     }
   });
@@ -165,7 +165,7 @@ exports.searchCoursesForPrefix = function (req, res, next) {
   pool.query(sql, [searchKey], function (err, result, fields) {
     if (err) next(err);
     else {
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json(result.rows);
     }
   });
@@ -192,7 +192,7 @@ exports.searchCourses = function (req, res, next) {
   pool.query(sql, [searchKey], function (err, result, fields) {
     if (err) next(err);
     else {
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json(result.rows);
     }
   });
@@ -253,7 +253,7 @@ exports.getTheCourse = function (req, res, next) {
             if (err) next(err);
             else {
               resObj.categoriesArray = result2.rows;
-              setCorsHeaders(res);
+              setCorsHeaders(req, res);
               res.json(resObj);
             }
           });
@@ -289,7 +289,7 @@ exports.getQuizListForCourseJson = function (req, res, next) {
       for (i = 0; i < result.rows.length; i++) {
         resultArr.push(result.rows[i]);
       }
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json(resultArr);
     }
   });
@@ -346,7 +346,7 @@ exports.editCourseInDbJson = function (req, res, next) {
         //res.json({ updatestatus: "error" });
       } else {
         console.log("course updated");
-        setCorsHeaders(res);
+        setCorsHeaders(req, res);
         res.json({ updatestatus: "ok" });
       }
     }
@@ -376,7 +376,7 @@ exports.deleteCourseInDB = function (req, res, next) {
     } else {
       //console.log(description+' '+solution);
       console.log("problem deleted");
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json({ deletestatus: "ok" });
     }
   });
@@ -407,7 +407,7 @@ exports.getCategoryListForCourseJson = function (req, res, next) {
       for (i = 0; i < result.rows.length; i++) {
         resultArr.push(result.rows[i]);
       }
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json(resultArr);
     }
   });
@@ -428,7 +428,7 @@ exports.getCategoryList = function (req, res, next) {
   pool.query(sql, function (err, result, fields) {
     if (err) reject(err);
     else {
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json(result.rows);
     }
   });

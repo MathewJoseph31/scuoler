@@ -30,7 +30,7 @@ exports.getChats = function (req, res, next) {
   pool.query(sql, [offset, pageSize], function (err, result, fields) {
     if (err) next(err);
 
-    utils.setCorsHeaders(res);
+    utils.setCorsHeaders(req, res);
     res.json(result.rows);
   });
 };
@@ -69,7 +69,7 @@ exports.insertChatToDbJson = function (req, res, next) {
       next(err);
       //res.json({"insertstatus":"error "+err.toString()});
     } else {
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json({ insertstatus: "ok", chat_id: id });
     }
   });
@@ -100,7 +100,7 @@ exports.editChatInDbJson = function (req, res, next) {
       next(err);
       //res.json({"updatestatus":"error"});
     } else {
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json({ updatestatus: "ok" });
     }
   });
@@ -128,7 +128,7 @@ exports.deleteChatInDB = function (req, res, next) {
       res.json({ deletestatus: "error" });
     } else {
       //console.log(description+' '+solution);
-      setCorsHeaders(res);
+      setCorsHeaders(req, res);
       res.json({ deletestatus: "ok" });
     }
   });
