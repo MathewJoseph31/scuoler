@@ -4,47 +4,65 @@
  * Module dependencies.
  */
 
-var app = require('../app');
-var debug = require('debug')('webapp:server');
-//var http = require('http');
-const https = require('https');//gives an error in heroku after deploying so turning it off
-const fs = require('fs');
+var app = require("../app");
+var debug = require("debug")("webapp:server");
+var http = require("http");
+const https = require("https"); //gives an error in heroku after deploying so turning it off
+const fs = require("fs");
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '443');
-app.set('port', port);
+var port;
+
+if (process.env.NODE_ENV === "production") {
+  port = normalizePort(process.env.PORT || "443");
+} else {
+  port = normalizePort(process.env.PORT || "5000");
+}
+app.set("port", port);
 
 /**
  * Create HTTP server.
  */
 
-//var server = http.createServer(app);
+let server;
 
-var server = https.createServer({
-    key: fs.readFileSync('/etc/letsencrypt/live/scuoler.com/privkey.pem'),
-    cert: fs.readFileSync('/etc/letsencrypt/live/scuoler.com/fullchain.pem')
-},app);
+if (process.env.NODE_ENV === "production") {
+  server = https.createServer(
+    {
+      key: fs.readFileSync("/etc/letsencrypt/live/scuoler.com/privkey.pem"),
+      cert: fs.readFileSync("/etc/letsencrypt/live/scuoler.com/fullchain.pem"),
+    },
+    app
+  );
+} else {
+  server = http.createServer(app);
+}
 
 /**
  * Listen on provided port, on all network interfaces.
  */
 
-const socketController=require('../SocketController');
+const socketController = require("../SocketController");
 socketController.handleSocketIO(server);
 
 server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+server.on("error", onError);
+server.on("listening", onListening);
 
 // Redirect from http port 80 to https
-var http = require('http');
-http.createServer(function (req, res) {
-    res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
-    res.end();
-}).listen(80);
+if (process.env.NODE_ENV === "production") {
+  http
+    .createServer(function (req, res) {
+      res.writeHead(301, {
+        Location: "https://" + req.headers["host"] + req.url,
+      });
+      res.end();
+    })
+    .listen(80);
+}
 
 /**
  * Normalize a port into a number, string, or false.
@@ -71,22 +89,20 @@ function normalizePort(val) {
  */
 
 function onError(error) {
-  if (error.syscall !== 'listen') {
+  if (error.syscall !== "listen") {
     throw error;
   }
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+  var bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
-    case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
+    case "EACCES":
+      console.error(bind + " requires elevated privileges");
       process.exit(1);
       break;
-    case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
+    case "EADDRINUSE":
+      console.error(bind + " is already in use");
       process.exit(1);
       break;
     default:
@@ -100,8 +116,6 @@ function onError(error) {
 
 function onListening() {
   var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
-  debug('Listening on ' + bind);
+  var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
+  debug("Listening on " + bind);
 }
