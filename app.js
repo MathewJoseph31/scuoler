@@ -53,7 +53,7 @@ if (process.env.NODE_ENV === "production") {
       {
         stream: accessLogStream,
         skip: (req, res) => {
-          return req.url.startsWith("/api");
+          return req.url.startsWith("/static");
         },
       }
     )
