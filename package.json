@@ -30,6 +30,7 @@
     "pg": "^8.6.0",
     "pg-native": "^3.0.0",
     "pg-sync": "^0.2.0",
+    "rotating-file-stream": "^3.0.3",
     "socket.io": "^2.4.1"
   },
   "devDependencies": {

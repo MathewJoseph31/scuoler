@@ -11,7 +11,8 @@ const session = require("express-session");
 //additional
 var createError = require("http-errors");
 var path = require("path");
-var logger = require("morgan");
+//morgan logger
+var morgan = require("morgan");
 
 // Use enforce.HTTPS({ trustProtoHeader: true }) in case you are behind
 // a load balancer (e.g. Heroku). See further comments below
@@ -38,7 +39,23 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //app.set('views', path.join(__dirname, 'views'));
 //app.set('view engine', 'ejs');
 
-app.use(logger("dev"));
+if (process.env.NODE_ENV === "production") {
+  var rfs = require("rotating-file-stream");
+  // create a rotating write stream
+  var accessLogStream = rfs.createStream("access.log", {
+    interval: "1d", // rotate daily
+    path: path.join(__dirname, "logs"),
+  });
+
+  app.use(
+    morgan(
+      "[:remote-addr]  [:remote-user] [:date[clf]] [:method :url] [:status] [:res[content-length]] [:referrer] [:user-agent]",
+      { stream: accessLogStream }
+    )
+  );
+} else {
+  app.use(morgan("dev"));
+}
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
