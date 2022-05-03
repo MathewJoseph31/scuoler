@@ -50,7 +50,12 @@ if (process.env.NODE_ENV === "production") {
   app.use(
     morgan(
       "[:remote-addr]  [:remote-user] [:date[clf]] [:method :url] [:status] [:res[content-length]] [:referrer] [:user-agent]",
-      { stream: accessLogStream }
+      {
+        stream: accessLogStream,
+        skip: (req, res) => {
+          return req.url.startsWith("/api");
+        },
+      }
     )
   );
 } else {
