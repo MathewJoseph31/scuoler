@@ -42,6 +42,20 @@ function getUniqueId(userId) {
 
 exports.getUniqueId = getUniqueId;
 
+const whiteListedIps = ["72.230.86.18", "127.0.0.1", "150.136.243.153"];
+
+exports.setCorsHeaders = function (req, res) {
+  whiteListedIps.forEach((val) => {
+    if (req.ip.includes(val)) {
+      res.setHeader("Access-Control-Allow-Origin", "*");
+      res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+      res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+      res.setHeader("Access-Control-Allow-Credentials", true);
+      return;
+    }
+  });
+};
+
 exports.uploadFilesToCloudinary = function (req, res, next, dir_name) {
   cloudinary.config({
     cloud_name: cloudinaryConfiguration.getCloudName(),
@@ -59,10 +73,7 @@ exports.uploadFilesToCloudinary = function (req, res, next, dir_name) {
           next(err);
           //res.json({"updatestatus":"error"});
         }
-        res.setHeader("Access-Control-Allow-Origin", "*");
-        res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-        res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-        res.setHeader("Access-Control-Allow-Credentials", true);
+        setCorsHeaders(req, res);
         res.json(result);
       }
     );
@@ -72,10 +83,7 @@ exports.uploadFilesToCloudinary = function (req, res, next, dir_name) {
         next(err);
         //res.json({"updatestatus":"error"});
       }
-      res.setHeader("Access-Control-Allow-Origin", "*");
-      res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-      res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-      res.setHeader("Access-Control-Allow-Credentials", true);
+      setCorsHeaders(req, res);
       res.json(result);
     });
   }
@@ -102,18 +110,4 @@ exports.delete_images = function (image_urls_for_delete) {
   });
 
   return "ok";
-};
-
-const whiteListedIps = ["72.230.86.18", "127.0.0.1"];
-
-exports.setCorsHeaders = function (req, res) {
-  whiteListedIps.forEach((val) => {
-    if (req.ip.includes(val)) {
-      res.setHeader("Access-Control-Allow-Origin", "*");
-      res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-      res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-      res.setHeader("Access-Control-Allow-Credentials", true);
-      return;
-    }
-  });
 };

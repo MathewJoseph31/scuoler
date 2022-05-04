@@ -14,6 +14,9 @@ var path = require("path");
 //morgan logger
 var morgan = require("morgan");
 
+const utils = require("./utils/Utils");
+let { setCorsHeaders } = utils;
+
 // Use enforce.HTTPS({ trustProtoHeader: true }) in case you are behind
 // a load balancer (e.g. Heroku). See further comments below
 //app.use(enforce.HTTPS({ trustProtoHeader: true}));
@@ -102,10 +105,7 @@ app.use(function (err, req, res, next) {
     res.send({ error: "Something failed!" + err.toString() });
   } else {
     //res.render('error',{message:err.toString(),error:err});
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-    res.setHeader("Access-Control-Allow-Credentials", true);
+    setCorsHeaders(req, res);
     res.json("Error!, description: " + err.toString());
   }
 });
