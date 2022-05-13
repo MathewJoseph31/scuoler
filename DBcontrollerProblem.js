@@ -327,7 +327,7 @@ exports.getProblems = function (req, res, next) {
   });
 
   var sql =
-    "select distinct A.id, A.description, A.options, A.option1, A.option2, A.option3, A.option4, A.answerkey, " +
+    "select distinct A.id,  A.description, A.options, A.option1, A.option2, A.option3, A.option4, A.answerkey, " +
     " A.solution, A.type, A.author_id, A.source  from Problem A " +
     " where A.deleted=false offset $1 limit $2 ";
 
@@ -370,8 +370,12 @@ exports.searchProblems = function (req, res, next) {
   pool.query(sql, [searchKey], function (err, result, fields) {
     if (err) next(err);
     else {
+      //setCorsHeaders(req, res);
+      //res.json(result.rows);
+      const jsonStr = JSON.stringify(result.rows);
+      const encStr = util.encrypt(jsonStr);
       setCorsHeaders(req, res);
-      res.json(result.rows);
+      res.json(encStr);
     }
   });
 };
