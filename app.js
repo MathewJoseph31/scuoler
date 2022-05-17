@@ -106,7 +106,7 @@ app.use(function (err, req, res, next) {
   } else {
     //res.render('error',{message:err.toString(),error:err});
     setCorsHeaders(req, res);
-    res.json("Error!, description: " + err.toString());
+    res.json("Description: " + err.toString());
   }
 });
 
