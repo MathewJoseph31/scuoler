@@ -1,10 +1,12 @@
 var nodemailer = require("nodemailer");
 
+const constants = require("./Constants");
+
 var transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "ischools.elearning@gmail.com",
-    pass: "ischools.elearning@123",
+    user: constants.GOOGLE_MAIL_USER_ID,
+    pass: constants.GOOGLE_MAIL_PASSWORD,
   },
 });
 exports.sendMail = function (req, res, next) {
@@ -26,9 +28,9 @@ exports.sendMail = function (req, res, next) {
     " \n";
 
   var mailMessage = {
-    from: "ischools.elearning@gmail.com",
+    from: constants.GOOGLE_MAIL_USER_ID,
     // from: req.body.email,
-    to: "ischools.elearning@gmail.com",
+    to: constants.GOOGLE_MAIL_USER_ID,
     subject: "Ref No:" + req.body.refnum,
     text: mailBody,
     replyTo: req.body.email,
@@ -36,7 +38,6 @@ exports.sendMail = function (req, res, next) {
 
   transporter.sendMail(mailMessage, function (error, info) {
     if (error) {
-      console.log(error);
       next(error);
     } else {
       console.log("Email sent: " + info.response);
@@ -63,7 +64,7 @@ exports.sendReply = function (req, res, next) {
     " \n";
 
   var mailMessage = {
-    from: "ischools.elearning@gmail.com",
+    from: constants.GOOGLE_MAIL_USER_ID,
     to: req.body.email,
     subject: "Ref No:" + req.body.refnum,
     text: "Thank you for contacting iSchools.com. We have recieved your query and will get back to you at the earliest. \n\nThanking you,\nTeam iSchools.com\n\n\nNote:This is an auto-generated mail.Please do not reply.",
@@ -71,7 +72,6 @@ exports.sendReply = function (req, res, next) {
 
   transporter.sendMail(mailMessage, function (error, info) {
     if (error) {
-      console.log(error);
       next(error);
     } else {
       console.log("Email reply sent: " + info.response);
@@ -86,7 +86,7 @@ exports.sendWelcome = function (req, res, next) {
   // console.log("req.body.password : ", req.body.password);
 
   var mailMessage = {
-    from: "ischools.elearning@gmail.com",
+    from: constants.GOOGLE_MAIL_USER_ID,
     to: req.body.email,
     subject: "Welcome to iSchools",
     text:
@@ -99,7 +99,6 @@ exports.sendWelcome = function (req, res, next) {
 
   transporter.sendMail(mailMessage, function (error, info) {
     if (error) {
-      console.log(error);
       next(error);
     } else {
       console.log("Email reply sent: " + info.response);

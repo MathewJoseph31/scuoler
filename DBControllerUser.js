@@ -17,13 +17,17 @@ const utils = require("./utils/Utils");
 
 let { setCorsHeaders } = utils;
 
+const util = require("./util");
+
 //--USER/Costumer---
 
 /* function for handling  http authentication requests
 to the portal, the credentials are store in Customer table */
 exports.encryptPass = function (req, res, next) {
   let text = req.body.userId;
-  let result = util.encryptPass(text, 10);
+  let result = util.encrypt(text, 10);
+  result = result.slice(0, 10);
+
   setCorsHeaders(req, res);
   // console.log("result_encrypt: ", result);
   res.json(result);
