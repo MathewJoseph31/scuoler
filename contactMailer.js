@@ -1,6 +1,7 @@
 var nodemailer = require("nodemailer");
 
 const constants = require("./Constants");
+const utils = require("./utils/Utils");
 let { setCorsHeaders } = utils;
 
 var transporter = nodemailer.createTransport({
