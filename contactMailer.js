@@ -1,6 +1,7 @@
 var nodemailer = require("nodemailer");
 
 const constants = require("./Constants");
+let { setCorsHeaders } = utils;
 
 var transporter = nodemailer.createTransport({
   service: "gmail",
@@ -41,6 +42,7 @@ exports.sendMail = function (req, res, next) {
       next(error);
     } else {
       console.log("Email sent: " + info.response);
+      setCorsHeaders(req, res);
       res.json({ mailSentStatus: "ok" });
     }
   });
@@ -75,6 +77,7 @@ exports.sendReply = function (req, res, next) {
       next(error);
     } else {
       console.log("Email reply sent: " + info.response);
+      setCorsHeaders(req, res);
       res.json({ mailReplySentStatus: "ok" });
     }
   });
@@ -102,6 +105,7 @@ exports.sendWelcome = function (req, res, next) {
       next(error);
     } else {
       console.log("Email reply sent: " + info.response);
+      setCorsHeaders(req, res);
       res.json({ mailReplySentStatus: "ok" });
     }
   });

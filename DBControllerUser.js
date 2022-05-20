@@ -25,7 +25,7 @@ const util = require("./util");
 to the portal, the credentials are store in Customer table */
 exports.encryptPass = function (req, res, next) {
   let text = req.body.userId;
-  let result = util.encrypt(text, 10);
+  let result = util.encrypt(text);
   result = result.slice(0, 10);
 
   setCorsHeaders(req, res);
