@@ -78,7 +78,7 @@ const processLine = (line) => {
     " referrer," +
     " user_agent) values ( $1, $2, $3, $4, $5, $6, $7, $8 )";
   let reg =
-    /\[(\S+)\]\s+\[(\S+)\]\s+\[(\S+\s\S+)\]\s+\[(\S+\s\S+)\]\s+\[(\d+)\]\s+\[(\S+)\]\s+\[(\S+)\]\s+\[(.+)\]$/;
+    /\[(\S+)\]\s+\[(\S+)\]\s+\[(\S+\s\S+)\]\s+\[(\S+\s\S+)\]\s+\[(\S+)\]\s+\[(\S+)\]\s+\[(\S+)\]\s+\[(.+)\]$/;
   let matchResult = line.match(reg);
   if (matchResult?.length > 0) {
     let remoteIp = matchResult[1];
