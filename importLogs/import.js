@@ -76,7 +76,8 @@ const processLine = (line, fileName) => {
     " response_status," +
     " response_length," +
     " referrer," +
-    " user_agent) values ( $1, $2, $3, $4, $5, $6, $7, $8 )";
+    " user_agent, " +
+    " log_filename) values ( $1, $2, $3, $4, $5, $6, $7, $8, $9 )";
   let reg =
     /\[(\S+)\]\s+\[(\S+)\]\s+\[(\S+\s\S+)\]\s+\[(\S+\s\S+)\]\s+\[(\S+)\]\s+\[(\S+)\]\s+\[(\S+)\]\s+\[(.+)\]$/;
   let matchResult = line.match(reg);
@@ -109,6 +110,7 @@ const processLine = (line, fileName) => {
         responseLength,
         referrer,
         userAgent,
+        fileName,
       ])
       .then()
       .catch((err) => {
