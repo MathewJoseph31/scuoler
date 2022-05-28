@@ -51,7 +51,7 @@ const processFile = (directoryPath, fileName, processedFiles) => {
   });
 
   readInterface.on("line", function (line) {
-    processLine(line);
+    processLine(line, fileName);
   });
   readInterface.on("close", function () {
     processedFiles.push(fileName);
@@ -64,7 +64,7 @@ const processFile = (directoryPath, fileName, processedFiles) => {
   });
 };
 
-const processLine = (line) => {
+const processLine = (line, fileName) => {
   //\s = white space character, \S - negation class
   //
   let insertQuery =
@@ -110,7 +110,10 @@ const processLine = (line) => {
         referrer,
         userAgent,
       ])
-      .then();
+      .then()
+      .catch((err) => {
+        console.log(fileName, err);
+      });
   } else {
     console.log("could not process", line);
   }
