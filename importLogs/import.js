@@ -85,7 +85,7 @@ const processLine = (line, fileName) => {
     let remoteIp = matchResult[1];
     let remoteUser = matchResult[2];
     let dateTime = matchResult[3];
-    let methodAndUrl = matchResult[4];
+    let methodAndUrl = matchResult[4].substring(0, 999);
     let status = matchResult[5];
     let responseLength = matchResult[6];
     let referrer = matchResult[7];
