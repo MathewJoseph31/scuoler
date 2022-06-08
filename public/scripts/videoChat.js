@@ -11,7 +11,10 @@ let ROOM_ID = path.substring(path.lastIndexOf("/") + 1);
 
 const socket = io("/");
 const videoGrid = document.getElementById("videoChat-left-video-grid");
-videoGrid.insertAdjacentHTML("beforeend", `<video autoplay="true" />`);
+videoGrid.insertAdjacentHTML(
+  "beforeend",
+  `<video autoplay="true" muted="true"/>`
+);
 let myVideo = videoGrid.firstChild;
 let myVideoStream;
 let myPeerId;
@@ -171,7 +174,7 @@ const connectToNewUser = (userId, myStream) => {
   console.log("another new user", userId, call);
   videoGrid.insertAdjacentHTML(
     "beforeend",
-    `<video class="${userId}" autoplay="true" />`
+    `<video class="${userId}" autoplay="true"  />`
   );
   let video;
   call.on("stream", (userVideoStream) => {
