@@ -31,7 +31,9 @@
     "pg-native": "^3.0.0",
     "pg-sync": "^0.2.0",
     "rotating-file-stream": "^3.0.3",
-    "socket.io": "^2.4.1"
+    "peer": "^0.6.1",
+    "socket.io": "^4.5.1",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "nodemon": "^1.19.4"

@@ -4,24 +4,12 @@
  * Module dependencies.
  */
 
-var app = require("../app");
+const app = require("../app");
+
 var debug = require("debug")("webapp:server");
 var http = require("http");
 const https = require("https"); //gives an error in heroku after deploying so turning it off
 const fs = require("fs");
-
-/**
- * Get port from environment and store in Express.
- */
-
-var port;
-
-if (process.env.NODE_ENV === "production") {
-  port = normalizePort(process.env.PORT || "443");
-} else {
-  port = normalizePort(process.env.PORT || "5000");
-}
-app.set("port", port);
 
 /**
  * Create HTTP server.
@@ -47,6 +35,27 @@ if (process.env.NODE_ENV === "production") {
 
 const socketController = require("../SocketController");
 socketController.handleSocketIO(server);
+
+const { ExpressPeerServer } = require("peer");
+const peerServer = ExpressPeerServer(server, {
+  debug: true,
+});
+
+const { setRoutes } = require("../setRoutes");
+setRoutes(app, peerServer);
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+var port;
+
+if (process.env.NODE_ENV === "production") {
+  port = normalizePort(process.env.PORT || "443");
+} else {
+  port = normalizePort(process.env.PORT || "5000");
+}
+app.set("port", port);
 
 server.listen(port);
 server.on("error", onError);
