@@ -17,6 +17,7 @@ let myName;
 const peers = {};
 
 let peer;
+let screenShare = false;
 
 const getPeer = () => {
   if (!peer) {
@@ -105,6 +106,7 @@ const getMyVideoStream = () => {
       resolve(myVideoStream);
     } else {
       window.navigator.mediaDevices
+        //.getDisplayMedia(camMediaOptions)
         .getUserMedia(camMediaOptions)
         .then((stream) => {
           myVideoStream = stream;
@@ -235,13 +237,16 @@ const connectToNewUser = (userId, myStream) => {
 
 const muteUnmute = () => {
   getMyVideoStream().then((myStream) => {
-    const enabled = myStream.getAudioTracks()[0].enabled;
-    if (enabled) {
-      myStream.getAudioTracks()[0].enabled = false;
-      setUnmuteButton();
-    } else {
-      myStream.getAudioTracks()[0].enabled = true;
-      setMuteButton();
+    console.log(myStream.getTracks());
+    if (myStream.getAudioTracks().length > 0) {
+      const enabled = myStream.getAudioTracks()[0].enabled;
+      if (enabled) {
+        myStream.getAudioTracks()[0].enabled = false;
+        setUnmuteButton();
+      } else {
+        myStream.getAudioTracks()[0].enabled = true;
+        setMuteButton();
+      }
     }
   });
 };
@@ -293,4 +298,59 @@ const setPlayVideoButton = () => {
     "videoChat__left__stopVideo__button"
   )[0];
   videoEle.innerHTML = html;
+};
+
+const switchToScreenShare = async () => {
+  if (!screenShare) {
+    let newStream = await window.navigator.mediaDevices.getDisplayMedia(
+      camMediaOptions
+    );
+
+    let localStream = await getMyVideoStream();
+
+    await replaceVideoTracks(localStream, newStream);
+
+    screenShare = true;
+    setScreenShareButton();
+  } else {
+    let newStream = await window.navigator.mediaDevices.getUserMedia(
+      camMediaOptions
+    );
+
+    let localStream = await getMyVideoStream();
+
+    await replaceVideoTracks(localStream, newStream);
+
+    screenShare = false;
+    setNoScreenShareButton();
+  }
+};
+
+const setScreenShareButton = () => {
+  const html = `<i class="fas fa-desktop"></i>
+                <span>Screenshare</span>`;
+  const screenshareEle = document.getElementsByClassName(
+    "videoChat__left__screenshare__button"
+  )[0];
+  screenshareEle.innerHTML = html;
+};
+
+const setNoScreenShareButton = () => {
+  const html = `<i class="noScreenShare fas fa-desktop"></i>
+                <span>Screenshare</span>`;
+  const screenshareEle = document.getElementsByClassName(
+    "videoChat__left__screenshare__button"
+  )[0];
+  screenshareEle.innerHTML = html;
+};
+
+const replaceVideoTracks = async (oldStream, newStream) => {
+  let trackArr = [...oldStream.getTracks()];
+  for (let i = 0; i < trackArr.length; i++)
+    if (trackArr[i].kind === "video") await oldStream.removeTrack(trackArr[i]);
+
+  for (let i = 0; i < newStream.getTracks().length; i++) {
+    if (newStream.getTracks()[i].kind === "video")
+      await oldStream.addTrack(newStream.getTracks()[i]);
+  }
 };
