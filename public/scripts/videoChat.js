@@ -9,17 +9,50 @@
 let path = window.location.pathname;
 let ROOM_ID = path.substring(path.lastIndexOf("/") + 1);
 
-const socket = io("/");
-const videoGrid = document.getElementById("videoChat-left-video-grid");
-videoGrid.insertAdjacentHTML(
-  "beforeend",
-  `<video autoplay="true" muted="true"/>`
-);
-let myVideo = videoGrid.firstChild;
+let socket;
+let videoGrid;
+let myVideo;
 let myVideoStream;
-let myPeerId;
 let myName;
 const peers = {};
+
+let peer;
+
+const getPeer = () => {
+  if (!peer) {
+    peer = new Peer(undefined, {
+      path: "/peerjsServer",
+      host: "/",
+      port: "443",
+    });
+  }
+  return peer;
+};
+
+const getSocket = () => {
+  if (!socket) {
+    socket = io("/");
+  }
+  return socket;
+};
+
+const getVideoGrid = () => {
+  if (!videoGrid) {
+    videoGrid = document.getElementById("videoChat-left-video-grid");
+    videoGrid.insertAdjacentHTML(
+      "beforeend",
+      `<video autoplay="true" muted="true"/>`
+    );
+  }
+  return videoGrid;
+};
+
+const getMyVideo = () => {
+  if (!myVideo) {
+    myVideo = getVideoGrid().firstChild;
+  }
+  return myVideo;
+};
 
 const nameClicked = () => {
   let name = document.getElementById("videChat__Dialog__input").value;
@@ -40,43 +73,8 @@ const getMyName = (defaultName) => {
   );
 };
 
-const textEle = document.getElementById("chat_message");
-
-textEle.addEventListener("keyup", function (event) {
-  event.preventDefault();
-  if (event.key === "Enter" && textEle.value?.length > 0) {
-    let chatMsg = { name: myName, message: textEle.value };
-    socket.emit("message", JSON.stringify(chatMsg));
-    textEle.value = "";
-  }
-});
-
-socket.on("createMessage", (jsonChatMsg) => {
-  let chatMsg = JSON.parse(jsonChatMsg);
-  liEl = document.createElement("li");
-  liEl.setAttribute("class", "MessageElement");
-
-  liEl.innerHTML = `<b>${chatMsg.name.substring(0, 11)}</b><br/>${
-    chatMsg.message
-  }`;
-  ulEl = document.getElementById("chat-right-MessagesUl");
-  ulEl.appendChild(liEl);
-  scrollToBottom(ulEl);
-});
-
 const scrollToBottom = (node) => {
   node.scrollTop = node.scrollHeight;
-};
-
-let peer = new Peer(undefined, {
-  path: "/peerjsServer",
-  host: "/",
-  port: "443",
-});
-
-const camMediaOptions = {
-  video: true,
-  audio: true,
 };
 
 /*let getUserMedia =
@@ -84,30 +82,6 @@ const camMediaOptions = {
   window.navigator.getUserMedia ||
   window.navigator.webkitGetUserMedia ||
   window.navigator.mozGetUserMedia;*/
-
-//const initializePeer = () => {
-peer.on("open", (myId) => {
-  myPeerId = myId;
-  //console.log("room peer", ROOM_ID, myPeerId);
-
-  myVideo?.setAttribute("class", myId);
-  socket.emit("join-room", ROOM_ID, myId);
-
-  if (!myName) {
-    getMyName(myId);
-  }
-});
-//};
-
-window.navigator.mediaDevices
-  .getUserMedia(camMediaOptions)
-  .then((stream) => {
-    myVideoStream = stream;
-    addVideoStream(myVideo, myVideoStream);
-  })
-  .catch((err) => {
-    console.log(`err in getting user media ${err}`);
-  });
 
 const addVideoStream = (video, stream) => {
   video.srcObject = stream;
@@ -120,59 +94,127 @@ const addVideoStream = (video, stream) => {
   //videoGrid.append(video);
 };
 
-socket.on("user-connected", (userId) => {
-  console.log("user connected");
-  connectToNewUser(userId, myVideoStream);
-});
+const camMediaOptions = {
+  video: true,
+  audio: true,
+};
 
-socket.on("user-disconnected", (userId) => {
-  let videoEle = document.getElementsByClassName(userId)[0];
-  if (videoEle) {
-    videoEle.remove();
-  }
-  if (peers[userId]) peers[userId].close();
-});
+const getMyVideoStream = () => {
+  return new Promise(function (resolve, reject) {
+    if (myVideoStream) {
+      resolve(myVideoStream);
+    } else {
+      window.navigator.mediaDevices
+        .getUserMedia(camMediaOptions)
+        .then((stream) => {
+          myVideoStream = stream;
+          addVideoStream(getMyVideo(), myVideoStream);
+          resolve(myVideoStream);
+        })
+        .catch((err) => {
+          console.log(`err in getting user media ${err}`);
+          reject(err);
+        });
+    }
+  });
+};
 
-peer.on("call", (call) => {
-  // Answer the call, providing our mediaStream
-  if (!myVideoStream) {
-    window.navigator.mediaDevices
-      .getUserMedia(camMediaOptions)
-      .then((stream) => {
-        myVideoStream = stream;
-        addVideoStream(myVideo, myVideoStream);
-        call.answer(myVideoStream);
+const init = () => {
+  getMyVideoStream()
+    .then()
+    .catch((err) => {
+      console.log(`err in getting user media ${err}`);
+    });
+
+  const textEle = document.getElementById("chat_message");
+
+  textEle.addEventListener("keyup", function (event) {
+    event.preventDefault();
+    if (event.key === "Enter" && textEle.value?.length > 0) {
+      let chatMsg = { name: myName, message: textEle.value };
+      getSocket().emit("message", JSON.stringify(chatMsg));
+      textEle.value = "";
+    }
+  });
+
+  getSocket().on("createMessage", (jsonChatMsg) => {
+    let chatMsg = JSON.parse(jsonChatMsg);
+    liEl = document.createElement("li");
+    liEl.setAttribute("class", "MessageElement");
+
+    liEl.innerHTML = `<b>${chatMsg.name.substring(0, 11)}</b><br/>${
+      chatMsg.message
+    }`;
+    ulEl = document.getElementById("chat-right-MessagesUl");
+    ulEl.appendChild(liEl);
+    scrollToBottom(ulEl);
+  });
+
+  getPeer().on("open", (myId) => {
+    //console.log("room peer", ROOM_ID, myId);
+
+    getMyVideo()?.setAttribute("class", myId);
+    getSocket().emit("join-room", ROOM_ID, myId);
+
+    if (!myName) {
+      getMyName(myId);
+    }
+  });
+
+  getSocket().on("user-connected", (userId) => {
+    console.log("user connected");
+    getMyVideoStream()
+      .then((mystream) => {
+        connectToNewUser(userId, mystream);
       })
       .catch((err) => {
         console.log(`err in getting user media ${err}`);
       });
-    //initVideoStream(myVideoStream);
-  } else {
-    call.answer(myVideoStream);
-  }
-  //console.log("on call", myVideoStream);
-  videoGrid.insertAdjacentHTML(
-    "beforeend",
-    `<video class="${call.peer}" autoplay="true"  />`
-  );
-  let video;
-  call.on("stream", (userVideoStream) => {
-    video = videoGrid.lastChild;
-    //video.setAttribute("class", call.peer);
-    //const video = document.createElement("video");
-    addVideoStream(video, userVideoStream);
   });
-  call.on("close", () => {
-    //console.log("closing call");
-    video.remove();
+
+  getSocket().on("user-disconnected", (userId) => {
+    let videoEle = document.getElementsByClassName(userId)[0];
+    if (videoEle) {
+      videoEle.remove();
+    }
+    if (peers[userId]) peers[userId].close();
   });
-  peers[call.peer] = call;
-});
+
+  getPeer().on("call", (call) => {
+    // Answer the call, providing our mediaStream
+    peers[call.peer] = call;
+    getMyVideoStream()
+      .then((myStream) => {
+        call.answer(myStream);
+      })
+      .catch((err) => {
+        console.log(`err in getting user media ${err}`);
+      });
+    //console.log("on call", myVideoStream);
+    getVideoGrid().insertAdjacentHTML(
+      "beforeend",
+      `<video class="${call.peer}" autoplay="true"  />`
+    );
+    let video;
+    call.on("stream", (userVideoStream) => {
+      video = getVideoGrid().lastChild;
+      //video.setAttribute("class", call.peer);
+      //const video = document.createElement("video");
+      addVideoStream(video, userVideoStream);
+    });
+    call.on("close", () => {
+      //console.log("closing call");
+      video.remove();
+    });
+  });
+};
+
+init();
 
 const connectToNewUser = (userId, myStream) => {
-  const call = peer.call(userId, myStream);
+  const call = getPeer().call(userId, myStream);
   console.log("another new user", userId, call);
-  videoGrid.insertAdjacentHTML(
+  getVideoGrid().insertAdjacentHTML(
     "beforeend",
     `<video class="${userId}" autoplay="true"  />`
   );
@@ -180,7 +222,7 @@ const connectToNewUser = (userId, myStream) => {
   call.on("stream", (userVideoStream) => {
     //const video = document.createElement("video");
     //console.log("stream arrived", userId, userVideoStream);
-    video = videoGrid.lastChild;
+    video = getVideoGrid().lastChild;
     //video.setAttribute("class", userId);
     addVideoStream(video, userVideoStream);
   });
@@ -192,16 +234,16 @@ const connectToNewUser = (userId, myStream) => {
 };
 
 const muteUnmute = () => {
-  if (!myVideoStream.getAudioTracks()[0]) return;
-
-  const enabled = myVideoStream.getAudioTracks()[0].enabled;
-  if (enabled) {
-    myVideoStream.getAudioTracks()[0].enabled = false;
-    setUnmuteButton();
-  } else {
-    myVideoStream.getAudioTracks()[0].enabled = true;
-    setMuteButton();
-  }
+  getMyVideoStream().then((myStream) => {
+    const enabled = myStream.getAudioTracks()[0].enabled;
+    if (enabled) {
+      myStream.getAudioTracks()[0].enabled = false;
+      setUnmuteButton();
+    } else {
+      myStream.getAudioTracks()[0].enabled = true;
+      setMuteButton();
+    }
+  });
 };
 
 const setMuteButton = () => {
@@ -223,14 +265,16 @@ const setUnmuteButton = () => {
 };
 
 const stopUnstopVideo = () => {
-  const enabled = myVideoStream.getVideoTracks()[0].enabled;
-  if (enabled) {
-    myVideoStream.getVideoTracks()[0].enabled = false;
-    setPlayVideoButton();
-  } else {
-    myVideoStream.getVideoTracks()[0].enabled = true;
-    setStopVideoButton();
-  }
+  getMyVideoStream().then((myStream) => {
+    const enabled = myStream.getVideoTracks()[0].enabled;
+    if (enabled) {
+      myStream.getVideoTracks()[0].enabled = false;
+      setPlayVideoButton();
+    } else {
+      myStream.getVideoTracks()[0].enabled = true;
+      setStopVideoButton();
+    }
+  });
 };
 
 const setStopVideoButton = () => {
