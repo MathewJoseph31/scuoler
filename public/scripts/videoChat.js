@@ -349,7 +349,7 @@ const switchToScreenShare = async () => {
 };
 
 const setScreenShareButton = () => {
-  const html = `<i class="fas fa-desktop"></i>
+  const html = `<i class="screenShare fas fa-desktop"></i>
                 <span>Screenshare</span>`;
   const screenshareEle = document.getElementsByClassName(
     "videoChat__left__screenshare__button"
@@ -375,5 +375,16 @@ const replaceVideoTracks = async (oldStream, newStream) => {
   for (let i = 0; i < newStream.getTracks().length; i++) {
     if (newStream.getTracks()[i].kind === "video")
       await oldStream.addTrack(newStream.getTracks()[i]);
+  }
+};
+
+const leaveMeeting = () => {
+  console.log(
+    window.location.protocol,
+    window.location.hostname,
+    window.location.port
+  );
+  if (window.confirm("Do you really want to leave the Meeting?")) {
+    window.location.replace("/");
   }
 };

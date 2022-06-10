@@ -78,6 +78,10 @@ font-size: 24px;
     color: #CC3B33;
 }
 
+.videoChat .screenShare{
+    color: rgb(110, 230, 100);
+}
+
 .videoChat__right{
     flex:0.2;
     background-color: #242324;
