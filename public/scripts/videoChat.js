@@ -344,7 +344,6 @@ const switchToScreenShare = async () => {
   }
 
   Object.keys(peers).map((peerId) => {
-    console.log(peerId);
     reconnectToExistingUser(peerId, localStream);
   });
 };
