@@ -193,13 +193,16 @@ const init = () => {
         console.log(`err in getting user media ${err}`);
       });
     //console.log("on call", myVideoStream);
-    getVideoGrid().insertAdjacentHTML(
-      "beforeend",
-      `<video class="${call.peer}" autoplay="true"  />`
-    );
+    if (getVideoGrid().getElementsByClassName(call.peer).length === 0) {
+      getVideoGrid().insertAdjacentHTML(
+        "beforeend",
+        `<video class="${call.peer}" autoplay="true"  />`
+      );
+    }
     let video;
     call.on("stream", (userVideoStream) => {
-      video = getVideoGrid().lastChild;
+      video = getVideoGrid().getElementsByClassName(call.peer)[0];
+      //video = getVideoGrid().lastChild;
       //video.setAttribute("class", call.peer);
       //const video = document.createElement("video");
       addVideoStream(video, userVideoStream);
@@ -224,7 +227,8 @@ const connectToNewUser = (userId, myStream) => {
   call.on("stream", (userVideoStream) => {
     //const video = document.createElement("video");
     //console.log("stream arrived", userId, userVideoStream);
-    video = getVideoGrid().lastChild;
+    //video = getVideoGrid().lastChild;
+    video = getVideoGrid().getElementsByClassName(userId)[0];
     //video.setAttribute("class", userId);
     addVideoStream(video, userVideoStream);
   });
@@ -235,9 +239,26 @@ const connectToNewUser = (userId, myStream) => {
   peers[userId] = call;
 };
 
+const reconnectToExistingUser = (peerId, myStream) => {
+  const call = getPeer().call(peerId, myStream);
+  console.log("reconnect to existing user", peerId, call);
+  let video;
+  call.on("stream", (userVideoStream) => {
+    //const video = document.createElement("video");
+    //console.log("stream arrived", userId, userVideoStream);
+    video = getVideoGrid().getElementsByClassName(peerId)[0];
+    //video.setAttribute("class", userId);
+    addVideoStream(video, userVideoStream);
+  });
+  call.on("close", () => {
+    //console.log("closing call");
+    video.remove();
+  });
+  peers[peerId] = call;
+};
+
 const muteUnmute = () => {
   getMyVideoStream().then((myStream) => {
-    console.log(myStream.getTracks());
     if (myStream.getAudioTracks().length > 0) {
       const enabled = myStream.getAudioTracks()[0].enabled;
       if (enabled) {
@@ -301,12 +322,11 @@ const setPlayVideoButton = () => {
 };
 
 const switchToScreenShare = async () => {
+  let localStream = await getMyVideoStream();
   if (!screenShare) {
     let newStream = await window.navigator.mediaDevices.getDisplayMedia(
       camMediaOptions
     );
-
-    let localStream = await getMyVideoStream();
 
     await replaceVideoTracks(localStream, newStream);
 
@@ -317,13 +337,16 @@ const switchToScreenShare = async () => {
       camMediaOptions
     );
 
-    let localStream = await getMyVideoStream();
-
     await replaceVideoTracks(localStream, newStream);
 
     screenShare = false;
     setNoScreenShareButton();
   }
+
+  Object.keys(peers).map((peerId) => {
+    console.log(peerId);
+    reconnectToExistingUser(peerId, localStream);
+  });
 };
 
 const setScreenShareButton = () => {
@@ -345,6 +368,7 @@ const setNoScreenShareButton = () => {
 };
 
 const replaceVideoTracks = async (oldStream, newStream) => {
+  //console.log(oldStream);
   let trackArr = [...oldStream.getTracks()];
   for (let i = 0; i < trackArr.length; i++)
     if (trackArr[i].kind === "video") await oldStream.removeTrack(trackArr[i]);
