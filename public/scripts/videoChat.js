@@ -42,7 +42,7 @@ const getVideoGrid = () => {
     videoGrid = document.getElementById("videoChat-left-video-grid");
     videoGrid.insertAdjacentHTML(
       "beforeend",
-      `<video autoplay="true" muted="true"/>`
+      `<video autoplay="true" muted="true" onclick="videoClicked(event, this)" />`
     );
   }
   return videoGrid;
@@ -196,7 +196,7 @@ const init = () => {
     if (getVideoGrid().getElementsByClassName(call.peer).length === 0) {
       getVideoGrid().insertAdjacentHTML(
         "beforeend",
-        `<video class="${call.peer}" autoplay="true"  />`
+        `<video class="${call.peer}" autoplay="true"   onclick="videoClicked(event, this)" />`
       );
     }
     let video;
@@ -221,7 +221,7 @@ const connectToNewUser = (userId, myStream) => {
   console.log("another new user", userId, call);
   getVideoGrid().insertAdjacentHTML(
     "beforeend",
-    `<video class="${userId}" autoplay="true"  />`
+    `<video class="${userId}" autoplay="true"  onclick="videoClicked(event, this)" />`
   );
   let video;
   call.on("stream", (userVideoStream) => {
@@ -379,12 +379,25 @@ const replaceVideoTracks = async (oldStream, newStream) => {
 };
 
 const leaveMeeting = () => {
-  console.log(
-    window.location.protocol,
-    window.location.hostname,
-    window.location.port
-  );
   if (window.confirm("Do you really want to leave the Meeting?")) {
     window.location.replace("/");
   }
+};
+
+const videoClicked = (e, ele) => {
+  let videoElement;
+  videoElement = document.getElementById("maxVideo");
+  if (!videoElement) {
+    let wholeWindow = document.getElementsByClassName("videoChat")[0];
+    wholeWindow.insertAdjacentHTML(
+      "beforeend",
+      ` <video id="maxVideo" autoplay="true" muted="true" onclick="maxVideoClicked(this)"></video>`
+    );
+    videoElement = document.getElementById("maxVideo");
+  }
+  videoElement.srcObject = ele.srcObject;
+};
+
+const maxVideoClicked = (ele) => {
+  ele.remove();
 };
