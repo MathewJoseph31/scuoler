@@ -92,7 +92,16 @@ font-size: 24px;
     color: #CC3B33;
 }
 
+
 .videoChat .screenShare{
+    color: rgb(110, 230, 100);
+}
+
+.videoChat .noRecord{
+    color: #CC3B33;
+}
+
+.videoChat .record{
     color: rgb(110, 230, 100);
 }
 
