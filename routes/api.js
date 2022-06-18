@@ -10,6 +10,7 @@ const dbControllerEmployee = require("../DBcontrollerEmployee");
 const dbControllerPost = require("../DBcontrollerPost");
 const dbControllerRoom = require("../DBcontrollerRoom");
 const dbControllerChat = require("../DBcontrollerChat");
+const dbControllerFiles = require("../DBcontrollerFiles");
 const contactMailer = require("../contactMailer");
 
 const { securityController } = require("../SecurityController");
@@ -137,6 +138,10 @@ router.get("/getChats", dbControllerChat.getChats);
 router.post("/insertChatAction", dbControllerChat.insertChatToDbJson);
 router.post("/updateChat", dbControllerChat.editChatInDbJson);
 router.post("/deleteChat", dbControllerChat.deleteChatInDB);
+//Files
+router.get("/getUploadsForSource", dbControllerFiles.getUploadsForSource);
+router.post("/fileUpload", dbControllerFiles.fileUpload);
+router.post("/fileUploadInsertToDB", dbControllerFiles.fileUploadInsertToDB);
 //MAILER
 router.post("/sendMail", contactMailer.sendMail);
 router.post("/sendReply", contactMailer.sendReply);
