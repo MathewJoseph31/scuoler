@@ -141,7 +141,12 @@ router.post("/deleteChat", dbControllerChat.deleteChatInDB);
 //Files
 router.get("/getUploadsForSource", dbControllerFiles.getUploadsForSource);
 router.post("/fileUpload", dbControllerFiles.fileUpload);
+router.post("/fileUploadDelete", dbControllerFiles.fileUploadDelete);
 router.post("/fileUploadInsertToDB", dbControllerFiles.fileUploadInsertToDB);
+router.post(
+  "/fileUploadDeleteFromDB",
+  dbControllerFiles.fileUploadDeleteFromDB
+);
 //MAILER
 router.post("/sendMail", contactMailer.sendMail);
 router.post("/sendReply", contactMailer.sendReply);

@@ -78,6 +78,50 @@ exports.fileUpload = function (req, res, next) {
   });
 };
 
+exports.fileUploadDelete = function (req, res, next) {
+  let relativeUrl = req.body.relativeUrl;
+  let deletePath = path.join(
+    __basedir,
+    constants.PUBLIC_DIRECTORY,
+    relativeUrl
+  );
+  fs.unlink(deletePath, (err) => {
+    if (err) {
+      next(err);
+    } else {
+      setCorsHeaders(req, res);
+      res.json({ deletestatus: "ok" });
+    }
+    //file removed
+  });
+};
+
+exports.fileUploadDeleteFromDB = function (req, res, next) {
+  let relativeUrl = req.body.relativeUrl;
+  let sourceId = req.body.sourceId;
+
+  let sql =
+    "Update Upload_Association set deleted=true, modified_timestamp=now() where source_object_id=$1 and relative_url=$2";
+
+  var pool = new pg.Pool({
+    host: configuration.getHost(),
+    user: configuration.getUserId(),
+    password: configuration.getPassword(),
+    database: configuration.getDatabase(),
+    port: configuration.getPort(),
+    ssl: { rejectUnauthorized: false },
+  });
+
+  pool.query(sql, [sourceId, relativeUrl], (err, result) => {
+    if (err) {
+      next(err);
+    } else {
+      setCorsHeaders(req, res);
+      res.json({ deletestatus: "ok" });
+    }
+  });
+};
+
 exports.fileUploadInsertToDB = function (req, res, next) {
   let authorId = req.body.authorId;
   let sourceId = req.body.sourceId;
