@@ -73,10 +73,9 @@ exports.fileUpload = function (req, res, next) {
     if (err) next(err);
 
     //    console.log(`Successfully  ${fileName} moved!`);
+    setCorsHeaders(req, res);
+    res.json({ relativeUrl, fileName, type });
   });
-  //res.json(uploadFiles[0].path);
-  setCorsHeaders(req, res);
-  res.json({ relativeUrl, fileName, type });
 };
 
 exports.fileUploadInsertToDB = function (req, res, next) {
