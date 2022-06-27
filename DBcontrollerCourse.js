@@ -160,9 +160,9 @@ exports.searchCoursesForPrefix = function (req, res, next) {
   var sql =
     sqlSubstringForGetAndSearch +
     " from Course  " +
-    " where deleted=false and name ilike  $1";
+    " where deleted=false and trim(name) ilike  $1";
 
-  pool.query(sql, [searchKey], function (err, result, fields) {
+  pool.query(sql, [`${searchKey}%`], function (err, result, fields) {
     if (err) next(err);
     else {
       setCorsHeaders(req, res);
