@@ -25,6 +25,7 @@ exports.getMeetingsListAsync = async function () {
     " where Meeting.deleted=false order by ctid  ";
 
   let result = await pool.query(sql);
+  pool.end(() => {});
   return result.rows;
 };
 
@@ -51,6 +52,7 @@ exports.getMeetings = function (req, res, next) {
     " where Meeting.deleted=false order by ctid  offset $1 limit $2 ";
 
   pool.query(sql, [offset, pageSize], function (err, result, fields) {
+    pool.end(() => {});
     if (err) next(err);
     else {
       setCorsHeaders(req, res);
@@ -77,6 +79,7 @@ exports.insertMeetingToDbJson = function (req, res, next) {
   var sql = "insert into Meeting(id,description,organiser_id) values($1,$2,$3)";
 
   pool.query(sql, [meetingId, description, organiserId], (err, result) => {
+    pool.end(() => {});
     if (err) {
       next(err);
       //res.json({"insertstatus":"error"});

@@ -51,6 +51,8 @@ exports.verifyUserJson = function (req, res, next) {
     " FROM Customer where id=$1 and password=$2";
 
   pool.query(sql, [userId, password], function (err, result, fields) {
+    pool.end(() => {});
+
     if (err) next(err);
     else {
       let resObj = {};
@@ -89,6 +91,7 @@ exports.mergeUserRating = function (req, res, next) {
     sql,
     [quizOrCourseId, userId, rating],
     function (err, result, fields) {
+      pool.end(() => {});
       if (err) {
         next(err);
         //res.json({"mergestatus":"error"});
@@ -125,6 +128,7 @@ exports.userLikeUnlike = function (req, res, next) {
   });
 
   pool.query(sql, [id, user_id], function (err, result, fields) {
+    pool.end(() => {});
     if (err) {
       next(err);
       //res.json({ updatestatus: "error" });
@@ -161,6 +165,7 @@ exports.mergeUser = function (req, res, next) {
     sql,
     [userId, firstName, lastName, email, pictureUrl],
     function (err, result, fields) {
+      pool.end(() => {});
       if (err) {
         next(err);
         //res.json({"mergestatus":"error"});
@@ -193,6 +198,7 @@ exports.getUsers = function (req, res, next) {
     "SELECT id, first_name, last_name, address1, address2, city, zip, phone, mobile, " +
     " email, sex_male, profile_image_url FROM Customer  where deleted=false offset $1 limit $2 ";
   pool.query(sql, [offset, pageSize], function (err, result, fields) {
+    pool.end(() => {});
     if (err) next(err);
     else {
       var arrResult = [];
@@ -236,6 +242,7 @@ exports.searchUsers = function (req, res, next) {
     " where A.deleted=false and search_tsv@@query  order by rank desc ";
 
   pool.query(sql, [searchKey], function (err, result, fields) {
+    pool.end(() => {});
     if (err) next(err);
     else {
       setCorsHeaders(req, res);
@@ -259,6 +266,7 @@ exports.getTheUser = function (req, res, next) {
     "select first_name, last_name, address1, address2, city, zip, phone, mobile, email, sex_male, profile_image_url from customer where id = $1";
 
   pool.query(sql, [userId], function (err, result, fields) {
+    pool.end(() => {});
     if (err) next(err);
     else {
       console.log(JSON.stringify(result.rows));
@@ -361,6 +369,7 @@ exports.editUserInDbJson = function (req, res, next) {
       id,
     ],
     function (err, result, fields) {
+      pool.end(() => {});
       if (err) {
         next(err);
         //res.json({ updatestatus: "error" });
@@ -428,6 +437,7 @@ exports.insertUserToDbJson = function (req, res, next) {
       profile_image_url,
     ],
     (err, result) => {
+      pool.end(() => {});
       if (err) {
         next(err);
         //res.json({"insertstatus":"error"});
@@ -485,6 +495,7 @@ function getCourseListForUser(userId) {
   var sql = "SELECT id,name FROM Course where author_id=$1  and deleted=false ";
   return new Promise(function (resolve, reject) {
     pool.query(sql, [userId], function (err, result, fields) {
+      pool.end(() => {});
       if (err) reject(err);
       else {
         var i = 0;

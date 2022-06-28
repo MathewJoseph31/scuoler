@@ -37,6 +37,7 @@ exports.getUploadsForSource = function (req, res, next) {
     " offset $2 limit $3 ";
 
   pool.query(sql, [sourceId, offset, pageSize], function (err, result, fields) {
+    pool.end(() => {});
     if (err) next(err);
     else {
       setCorsHeaders(req, res);
@@ -113,6 +114,7 @@ exports.fileUploadDeleteFromDB = function (req, res, next) {
   });
 
   pool.query(sql, [sourceId, relativeUrl], (err, result) => {
+    pool.end(() => {});
     if (err) {
       next(err);
     } else {
@@ -146,6 +148,7 @@ exports.fileUploadInsertToDB = function (req, res, next) {
     sql,
     [sourceId, fileName, relativeUrl, fileType, authorId, timestamp.toJSON()],
     (err, result) => {
+      pool.end(() => {});
       if (err) {
         next(err);
       } else {

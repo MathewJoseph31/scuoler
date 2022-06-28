@@ -29,6 +29,8 @@ function getCourseList() {
   var sql = "SELECT id,name FROM Course ORDER by name ASC";
   return new Promise((resolve, reject) => {
     pool.query(sql, (err, result, fields) => {
+      pool.end(() => {});
+
       if (err) reject(err);
       else {
         var i = 0;
@@ -92,6 +94,7 @@ exports.insertCourseToDbJson = function (req, res, next) {
       quizesId,
     ],
     function (err, result) {
+      pool.end(() => {});
       if (err) {
         next(err);
         //res.json({ insertstatus: "error" });
@@ -131,6 +134,7 @@ exports.getCourses = function (req, res, next) {
   var resultArr = [];
 
   pool.query(sql, [offset, pageSize], function (err, result, fields) {
+    pool.end(() => {});
     if (err) next(err);
     else {
       var i = 0;
@@ -163,6 +167,7 @@ exports.searchCoursesForPrefix = function (req, res, next) {
     " where deleted=false and trim(name) ilike  $1";
 
   pool.query(sql, [`${searchKey}%`], function (err, result, fields) {
+    pool.end(() => {});
     if (err) next(err);
     else {
       setCorsHeaders(req, res);
@@ -190,6 +195,7 @@ exports.searchCourses = function (req, res, next) {
     " where A.deleted=false and search_tsv@@query  order by rank desc ";
 
   pool.query(sql, [searchKey], function (err, result, fields) {
+    pool.end(() => {});
     if (err) next(err);
     else {
       setCorsHeaders(req, res);
@@ -230,8 +236,10 @@ exports.getTheCourse = function (req, res, next) {
     " where A.id=$1 ";
 
   pool.query(sql, [courseId, authorName], function (err, result, fields) {
-    if (err) next(err);
-    else {
+    if (err) {
+      pool.end(() => {});
+      next(err);
+    } else {
       let resObj = {};
 
       resObj.name = result.rows[0].name;
@@ -244,12 +252,15 @@ exports.getTheCourse = function (req, res, next) {
       resObj.quizesArray = [];
 
       pool.query(sql1, [courseId], function (err, result1, fields) {
-        if (err) next(err);
-        else {
+        if (err) {
+          pool.end(() => {});
+          next(err);
+        } else {
           resObj.quizesArray = result1.rows;
           resObj.categoriesArray = [];
 
           pool.query(sql2, [courseId], function (err, result2, fields) {
+            pool.end(() => {});
             if (err) next(err);
             else {
               resObj.categoriesArray = result2.rows;
@@ -282,6 +293,7 @@ exports.getQuizListForCourseJson = function (req, res, next) {
     " inner join Quiz_Course on Quiz.id=Quiz_Course.quiz_id where Quiz_Course.course_id=$1 " +
     " and Quiz_Course.deleted=false";
   pool.query(sql, [courseId], function (err, result, fields) {
+    pool.end(() => {});
     if (err) next(err);
     else {
       let resultArr = [];
@@ -340,6 +352,7 @@ exports.editCourseInDbJson = function (req, res, next) {
     sql,
     [courseId, name, description, thumbnail, quizesId, categoriesId],
     function (err, result, fields) {
+      pool.end(() => {});
       if (err) {
         console.log(err);
         next(err);
@@ -370,6 +383,7 @@ exports.deleteCourseInDB = function (req, res, next) {
   });
 
   pool.query(sql, [courseId], function (err, result, fields) {
+    pool.end(() => {});
     if (err) {
       next(err);
       //res.json({ deletestatus: "error" });
@@ -400,6 +414,7 @@ exports.getCategoryListForCourseJson = function (req, res, next) {
     " inner join Course_Category on Category.id=Course_Category.category_id where Course_Category.course_id=$1 " +
     " and Course_Category.deleted=false";
   pool.query(sql, [courseId], function (err, result, fields) {
+    pool.end(() => {});
     if (err) reject(err);
     else {
       let resultArr = [];
@@ -426,6 +441,7 @@ exports.getCategoryList = function (req, res, next) {
   var sql =
     "SELECT id,name FROM Category where deleted = false ORDER by name asc ";
   pool.query(sql, function (err, result, fields) {
+    pool.end(() => {});
     if (err) reject(err);
     else {
       setCorsHeaders(req, res);

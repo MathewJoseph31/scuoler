@@ -28,6 +28,8 @@ exports.getChats = function (req, res, next) {
     " offset $1 limit $2 ";
 
   pool.query(sql, [offset, pageSize], function (err, result, fields) {
+    pool.end(() => {});
+
     if (err) next(err);
 
     utils.setCorsHeaders(req, res);
@@ -65,6 +67,7 @@ exports.insertChatToDbJson = function (req, res, next) {
   }
 
   pool.query(sql, paramsArray, (err, result) => {
+    pool.end(() => {});
     if (err) {
       next(err);
       //res.json({"insertstatus":"error "+err.toString()});
@@ -96,6 +99,8 @@ exports.editChatInDbJson = function (req, res, next) {
   });
 
   pool.query(sql, [payload, author_id, id], function (err, result, fields) {
+    pool.end(() => {});
+
     if (err) {
       next(err);
       //res.json({"updatestatus":"error"});
@@ -123,6 +128,7 @@ exports.deleteChatInDB = function (req, res, next) {
   });
 
   pool.query(sql, [id], function (err, result, fields) {
+    pool.end(() => {});
     if (err) {
       //next(err);
       res.json({ deletestatus: "error" });

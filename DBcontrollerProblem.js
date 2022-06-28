@@ -32,14 +32,16 @@ exports.addProblemToQuiz = function (req, res, next) {
   });
 
   pool.query(sql, [problemId, quizId], function (err, result, fields) {
-    setCorsHeaders(req, res);
+    pool.end(() => {});
     if (err) {
       next(err);
       //res.json({ addstatus: "error" });
+    } else {
+      setCorsHeaders(req, res);
+      if (result.rows != undefined && result.rows.length > 0)
+        res.json({ addstatus: result.rows[0].problem_addto_quiz });
+      else res.json({ addstatus: "ok" });
     }
-    if (result.rows != undefined && result.rows.length > 0)
-      res.json({ addstatus: result.rows[0].problem_addto_quiz });
-    else res.json({ addstatus: "ok" });
   });
 };
 
@@ -110,6 +112,7 @@ exports.insertProblemToDbJson = function (req, res, next) {
       problemType,
     ],
     function (err, result) {
+      pool.end(() => {});
       if (err) {
         next(err);
         //res.json({ insertstatus: "error" });
@@ -188,6 +191,7 @@ exports.editProblemInDB = function (req, res, next) {
       type,
     ],
     function (err, result, fields) {
+      pool.end(() => {});
       if (err) {
         //console.log(err);
         next(err);
@@ -221,6 +225,7 @@ exports.deleteProblemInDB = function (req, res, next) {
   });
 
   pool.query(sql, [problemId], function (err, result, fields) {
+    pool.end(() => {});
     if (err) {
       next(err);
       //res.json({ deletestatus: "error" });
@@ -269,8 +274,10 @@ exports.getTheProblem = function (req, res, next) {
 
   let resObj = {};
   pool.query(sql, [problemId, authorId], function (err, result, fields) {
-    if (err) next(err);
-    else {
+    if (err) {
+      pool.end(() => {});
+      next(err);
+    } else {
       if (result.rows !== undefined && result.rows.length > 0) {
         resObj.id = result.rows[0].id;
         resObj.description = result.rows[0].description;
@@ -290,6 +297,7 @@ exports.getTheProblem = function (req, res, next) {
 
       pool.query(sql1, [problemId], function (err, result1, fields) {
         if (err) {
+          pool.end(() => {});
           next(err);
           //res.json(resObj);
         } else {
@@ -297,6 +305,7 @@ exports.getTheProblem = function (req, res, next) {
           resObj.categoriesArray = [];
 
           pool.query(sql2, [problemId], function (err, result2, fields) {
+            pool.end(() => {});
             if (err) next(err);
             else {
               resObj.categoriesArray = result2.rows;
@@ -333,6 +342,7 @@ exports.getProblems = function (req, res, next) {
     " where A.deleted=false offset $1 limit $2 ";
 
   pool.query(sql, [offset, pageSize], function (err, result, fields) {
+    pool.end(() => {});
     if (err) next(err);
     else {
       var resultArr = [];
@@ -369,6 +379,8 @@ exports.searchProblems = function (req, res, next) {
     " where A.deleted=false and search_tsv@@query  order by rank desc ";
 
   pool.query(sql, [searchKey], function (err, result, fields) {
+    pool.end(() => {});
+
     if (err) next(err);
     else {
       //setCorsHeaders(req, res);

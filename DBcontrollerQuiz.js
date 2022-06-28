@@ -29,6 +29,7 @@ function getQuizList() {
   var sql = "SELECT id,description FROM Quiz";
   return new Promise(function (resolve, reject) {
     pool.query(sql, function (err, result, fields) {
+      pool.end(() => {});
       if (err) reject(err);
       else {
         var i = 0;
@@ -142,6 +143,7 @@ exports.insertQuizToDbJson = function (req, res, next) {
       thumbnail,
     ],
     function (err, result) {
+      pool.end(() => {});
       if (err) {
         console.log(err);
         //res.json({ insertstatus: "error" });
@@ -172,6 +174,7 @@ exports.quizStart = function (req, res, next) {
     ssl: { rejectUnauthorized: false },
   });
   pool.query(sql, [quizInstanceId, quizId, userId], function (err, result) {
+    pool.end(() => {});
     if (err) {
       next(err);
       //res.json({ insertstatus: "error" });
@@ -220,14 +223,17 @@ exports.quizAnwersSubmit = function (req, res, next) {
 
   pool.query(sql, [quizInstanceId], function (err, result) {
     if (err) {
+      pool.end(() => {});
       next(err);
       //res.json({ insertstatus: "error" });
     } else {
       if (answersObject == null || Object.keys(answersObject).length == 0) {
+        pool.end(() => {});
         setCorsHeaders(req, res);
         res.json({ insertstatus: "ok" });
       } else {
         pool.query(sql1, answersArr, function (err, result) {
+          pool.end(() => {});
           if (err) {
             next(err);
             //res.json({ insertstatus: "error" });
@@ -262,6 +268,8 @@ exports.updateQuizMarksAwarded = function (req, res, next) {
     sql,
     [quizInstanceId, marksAwardedArray],
     function (err, result, fields) {
+      pool.end(() => {});
+
       if (err) next(err);
       else {
         setCorsHeaders(req, res);
@@ -305,6 +313,7 @@ exports.getQuizInstanceProblems = function (req, res, next) {
   });
 
   pool.query(sql, [quizInstanceId], function (err, result, fields) {
+    pool.end(() => {});
     if (err) next(err);
     else {
       setCorsHeaders(req, res);
@@ -345,6 +354,7 @@ exports.quizGetInstances = function (req, res, next) {
   });
 
   pool.query(sql, [quizId], function (err, result, fields) {
+    pool.end(() => {});
     if (err) next(err);
     else {
       setCorsHeaders(req, res);
@@ -385,6 +395,7 @@ exports.quizGetScoresForUser = function (req, res, next) {
   });
 
   pool.query(sql, [userId], function (err, result, fields) {
+    pool.end(() => {});
     if (err) next(err);
     else {
       setCorsHeaders(req, res);
@@ -420,6 +431,7 @@ exports.getQuizes = function (req, res, next) {
     " where Quiz.deleted=false order by ctid  offset $1 limit $2 ";
 
   pool.query(sql, [offset, pageSize], function (err, result, fields) {
+    pool.end(() => {});
     if (err) next(err);
     else {
       setCorsHeaders(req, res);
@@ -447,6 +459,7 @@ exports.searchQuizesForPrefix = function (req, res, next) {
     " where deleted=false and trim(name) ilike  $1 ";
 
   pool.query(sql, [`${searchKey}%`], function (err, result, fields) {
+    pool.end(() => {});
     if (err) next(err);
     else {
       setCorsHeaders(req, res);
@@ -475,6 +488,7 @@ exports.searchQuizes = function (req, res, next) {
     " where A.deleted=false and search_tsv@@query  order by rank desc ";
 
   pool.query(sql, [searchKey], function (err, result, fields) {
+    pool.end(() => {});
     if (err) next(err);
     else {
       setCorsHeaders(req, res);
@@ -501,6 +515,7 @@ exports.deleteQuizInDB = function (req, res, next) {
   });
 
   pool.query(sql, [quizId], function (err, result, fields) {
+    pool.end(() => {});
     if (err) {
       next(err);
       //res.json({ deletestatus: "error" });
@@ -530,6 +545,7 @@ exports.addQuizToCourse = function (req, res, next) {
   });
 
   pool.query(sql, [quizId, courseId], function (err, result, fields) {
+    pool.end(() => {});
     if (err) {
       next(err);
       //res.json({ addstatus: "error" });
@@ -617,6 +633,7 @@ exports.editQuizInDbJson = function (req, res, next) {
       thumbnail,
     ],
     function (err, result, fields) {
+      pool.end(() => {});
       if (err) {
         next(err);
         //res.json({ updatestatus: "error" });
@@ -673,7 +690,7 @@ exports.getTheQuiz = function (req, res, next) {
 
   pool.query(sql, [quizId, authorName], function (err, result, fields) {
     if (err) {
-      console.log(err);
+      pool.end(() => {});
       next(err);
     } else {
       resObj.description = result.rows[0]?.description;
@@ -689,17 +706,21 @@ exports.getTheQuiz = function (req, res, next) {
 
       pool.query(sql1, [quizId], function (err, result1, fields) {
         if (err) {
+          pool.end(() => {});
           next(err);
           //res.json(resObj);
         } else {
           resObj.coursesArray = result1.rows;
           resObj.problemsArray = [];
           pool.query(sql2, [quizId], function (err, result2, fields) {
-            if (err) next(err);
-            else {
+            if (err) {
+              pool.end(() => {});
+              next(err);
+            } else {
               resObj.problemsArray = result2?.rows;
               resObj.categoriesArray = [];
               pool.query(sql3, [quizId], function (err, result3, fields) {
+                pool.end(() => {});
                 if (err) next(err);
                 else {
                   resObj.categoriesArray = result3.rows;
@@ -731,6 +752,7 @@ exports.getProblemListForQuizJson = function (req, res, next) {
     " INNER JOIN Problem_Quiz on Problem.id=Problem_Quiz.problem_id " +
     " where Problem_Quiz.quiz_id=$1 and Problem.deleted=false and Problem_Quiz.deleted=false";
   pool.query(sql, [quizId], function (err, result, fields) {
+    pool.end(() => {});
     if (err) next(err);
     else {
       let resultArr = [];
@@ -761,6 +783,7 @@ exports.getCategoryListForQuizJson = function (req, res, next) {
     " inner join Quiz_Category on Category.id=Quiz_Category.category_id where Quiz_Category.quiz_id=$1 " +
     " and Quiz_Category.deleted=false";
   pool.query(sql, [quizId], function (err, result, fields) {
+    pool.end(() => {});
     if (err) next(err);
     else {
       let resultArr = [];

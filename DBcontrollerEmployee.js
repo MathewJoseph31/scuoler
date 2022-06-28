@@ -44,6 +44,7 @@ exports.mergeEmployee = function (req, res, next) {
     sql,
     [userId, firstName, lastName, email, attachments],
     function (err, result, fields) {
+      pool.end(() => {});
       if (err) {
         next(err);
         //res.json({"mergestatus":"error"});
@@ -83,6 +84,7 @@ exports.searchEmployees = function (req, res, next) {
     " where A.deleted=false and search_tsv@@query  order by rank desc ";
 
   pool.query(sql, [searchKey], function (err, result, fields) {
+    pool.end(() => {});
     if (err) next(err);
     else {
       setCorsHeaders(req, res);
@@ -113,6 +115,7 @@ exports.getEmployees = function (req, res, next) {
     " email, birth_date, salary, attachments, start_date, term_date FROM Employee " +
     " where deleted=false offset $1 limit $2 ";
   pool.query(sql, [offset, pageSize], function (err, result, fields) {
+    pool.end(() => {});
     if (err) next(err);
     else {
       var arrResult = [];
@@ -144,6 +147,7 @@ exports.getTheEmployee = function (req, res, next) {
     " email, birth_date, salary, attachments,  start_date, term_date from Employee where id = $1";
 
   pool.query(sql, [employeeId], function (err, result, fields) {
+    pool.end(() => {});
     if (err) next(err);
     else {
       console.log(JSON.stringify(result.rows));
@@ -227,6 +231,7 @@ exports.editEmployeeInDbJson = function (req, res, next) {
       id,
     ],
     function (err, result, fields) {
+      pool.end(() => {});
       if (err) {
         next(err);
         //res.json({"updatestatus":"error"});
@@ -299,6 +304,7 @@ exports.insertEmployeeToDbJson = function (req, res, next) {
       term_date,
     ],
     (err, result) => {
+      pool.end(() => {});
       if (err) {
         next(err);
         //res.json({"insertstatus":"error "+err.toString()});
@@ -333,6 +339,7 @@ exports.deleteEmployeeInDB = function (req, res, next) {
   });
 
   pool.query(sql, [employeeId], function (err, result, fields) {
+    pool.end(() => {});
     if (err) {
       //next(err);
       res.json({ deletestatus: "error" });

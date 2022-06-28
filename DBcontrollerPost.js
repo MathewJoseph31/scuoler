@@ -53,6 +53,7 @@ exports.getPostsForSource = function (req, res, next) {
     sql,
     [sourceId, authorId, offset, pageSize],
     function (err, result, fields) {
+      pool.end(() => {});
       if (err) next(err);
       else {
         setCorsHeaders(req, res);
@@ -82,6 +83,7 @@ exports.insertPostToDbJson = function (req, res, next) {
     "insert into Post_Association(source_object_id, post_id, payload, author_id) values($1,$2,$3,$4)";
 
   pool.query(sql, [sourceId, id, payload, author_id], (err, result) => {
+    pool.end(() => {});
     if (err) {
       next(err);
       //res.json({"insertstatus":"error "+err.toString()});
@@ -117,6 +119,7 @@ exports.postLikeUnlike = function (req, res, next) {
   });
 
   pool.query(sql, [post_id, user_id], function (err, result, fields) {
+    pool.end(() => {});
     if (err) {
       next(err);
       //res.json({ updatestatus: "error" });
@@ -148,6 +151,7 @@ exports.editPostInDbJson = function (req, res, next) {
   });
 
   pool.query(sql, [payload, id], function (err, result, fields) {
+    pool.end(() => {});
     if (err) {
       next(err);
       //res.json({"updatestatus":"error"});
@@ -175,6 +179,7 @@ exports.deletePostInDB = function (req, res, next) {
   });
 
   pool.query(sql, [id], function (err, result, fields) {
+    pool.end(() => {});
     if (err) {
       //next(err);
       res.json({ deletestatus: "error" });
