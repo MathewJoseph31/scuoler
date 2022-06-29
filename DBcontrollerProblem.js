@@ -54,6 +54,8 @@ exports.insertProblemToDbJson = function (req, res, next) {
   let problemDescription = req.body.probDescription;
   let options = JSON.parse(req.body.options);
   let problemType = req.body.problemType;
+  let solutionOpen = req.body.solutionOpen;
+  if (!solutionOpen) solutionOpen = true;
   let answerKey = req.body.answerKey;
   let ansDescription = req.body.ansDescription;
   let authorName = req.body.authorName;
@@ -94,7 +96,7 @@ exports.insertProblemToDbJson = function (req, res, next) {
   var sql =
     "select problem_insert(p_id :=$1, p_description:=$2, p_options:=$3, " +
     "  p_solution:=$4, p_answerkey:=$5, p_author_id:=$6, p_quizes_id:=$7, " +
-    " p_categories_id:=$8, p_type:=$9);";
+    " p_categories_id:=$8, p_type:=$9, p_solution_open:=$10);";
 
   var problemId = utils.getUniqueId(authorName);
 
@@ -110,6 +112,7 @@ exports.insertProblemToDbJson = function (req, res, next) {
       quizesId,
       categoriesId,
       problemType,
+      solutionOpen,
     ],
     function (err, result) {
       pool.end(() => {});
@@ -129,6 +132,8 @@ exports.editProblemInDB = function (req, res, next) {
   let problemId = req.body.id;
   let description = req.body.description;
   let type = req.body.type;
+  let solutionOpen = req.body.solutionOpen;
+  if (!solutionOpen) solutionOpen = true;
   let options = JSON.parse(req.body.options);
   /*let option1 = req.body.option1;
   let option2 = req.body.option2;
@@ -167,7 +172,7 @@ exports.editProblemInDB = function (req, res, next) {
 
   var sql =
     "select problem_update(p_id:=$1,p_description:=$2,p_options:=$3, " +
-    " p_solution:=$4, p_answerkey:=$5, p_quizes_id:=$6, p_categories_id:=$7, p_type:=$8);";
+    " p_solution:=$4, p_answerkey:=$5, p_quizes_id:=$6, p_categories_id:=$7, p_type:=$8, p_solution_open:=$9);";
 
   var pool = new pg.Pool({
     host: configuration.getHost(),
@@ -189,6 +194,7 @@ exports.editProblemInDB = function (req, res, next) {
       quizesId,
       categoriesId,
       type,
+      solutionOpen,
     ],
     function (err, result, fields) {
       pool.end(() => {});
@@ -253,14 +259,14 @@ exports.getTheProblem = function (req, res, next) {
   var sql =
     "select A.id, A.description, A.options, " +
     " A.answerkey, " +
-    " A.solution, A.type, A.author_id, A.source, A.is_open,  " +
+    " A.solution, A.type, A.author_id, A.source, A.solution_open,  " +
     " avg(B.rating) rating, count(distinct C.*) likes,  " +
     " case when exists(select 1 from user_like where id=$1 and user_id=$2 and deleted=false) then true else false end liked " +
     " from Problem A " +
     " left join user_rating B on A.id=B.id   " +
     " left join user_like C on A.id=C.id and C.deleted=false " +
     " where A.deleted=false and A.id=$1" +
-    " GROUP BY A.id, A.description, A.options, A.answerkey, A.solution, A.type, A.author_id, A.source, A.is_open ";
+    " GROUP BY A.id, A.description, A.options, A.answerkey, A.solution, A.type, A.author_id, A.source, A.solution_open ";
 
   var sql1 =
     "SELECT Quiz.id, Quiz.description, Quiz.name, Quiz.author_id, Quiz.duration_minutes " +
@@ -288,7 +294,7 @@ exports.getTheProblem = function (req, res, next) {
         resObj.type = result.rows[0].type;
         resObj.author_id = result.rows[0].author_id;
         resObj.source = result.rows[0].source;
-        resObj.is_open = result.rows[0].is_open;
+        resObj.solution_open = result.rows[0].solution_open;
         resObj.rating = result.rows[0].rating;
         resObj.likes = result.rows[0].likes;
         resObj.liked = result.rows[0].liked;
@@ -338,7 +344,7 @@ exports.getProblems = function (req, res, next) {
 
   var sql =
     "select distinct A.id,  A.description, A.options, A.option1, A.option2, A.option3, A.option4, A.answerkey, " +
-    " A.solution, A.type, A.author_id, A.source  from Problem A " +
+    " A.solution, A.type, A.solution_open, A.author_id, A.source  from Problem A " +
     " where A.deleted=false offset $1 limit $2 ";
 
   pool.query(sql, [offset, pageSize], function (err, result, fields) {
@@ -374,7 +380,7 @@ exports.searchProblems = function (req, res, next) {
   var sql =
     "select distinct A.id, ts_headline('english', A.description, query, 'HighlightAll=true') description, " +
     " ts_headline('english', A.solution, query, 'HighlightAll=true') solution, A.options, A.option1, A.option2, A.option3, A.option4, " +
-    " A.answerkey, A.type, A.author_id, A.source, ts_rank_cd(search_tsv, query, 32) rank  " +
+    " A.answerkey, A.type, A.solution_open, A.author_id, A.source, ts_rank_cd(search_tsv, query, 32) rank  " +
     " from Problem A, plainto_tsquery('english', $1) query " +
     " where A.deleted=false and search_tsv@@query  order by rank desc ";
 
