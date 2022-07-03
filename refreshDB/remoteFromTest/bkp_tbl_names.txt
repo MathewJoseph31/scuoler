@@ -1,1 +1,3 @@
-category
+upload_association
+user_like
+user_rating

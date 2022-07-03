@@ -77,7 +77,14 @@ const refreshDb = async () => {
         let valArray = columnNames.map((val) => {
           return result.rows[i][val];
         });
-        pool.query(insertQuery, valArray).then();
+        pool
+          .query(insertQuery, valArray)
+          .then()
+          .catch((err) => {
+            console.log(insertQuery, valArray);
+            console.log(err);
+            process.exit(1);
+          });
         //console.log(columnNames);
       }
     });
