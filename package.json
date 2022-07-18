@@ -13,6 +13,7 @@
     "dev": "npm run devstart & npm run client"
   },
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "cloudinary": "^1.25.2",
     "cookie-parser": "^1.4.5",
     "crypto-js": "^4.0.0",
@@ -27,11 +28,11 @@
     "morgan": "^1.10.0",
     "node-fetch": "^2.6.1",
     "nodemailer": "^6.6.2",
+    "peer": "^0.6.1",
     "pg": "^8.6.0",
     "pg-native": "^3.0.0",
     "pg-sync": "^0.2.0",
     "rotating-file-stream": "^3.0.3",
-    "peer": "^0.6.1",
     "socket.io": "^4.5.1",
     "uuid": "^8.3.2"
   },

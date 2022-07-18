@@ -86,6 +86,7 @@ router.post("/login", function (req, res) {
   dbControllerUser.verifyUserJson(req, res);
 });
 router.post("/insertUserAction", dbControllerUser.insertUserToDbJson);
+router.post("/changeUserPassword", dbControllerUser.changeUserPassword);
 router.get("/getUsers", dbControllerUser.getUsers);
 router.post("/searchUsers", dbControllerUser.searchUsers);
 router.post("/getTheUser", dbControllerUser.getTheUser);

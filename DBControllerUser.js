@@ -11,6 +11,8 @@ const fs = require("fs");
 //end of session code
 
 const url = require("url");
+const bcrypt = require("bcrypt");
+
 const configuration = require("./Configuration");
 
 const utils = require("./utils/Utils");
@@ -18,6 +20,8 @@ const utils = require("./utils/Utils");
 let { setCorsHeaders } = utils;
 
 const util = require("./util");
+
+const constants = require("./Constants");
 
 //--USER/Costumer---
 
@@ -47,23 +51,29 @@ exports.verifyUserJson = function (req, res, next) {
   });
 
   var sql =
-    "SELECT count(*) as count, max(case when admin=true then 1 else 0 end) as admin, trim(max(first_name)||' '||max(last_name)) as full_name " +
-    " FROM Customer where id=$1 and password=$2";
+    "SELECT  count(*) as count, max(case when admin=true then 1 else 0 end) as admin, trim(max(first_name)||' '||max(last_name)) as full_name,  max(password) as password  FROM Customer where id=$1 ";
 
-  pool.query(sql, [userId, password], function (err, result, fields) {
+  pool.query(sql, [userId], async function (err, result, fields) {
     pool.end(() => {});
 
-    if (err) next(err);
-    else {
+    if (err) {
+      next(err);
+    } else {
       let resObj = {};
-      if (result.rows[0].count == "0") {
+      if (result.rows[0].count === "0") {
         resObj = { login: "failure" };
       } else {
-        resObj = {
-          login: "ok",
-          admin: result.rows[0].admin,
-          full_name: result.rows[0].full_name,
-        };
+        let dbPassword = result.rows[0].password;
+        let match = await bcrypt.compare(password, dbPassword);
+        if (match || dbPassword === password) {
+          resObj = {
+            login: "ok",
+            admin: result.rows[0].admin,
+            full_name: result.rows[0].full_name,
+          };
+        } else {
+          resObj = { login: "failure" };
+        }
       }
       setCorsHeaders(req, res);
       res.json(resObj);
@@ -387,10 +397,65 @@ exports.editUserInDbJson = function (req, res, next) {
   );
 };
 
+/* change user password in database*/
+exports.changeUserPassword = function (req, res, next) {
+  let userId = req.body.userId;
+  let oldpassword = req.body.oldpassword;
+  let newpassword = req.body.newpassword;
+
+  var pool = new pg.Pool({
+    host: configuration.getHost(),
+    user: configuration.getUserId(),
+    password: configuration.getPassword(),
+    database: configuration.getDatabase(),
+    port: configuration.getPort(),
+    ssl: { rejectUnauthorized: false },
+  });
+
+  let sql =
+    "select count(*) as count, max(password) as password from Customer where id=$1 ";
+  pool.query(sql, [userId], async (err, result) => {
+    if (err) {
+      pool.end(() => {});
+      next(err);
+    }
+    if (result.rows[0].count === "0") {
+      err = new Error("User Id, Old Password combination is wrong");
+      pool.end(() => {});
+      next(err);
+    } else {
+      let newpasswordHash = await bcrypt.hash(
+        newpassword,
+        constants.BCRYPT_SALT_ROUNDS
+      );
+      let dbPassword = result.rows[0].password;
+      let match = await bcrypt.compare(oldpassword, dbPassword);
+      if (match || dbPassword === oldpassword) {
+        let sql1 = "Update Customer set password=$1 where id=$2 ";
+
+        pool.query(sql1, [newpasswordHash, userId], (err, result) => {
+          pool.end(() => {});
+          if (err) {
+            next(err);
+            //res.json({"insertstatus":"error"});
+          } else {
+            setCorsHeaders(req, res);
+            res.json({ updatestatus: "ok" });
+          }
+        });
+      } else {
+        err = new Error("User Id, Old Password combination is wrong");
+        next(err);
+      }
+    }
+  });
+};
+
 /* Api verison of InsertUserToDB in database*/
-exports.insertUserToDbJson = function (req, res, next) {
+exports.insertUserToDbJson = async function (req, res, next) {
   let userId = req.body.userId;
   let password = req.body.password;
+  let passwordHash = await bcrypt.hash(password, constants.BCRYPT_SALT_ROUNDS);
   let firstName = req.body.firstName;
   let lastName = req.body.lastName;
   let address1 = req.body.address1;
@@ -416,42 +481,56 @@ exports.insertUserToDbJson = function (req, res, next) {
     ssl: { rejectUnauthorized: false },
   });
 
-  var sql =
-    "insert into Customer(id,password,first_name,last_name,address1,address2,city,zip,phone,mobile,email, sex_male, profile_image_url) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11, $12, $13)";
+  let sql = "select count(*) as count from Customer where id=$1";
 
-  pool.query(
-    sql,
-    [
-      userId,
-      password,
-      firstName,
-      lastName,
-      address1,
-      address2,
-      city,
-      zip,
-      phone,
-      cell,
-      email,
-      sex_male,
-      profile_image_url,
-    ],
-    (err, result) => {
+  pool.query(sql, [userId], (err, result) => {
+    if (err) {
       pool.end(() => {});
-      if (err) {
-        next(err);
-        //res.json({"insertstatus":"error"});
-      } else {
-        if (
-          Object.keys(image_urls_for_delete) !== undefined &&
-          Object.keys(image_urls_for_delete).length > 0
-        )
-          utils.delete_images(image_urls_for_delete);
-        setCorsHeaders(req, res);
-        res.json({ insertstatus: "ok" });
-      }
+      next(err);
     }
-  );
+    if (result.rows[0].count !== "0") {
+      err = new Error("Duplicate User Id");
+      pool.end(() => {});
+      next(err);
+    } else {
+      let sql1 =
+        "insert into Customer(id,password,first_name,last_name,address1,address2,city,zip,phone,mobile,email, sex_male, profile_image_url) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11, $12, $13)";
+
+      pool.query(
+        sql1,
+        [
+          userId,
+          passwordHash,
+          firstName,
+          lastName,
+          address1,
+          address2,
+          city,
+          zip,
+          phone,
+          cell,
+          email,
+          sex_male,
+          profile_image_url,
+        ],
+        (err, result) => {
+          pool.end(() => {});
+          if (err) {
+            next(err);
+            //res.json({"insertstatus":"error"});
+          } else {
+            if (
+              Object.keys(image_urls_for_delete) !== undefined &&
+              Object.keys(image_urls_for_delete).length > 0
+            )
+              utils.delete_images(image_urls_for_delete);
+            setCorsHeaders(req, res);
+            res.json({ insertstatus: "ok" });
+          }
+        }
+      );
+    }
+  });
 };
 
 exports.getCourseListForUserJson = function (req, res, next) {
