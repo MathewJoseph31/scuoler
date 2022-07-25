@@ -1,16 +1,33 @@
-var nodemailer = require("nodemailer");
+const nodemailer = require("nodemailer");
 
 const constants = require("./Constants");
 const utils = require("./utils/Utils");
 let { setCorsHeaders } = utils;
 
-var transporter = nodemailer.createTransport({
+/*const gmailTransporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: constants.GOOGLE_MAIL_USER_ID,
     pass: constants.GOOGLE_MAIL_PASSWORD,
   },
+});*/
+
+const transporter = nodemailer.createTransport({
+  host: constants.MAIL_JET_HOST,
+  port: constants.MAIL_JET_PORT,
+  secure: false,
+  auth: {
+    user: constants.MAIL_JET_USER_ID,
+    pass: constants.MAIL_JET_PASSWORD,
+  },
+  tls: {
+    ciphers: "SSLv3",
+    secure: true,
+    ignoreTLS: false,
+    rejectUnauthorized: true,
+  },
 });
+
 exports.sendMail = function (req, res, next) {
   let mailBody =
     "Name: " +
@@ -30,7 +47,7 @@ exports.sendMail = function (req, res, next) {
     " \n";
 
   var mailMessage = {
-    from: constants.GOOGLE_MAIL_USER_ID,
+    from: constants.SCUOLER_EMAIL_ID,
     // from: req.body.email,
     to: constants.GOOGLE_MAIL_USER_ID,
     subject: "Ref No:" + req.body.refnum,
@@ -67,7 +84,7 @@ exports.sendReply = function (req, res, next) {
     " \n";
 
   var mailMessage = {
-    from: constants.GOOGLE_MAIL_USER_ID,
+    from: constants.SCUOLER_EMAIL_ID,
     to: req.body.email,
     subject: "Ref No:" + req.body.refnum,
     text: "Thank you for contacting iSchools.com. We have recieved your query and will get back to you at the earliest. \n\nThanking you,\nTeam iSchools.com\n\n\nNote:This is an auto-generated mail.Please do not reply.",
@@ -84,13 +101,8 @@ exports.sendReply = function (req, res, next) {
   });
 };
 exports.sendWelcome = function (req, res, next) {
-  // console.log("In sendWelcome");
-  // console.log("req.body.name: ", req.body.name);
-  // console.log("req.body.email: ", req.body.email);
-  // console.log("req.body.password : ", req.body.password);
-
   var mailMessage = {
-    from: constants.GOOGLE_MAIL_USER_ID,
+    from: constants.SCUOLER_EMAIL_ID,
     to: req.body.email,
     subject: "Welcome to iSchools",
     text:
