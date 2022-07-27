@@ -14,6 +14,7 @@ const dbControllerFiles = require("../DBcontrollerFiles");
 const contactMailer = require("../contactMailer");
 
 const { securityController } = require("../SecurityController");
+const jwtVerifier = require("../middleware/JwtVerifier");
 
 router.all("/*", securityController);
 //#####################################################################
@@ -106,6 +107,7 @@ router.post("/encryptPass", dbControllerUser.encryptPass);
 //Employee
 router.post(
   "/insertEmployeeAction",
+  jwtVerifier.verifyJwt,
   dbControllerEmployee.insertEmployeeToDbJson
 );
 router.get("/getEmployees", dbControllerEmployee.getEmployees);

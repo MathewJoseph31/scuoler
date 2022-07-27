@@ -252,6 +252,7 @@ exports.editEmployeeInDbJson = function (req, res, next) {
 /* Api verison of InsertEmployeeToDB in database*/
 exports.insertEmployeeToDbJson = function (req, res, next) {
   //let id=req.body.id;
+  console.log("user id" + req.userId);
   let firstName = req.body.firstName;
   let lastName = req.body.lastName;
   let address1 = req.body.address1;

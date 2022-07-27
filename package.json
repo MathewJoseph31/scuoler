@@ -24,6 +24,7 @@
     "express-sslify": "^1.2.0",
     "http-errors": "~1.6.2",
     "https": "^1.0.0",
+    "jsonwebtoken": "^8.5.1",
     "libpq": "^1.8.9",
     "morgan": "^1.10.0",
     "node-fetch": "^2.6.1",

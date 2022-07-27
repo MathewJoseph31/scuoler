@@ -12,6 +12,7 @@ const fs = require("fs");
 
 const url = require("url");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const configuration = require("./Configuration");
 
@@ -66,10 +67,16 @@ exports.verifyUserJson = function (req, res, next) {
         let dbPassword = result.rows[0].password;
         let match = await bcrypt.compare(password, dbPassword);
         if (match || dbPassword === password) {
+          let accessToken = jwt.sign(
+            { userId },
+            constants.ACCESS_TOKEN_SECRET,
+            { expiresIn: "9999d" }
+          );
           resObj = {
             login: "ok",
             admin: result.rows[0].admin,
             full_name: result.rows[0].full_name,
+            accessToken,
           };
         } else {
           resObj = { login: "failure" };
@@ -180,8 +187,11 @@ exports.mergeUser = function (req, res, next) {
         next(err);
         //res.json({"mergestatus":"error"});
       } else {
+        let accessToken = jwt.sign({ userId }, constants.ACCESS_TOKEN_SECRET, {
+          expiresIn: "9999d",
+        });
         setCorsHeaders(req, res);
-        res.json({ mergestatus: "ok" });
+        res.json({ mergestatus: "ok", accessToken });
       }
     }
   );
