@@ -4,9 +4,9 @@ const path = require("path");
 const fs = require("fs");
 const { v4: uuidv4 } = require("uuid");
 
-const configuration = require("./Configuration");
-const utils = require("./utils/Utils");
-const constants = require("./Constants");
+const configuration = require("../Configuration");
+const utils = require("../utils/Utils");
+const constants = require("../Constants");
 
 let { setCorsHeaders } = utils;
 

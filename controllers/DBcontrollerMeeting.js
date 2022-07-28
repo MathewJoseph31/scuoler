@@ -1,8 +1,8 @@
 const pg = require("pg");
 const url = require("url");
 
-const configuration = require("./Configuration");
-const utils = require("./utils/Utils");
+const configuration = require("../Configuration");
+const utils = require("../utils/Utils");
 let { setCorsHeaders } = utils;
 
 /*Global variable for shared select list between getQuizes and searchQuizesForPrefix*/

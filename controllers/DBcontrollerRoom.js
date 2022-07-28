@@ -1,7 +1,7 @@
 const pg = require("pg");
-const configuration = require("./Configuration");
+const configuration = require("../Configuration");
 const url = require("url");
-const utils = require("./utils/Utils");
+const utils = require("../utils/Utils");
 let { setCorsHeaders } = utils;
 
 exports.getRooms = function (req, res, next) {

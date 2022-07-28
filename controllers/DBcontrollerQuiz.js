@@ -6,10 +6,10 @@ const pg = require("pg");
 
 const url = require("url");
 
-const configuration = require("./Configuration");
+const configuration = require("../Configuration");
 const dbControllerCourse = require("./DBcontrollerCourse");
 
-const utils = require("./utils/Utils");
+const utils = require("../utils/Utils");
 
 let { setCorsHeaders } = utils;
 
@@ -280,7 +280,7 @@ exports.updateQuizMarksAwarded = function (req, res, next) {
   );
 };
 
-const constants = require("./Constants");
+const constants = require("../Constants");
 
 exports.getQuizInstanceProblems = function (req, res, next) {
   let quizInstanceId = req.body.quizInstanceId;

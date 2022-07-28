@@ -12,12 +12,12 @@ const fs = require("fs");
 //end of session code
 
 const url = require("url");
-const configuration = require("./Configuration");
+const configuration = require("../Configuration");
 
-const utils = require("./utils/Utils");
+const utils = require("../utils/Utils");
 let { setCorsHeaders } = utils;
 
-const util = require("./util");
+const util = require("../util");
 
 /* function for handling  http requests to retrive list of posts for a course in database
 in json format*/

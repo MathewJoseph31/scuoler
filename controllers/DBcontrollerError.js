@@ -1,5 +1,5 @@
 const pg = require("pg");
-const configuration = require("./Configuration");
+const configuration = require("../Configuration");
 
 /* Api verison of InsertUserToDB in database*/
 exports.insertErrorToDb = async function (err, req) {

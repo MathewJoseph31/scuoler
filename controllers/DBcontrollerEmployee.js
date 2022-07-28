@@ -12,10 +12,10 @@ const fs = require("fs");
 //end of session code
 
 const url = require("url");
-const configuration = require("./Configuration");
+const configuration = require("../Configuration");
 
-const util = require("./util");
-const utils = require("./utils/Utils");
+const util = require("../util");
+const utils = require("../utils/Utils");
 let { setCorsHeaders } = utils;
 
 //--Employee---

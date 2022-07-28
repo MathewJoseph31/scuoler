@@ -1,19 +1,19 @@
 var express = require("express");
 var router = express.Router();
 
-const dbControllerProblem = require("../DBcontrollerProblem");
-const dbControllerQuiz = require("../DBcontrollerQuiz");
-const dbControllerCourse = require("../DBcontrollerCourse");
-const dbControllerUser = require("../DBControllerUser");
-const dbControllerMeeting = require("../DBcontrollerMeeting");
-const dbControllerEmployee = require("../DBcontrollerEmployee");
-const dbControllerPost = require("../DBcontrollerPost");
-const dbControllerRoom = require("../DBcontrollerRoom");
-const dbControllerChat = require("../DBcontrollerChat");
-const dbControllerFiles = require("../DBcontrollerFiles");
-const contactMailer = require("../contactMailer");
+const dbControllerProblem = require("../controllers/DBcontrollerProblem");
+const dbControllerQuiz = require("../controllers/DBcontrollerQuiz");
+const dbControllerCourse = require("../controllers/DBcontrollerCourse");
+const dbControllerUser = require("../controllers/DBControllerUser");
+const dbControllerMeeting = require("../controllers/DBcontrollerMeeting");
+const dbControllerEmployee = require("../controllers/DBcontrollerEmployee");
+const dbControllerPost = require("../controllers/DBcontrollerPost");
+const dbControllerRoom = require("../controllers/DBcontrollerRoom");
+const dbControllerChat = require("../controllers/DBcontrollerChat");
+const dbControllerFiles = require("../controllers/DBcontrollerFiles");
+const contactMailer = require("../controllers/EmailController");
 
-const { securityController } = require("../SecurityController");
+const { securityController } = require("../controllers/SecurityController");
 const jwtVerifier = require("../middleware/JwtVerifier");
 
 router.all("/*", securityController);

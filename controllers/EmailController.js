@@ -1,7 +1,7 @@
 const nodemailer = require("nodemailer");
 
-const constants = require("./Constants");
-const utils = require("./utils/Utils");
+const constants = require("../Constants");
+const utils = require("../utils/Utils");
 let { setCorsHeaders } = utils;
 
 /*const gmailTransporter = nodemailer.createTransport({

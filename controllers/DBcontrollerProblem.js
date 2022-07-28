@@ -6,9 +6,9 @@ const pg = require("pg");
 
 const url = require("url");
 
-const configuration = require("./Configuration");
-const util = require("./util");
-const utils = require("./utils/Utils");
+const configuration = require("../Configuration");
+const util = require("../util");
+const utils = require("../utils/Utils");
 
 let { setCorsHeaders } = utils;
 

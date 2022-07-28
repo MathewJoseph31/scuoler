@@ -33,7 +33,7 @@ if (process.env.NODE_ENV === "production") {
  * Listen on provided port, on all network interfaces.
  */
 
-const socketController = require("../SocketController");
+const socketController = require("../controllers/SocketController");
 socketController.handleSocketIO(server);
 
 const { ExpressPeerServer } = require("peer");

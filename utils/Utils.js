@@ -43,7 +43,6 @@ function getUniqueId(userId) {
 exports.getUniqueId = getUniqueId;
 
 const whiteListedIps = ["72.230.86.18", "127.0.0.1", "150.136.243.153"];
-
 exports.setCorsHeaders = function (req, res) {
   whiteListedIps.forEach((val) => {
     if (req.ip.includes(val)) {
@@ -73,7 +72,7 @@ exports.uploadFilesToCloudinary = function (req, res, next, dir_name) {
           next(err);
           //res.json({"updatestatus":"error"});
         }
-        setCorsHeaders(req, res);
+        exports.setCorsHeaders(req, res);
         res.json(result);
       }
     );
@@ -83,7 +82,7 @@ exports.uploadFilesToCloudinary = function (req, res, next, dir_name) {
         next(err);
         //res.json({"updatestatus":"error"});
       }
-      setCorsHeaders(req, res);
+      exports.setCorsHeaders(req, res);
       res.json(result);
     });
   }

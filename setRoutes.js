@@ -32,7 +32,7 @@ exports.setRoutes = (app, peerServer) => {
     next(createError(404, err.toString()));
   });
 
-  const dbControllerError = require("./DBcontrollerError");
+  const dbControllerError = require("./controllers/DBcontrollerError");
 
   // error handler
   app.use(function (err, req, res, next) {

@@ -14,15 +14,15 @@ const url = require("url");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const configuration = require("./Configuration");
+const configuration = require("../Configuration");
 
-const utils = require("./utils/Utils");
+const utils = require("../utils/Utils");
 
 let { setCorsHeaders } = utils;
 
-const util = require("./util");
+const util = require("../util");
 
-const constants = require("./Constants");
+const constants = require("../Constants");
 
 //--USER/Costumer---
 
