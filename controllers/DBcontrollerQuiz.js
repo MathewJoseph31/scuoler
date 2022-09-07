@@ -295,7 +295,7 @@ exports.getQuizInstanceProblems = function (req, res, next) {
     " problem.maxmarks,  quiz_instance_answers.create_timestamp, " +
     " quiz_instance_answers.solution as user_solution, " +
     " coalesce(quiz_instance_answers.marks_awarded,0) marks_awarded, " +
-    ` case when problem.type='${constants.PROBLEM_TYPE_CODE_MULTIPLE_CHOICE}' and problem.answerkey = CAST(quiz_instance_answers.solution as integer) then problem.maxmarks when problem.type='${constants.PROBLEM_TYPE_CODE_HYBRID}' then coalesce(quiz_instance_answers.marks_awarded,0)  else 0 end marks_scored ` +
+    ` case when problem.type='${constants.PROBLEM_TYPE_CODE_MULTIPLE_CHOICE_SINGLE_ANSWER}' and problem.answerkey = CAST(quiz_instance_answers.solution as integer) then problem.maxmarks when problem.type='${constants.PROBLEM_TYPE_CODE_HYBRID}' then coalesce(quiz_instance_answers.marks_awarded,0)  else 0 end marks_scored ` +
     " from quiz " +
     " inner join problem_quiz on problem_quiz.quiz_id=quiz.id and problem_quiz.deleted=false " +
     " inner join problem on problem_quiz.problem_id=problem.id " +
@@ -332,7 +332,7 @@ exports.quizGetInstances = function (req, res, next) {
     //'--problem_quiz.problem_id, problem.answerkey, problem.type'+
     //'--, quiz_instance_answers.create_timestamp, '+
     " SUM(problem.maxmarks) maxmarks,  " +
-    ` SUM(case when problem.type='${constants.PROBLEM_TYPE_CODE_MULTIPLE_CHOICE}' and problem.answerkey = CAST(quiz_instance_answers.solution as integer) then problem.maxmarks when problem.type='${constants.PROBLEM_TYPE_CODE_HYBRID}' then coalesce(quiz_instance_answers.marks_awarded,0)  else 0 end) marks_scored ` +
+    ` SUM(case when problem.type='${constants.PROBLEM_TYPE_CODE_MULTIPLE_CHOICE_SINGLE_ANSWER}' and problem.answerkey = CAST(quiz_instance_answers.solution as integer) then problem.maxmarks when problem.type='${constants.PROBLEM_TYPE_CODE_HYBRID}' then coalesce(quiz_instance_answers.marks_awarded,0)  else 0 end) marks_scored ` +
     " from quiz " +
     " inner join problem_quiz on problem_quiz.quiz_id=quiz.id " +
     " inner join problem on problem_quiz.problem_id=problem.id " +
@@ -373,7 +373,7 @@ exports.quizGetScoresForUser = function (req, res, next) {
     //'--problem_quiz.problem_id, problem.answerkey, problem.type'+
     //'--, quiz_instance_answers.create_timestamp, '+
     " SUM(problem.maxmarks) maxmarks,  " +
-    ` SUM(case when problem.type='${constants.PROBLEM_TYPE_CODE_MULTIPLE_CHOICE}' and problem.answerkey = CAST(quiz_instance_answers.solution as integer) then problem.maxmarks when problem.type='${constants.PROBLEM_TYPE_CODE_HYBRID}' then coalesce(quiz_instance_answers.marks_awarded,0)  else 0 end) marks_scored ` +
+    ` SUM(case when problem.type='${constants.PROBLEM_TYPE_CODE_MULTIPLE_CHOICE_SINGLE_ANSWER}' and problem.answerkey = CAST(quiz_instance_answers.solution as integer) then problem.maxmarks when problem.type='${constants.PROBLEM_TYPE_CODE_HYBRID}' then coalesce(quiz_instance_answers.marks_awarded,0)  else 0 end) marks_scored ` +
     " from quiz " +
     " inner join problem_quiz on problem_quiz.quiz_id=quiz.id " +
     " inner join problem on problem_quiz.problem_id=problem.id " +
