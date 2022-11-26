@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "engines": {
-    "node": "17.9.0"
+    "node": "18.9.0"
   },
   "scripts": {
     "start": "export NODE_ENV=production && node ./bin/www",
