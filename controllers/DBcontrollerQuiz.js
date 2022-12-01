@@ -295,7 +295,9 @@ exports.getQuizInstanceProblems = function (req, res, next) {
     " problem.maxmarks,  quiz_instance_answers.create_timestamp, " +
     " quiz_instance_answers.solution as user_solution, " +
     " coalesce(quiz_instance_answers.marks_awarded,0) marks_awarded, " +
-    ` case when problem.type='${constants.PROBLEM_TYPE_CODE_MULTIPLE_CHOICE_SINGLE_ANSWER}' and problem.answerkey = CAST(quiz_instance_answers.solution as integer) then problem.maxmarks when problem.type='${constants.PROBLEM_TYPE_CODE_HYBRID}' then coalesce(quiz_instance_answers.marks_awarded,0)  else 0 end marks_scored ` +
+    ` case when problem.type='${constants.PROBLEM_TYPE_CODE_MULTIPLE_CHOICE_SINGLE_ANSWER}' and CAST(problem.answerkey as integer) = CAST(quiz_instance_answers.solution as integer) then problem.maxmarks
+           when problem.type='${constants.PROBLEM_TYPE_CODE_MULTIPLE_CHOICE_MULTIPLE_ANSWER}' and string_to_array(problem.answerkey, ',')::int[] = string_to_array(quiz_instance_answers.solution, ',')::int[] then problem.maxmarks 
+           when problem.type='${constants.PROBLEM_TYPE_CODE_HYBRID}' then coalesce(quiz_instance_answers.marks_awarded,0)  else 0 end marks_scored ` +
     " from quiz " +
     " inner join problem_quiz on problem_quiz.quiz_id=quiz.id and problem_quiz.deleted=false " +
     " inner join problem on problem_quiz.problem_id=problem.id " +
@@ -332,13 +334,15 @@ exports.quizGetInstances = function (req, res, next) {
     //'--problem_quiz.problem_id, problem.answerkey, problem.type'+
     //'--, quiz_instance_answers.create_timestamp, '+
     " SUM(problem.maxmarks) maxmarks,  " +
-    ` SUM(case when problem.type='${constants.PROBLEM_TYPE_CODE_MULTIPLE_CHOICE_SINGLE_ANSWER}' and problem.answerkey = CAST(quiz_instance_answers.solution as integer) then problem.maxmarks when problem.type='${constants.PROBLEM_TYPE_CODE_HYBRID}' then coalesce(quiz_instance_answers.marks_awarded,0)  else 0 end) marks_scored ` +
+    ` SUM(case when problem.type='${constants.PROBLEM_TYPE_CODE_MULTIPLE_CHOICE_SINGLE_ANSWER}' and CAST(problem.answerkey as integer) = CAST(quiz_instance_answers.solution as integer) then problem.maxmarks
+               when problem.type='${constants.PROBLEM_TYPE_CODE_MULTIPLE_CHOICE_MULTIPLE_ANSWER}' and string_to_array(problem.answerkey, ',')::int[] = string_to_array(quiz_instance_answers.solution, ',')::int[] then problem.maxmarks 
+               when problem.type='${constants.PROBLEM_TYPE_CODE_HYBRID}' then coalesce(quiz_instance_answers.marks_awarded,0)  else 0 end) marks_scored ` +
     " from quiz " +
     " inner join problem_quiz on problem_quiz.quiz_id=quiz.id " +
     " inner join problem on problem_quiz.problem_id=problem.id " +
     " inner join quiz_instance on quiz_instance.quiz_id=quiz.id " +
     " left join quiz_instance_answers on quiz_instance.quiz_instance_id=quiz_instance_answers.quiz_instance_id and problem.id=quiz_instance_answers.problem_id " +
-    " where quiz.id=$1 " +
+    " where quiz.id=$1 and problem_quiz.deleted=false " +
     " group by " +
     " quiz_instance.quiz_instance_id, quiz.description, quiz.name, quiz_instance.quiz_id, quiz.duration_minutes, quiz.author_id,  quiz_instance.user_id, " +
     " quiz.type, quiz_instance.create_timestamp, quiz_instance.end_timestamp " +
@@ -373,13 +377,15 @@ exports.quizGetScoresForUser = function (req, res, next) {
     //'--problem_quiz.problem_id, problem.answerkey, problem.type'+
     //'--, quiz_instance_answers.create_timestamp, '+
     " SUM(problem.maxmarks) maxmarks,  " +
-    ` SUM(case when problem.type='${constants.PROBLEM_TYPE_CODE_MULTIPLE_CHOICE_SINGLE_ANSWER}' and problem.answerkey = CAST(quiz_instance_answers.solution as integer) then problem.maxmarks when problem.type='${constants.PROBLEM_TYPE_CODE_HYBRID}' then coalesce(quiz_instance_answers.marks_awarded,0)  else 0 end) marks_scored ` +
+    ` SUM(case when problem.type='${constants.PROBLEM_TYPE_CODE_MULTIPLE_CHOICE_SINGLE_ANSWER}' and CAST(problem.answerkey as integer) = CAST(quiz_instance_answers.solution as integer) then problem.maxmarks 
+              when problem.type='${constants.PROBLEM_TYPE_CODE_MULTIPLE_CHOICE_MULTIPLE_ANSWER}' and string_to_array(problem.answerkey, ',')::int[] = string_to_array(quiz_instance_answers.solution, ',')::int[] then problem.maxmarks
+               when problem.type='${constants.PROBLEM_TYPE_CODE_HYBRID}' then coalesce(quiz_instance_answers.marks_awarded,0)  else 0 end) marks_scored ` +
     " from quiz " +
     " inner join problem_quiz on problem_quiz.quiz_id=quiz.id " +
     " inner join problem on problem_quiz.problem_id=problem.id " +
     " inner join quiz_instance on quiz_instance.quiz_id=quiz.id " +
     " left join quiz_instance_answers on quiz_instance.quiz_instance_id=quiz_instance_answers.quiz_instance_id and problem.id=quiz_instance_answers.problem_id " +
-    " where quiz_instance.user_id=$1 " +
+    " where quiz_instance.user_id=$1 and problem_quiz.deleted=false " +
     " group by " +
     " quiz_instance.quiz_instance_id, quiz.description, quiz.name, quiz_instance.quiz_id, quiz.duration_minutes, quiz.author_id,  quiz_instance.user_id, " +
     " quiz.type, quiz_instance.create_timestamp, quiz_instance.end_timestamp " +
