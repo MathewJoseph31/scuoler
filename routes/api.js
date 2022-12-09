@@ -11,6 +11,7 @@ const dbControllerPost = require("../controllers/DBcontrollerPost");
 const dbControllerRoom = require("../controllers/DBcontrollerRoom");
 const dbControllerChat = require("../controllers/DBcontrollerChat");
 const dbControllerFiles = require("../controllers/DBcontrollerFiles");
+const dbControllerPage = require("../controllers/DBcontrollerPage");
 const contactMailer = require("../controllers/EmailController");
 
 const { securityController } = require("../controllers/SecurityController");
@@ -124,6 +125,10 @@ router.post("/insertPostAction", dbControllerPost.insertPostToDbJson);
 router.post("/deletePost", dbControllerPost.deletePostInDB);
 router.post("/updatePost", dbControllerPost.editPostInDbJson);
 router.post("/likeUnlikePost", dbControllerPost.postLikeUnlike);
+
+//Pages
+router.get("/getPagesForSource", dbControllerPage.getPagesForSource);
+router.post("/insertPageAction", dbControllerPage.insertPageToDbJson);
 
 //ROOM
 router.get("/getRooms", dbControllerRoom.getRooms);
