@@ -127,8 +127,9 @@ router.post("/updatePost", dbControllerPost.editPostInDbJson);
 router.post("/likeUnlikePost", dbControllerPost.postLikeUnlike);
 
 //Pages
-router.get("/getPagesForSource", dbControllerPage.getPagesForSource);
+router.get("/getPagesForCourse", dbControllerPage.getPagesForCourse);
 router.post("/insertPageAction", dbControllerPage.insertPageToDbJson);
+router.post("/moveModuleLessonPage", dbControllerPage.moveModuleLessonPage);
 
 //ROOM
 router.get("/getRooms", dbControllerRoom.getRooms);

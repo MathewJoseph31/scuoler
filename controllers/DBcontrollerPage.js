@@ -21,7 +21,7 @@ const util = require("../util");
 
 /* function for handling  http requests to retrive list of posts for a course in database
 in json format*/
-exports.getPagesForSource = function (req, res, next) {
+exports.getPagesForCourse = function (req, res, next) {
   var queryObject = url.parse(req.url, true).query;
   let sourceId = queryObject.sourceId;
 
@@ -54,7 +54,7 @@ exports.getPagesForSource = function (req, res, next) {
     pool.end(() => {});
     if (err) next(err);
     else {
-      console.log(result.rows);
+      //console.log(result.rows);
       setCorsHeaders(req, res);
       res.send(result.rows);
     }
@@ -73,7 +73,7 @@ exports.insertPageToDbJson = function (req, res, next) {
   let pageContent = req.body.pageContent;
   let authorId = req.body.ownerId;
 
-  console.log(courseId, moduleId, moduleName, moduleNew);
+  //console.log(courseId, moduleId, moduleName, moduleNew);
 
   var pool = new pg.Pool({
     host: configuration.getHost(),
@@ -116,6 +116,66 @@ exports.insertPageToDbJson = function (req, res, next) {
           moduleId: resArr[1],
           lessonId: resArr[2],
           pageId: resArr[3],
+        });
+      }
+    }
+  );
+};
+
+exports.moveModuleLessonPage = function (req, res, next) {
+  let parentId = req.body.parentId;
+  let afterBeforeFlag = req.body.afterBeforeFlag;
+  let moveSourceId = req.body.moveSourceId;
+  let moveReferenceObjectId = req.body.moveReferenceObjectId;
+  let moveReferenceParentObjectId = req.body.moveReferenceObjectParentId;
+  let moveType = req.body.moveType;
+  console.log(
+    afterBeforeFlag,
+    moveSourceId,
+    parentId,
+    moveType,
+    moveReferenceObjectId,
+    moveReferenceParentObjectId
+  );
+
+  var pool = new pg.Pool({
+    host: configuration.getHost(),
+    user: configuration.getUserId(),
+    password: configuration.getPassword(),
+    database: configuration.getDatabase(),
+    port: configuration.getPort(),
+    ssl: { rejectUnauthorized: false },
+  });
+
+  var sql = "";
+
+  if (moveType === "Module") {
+    sql =
+      "select course_module_move(p_course_id:=$1, p_after:=$2, p_module_id:=$3, p_reference_module_id:=$4, p_reference_module_course_id:=$5)";
+  } else if (moveType === "Lesson") {
+    sql =
+      "select course_lesson_move(p_module_id:=$1, p_after:=$2, p_lesson_id:=$3, p_reference_lesson_id:=$4, p_reference_lesson_module_id:=$5)";
+  } else if (moveType === "Page") {
+    sql =
+      "select course_page_move(p_lesson_id:=$1, p_after:=$2, p_page_id:=$3, p_reference_page_id:=$4, p_reference_page_lesson_id:=$5);";
+  }
+  pool.query(
+    sql,
+    [
+      parentId,
+      afterBeforeFlag,
+      moveSourceId,
+      moveReferenceObjectId,
+      moveReferenceParentObjectId,
+    ],
+    function (err, result, fields) {
+      pool.end(() => {});
+      if (err) next(err);
+      else {
+        //console.log(result.rows);
+        setCorsHeaders(req, res);
+        res.json({
+          updatestatus: "ok",
         });
       }
     }
