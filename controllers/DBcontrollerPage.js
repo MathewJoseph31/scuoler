@@ -122,6 +122,44 @@ exports.insertPageToDbJson = function (req, res, next) {
   );
 };
 
+exports.deleteModuleLessonPage = function (req, res, next) {
+  let parentId = req.body.parentId;
+  let sourceId = req.body.sourceId;
+  let deleteType = req.body.type;
+  console.log(parentId, sourceId, deleteType);
+
+  var pool = new pg.Pool({
+    host: configuration.getHost(),
+    user: configuration.getUserId(),
+    password: configuration.getPassword(),
+    database: configuration.getDatabase(),
+    port: configuration.getPort(),
+    ssl: { rejectUnauthorized: false },
+  });
+
+  var sql = "";
+
+  if (deleteType === "Module") {
+    sql = "select course_module_delete(p_course_id:=$1, p_module_id:=$2)";
+  } else if (deleteType === "Lesson") {
+    sql = "select course_lesson_delete(p_module_id:=$1, p_lesson_id:=$2)";
+  } else {
+    sql = "select course_page_delete(p_lesson_id:=$1, p_page_id:=$2)";
+  }
+
+  pool.query(sql, [parentId, sourceId], function (err, result, fields) {
+    pool.end(() => {});
+    if (err) next(err);
+    else {
+      //console.log(result.rows);
+      setCorsHeaders(req, res);
+      res.json({
+        deletestatus: "ok",
+      });
+    }
+  });
+};
+
 exports.moveModuleLessonPage = function (req, res, next) {
   let parentId = req.body.parentId;
   let afterBeforeFlag = req.body.afterBeforeFlag;
@@ -129,14 +167,14 @@ exports.moveModuleLessonPage = function (req, res, next) {
   let moveReferenceObjectId = req.body.moveReferenceObjectId;
   let moveReferenceParentObjectId = req.body.moveReferenceObjectParentId;
   let moveType = req.body.moveType;
-  console.log(
+  /* console.log(
     afterBeforeFlag,
     moveSourceId,
     parentId,
     moveType,
     moveReferenceObjectId,
     moveReferenceParentObjectId
-  );
+  );*/
 
   var pool = new pg.Pool({
     host: configuration.getHost(),
