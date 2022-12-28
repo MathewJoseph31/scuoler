@@ -129,6 +129,9 @@ router.post("/likeUnlikePost", dbControllerPost.postLikeUnlike);
 //Pages
 router.get("/getPagesForCourse", dbControllerPage.getPagesForCourse);
 router.post("/insertPageAction", dbControllerPage.insertPageToDbJson);
+router.post("/getThePage", dbControllerPage.getThePage);
+router.post("/getTheLesson", dbControllerPage.getTheLesson);
+router.post("/getTheModule", dbControllerPage.getTheModule);
 router.post("/moveModuleLessonPage", dbControllerPage.moveModuleLessonPage);
 router.post("/deleteModuleLessonPage", dbControllerPage.deleteModuleLessonPage);
 

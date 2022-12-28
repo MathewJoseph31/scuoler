@@ -2,7 +2,16 @@ const path = require("path");
 /*Export method that accepts an http server instance as param and performs the necessary
 socket io initialization and message handling definitions*/
 exports.handleSocketIO = function (server) {
-  const io = require("socket.io")(server);
+  var io;
+  if (process.env.NODE_ENV === "production") {
+    io = require("socket.io")(server);
+  } else {
+    io = require("socket.io")(server, {
+      cors: {
+        origin: "*",
+      },
+    });
+  }
   /*const io = require("socket.io")({
     transports: ["websocket", "flashsocket", "polling", "xhr-polling"],
     allowEIO3: true, // false by default
