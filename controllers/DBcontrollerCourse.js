@@ -242,13 +242,13 @@ exports.getTheCourse = function (req, res, next) {
     } else {
       let resObj = {};
 
-      resObj.name = result.rows[0].name;
-      resObj.description = result.rows[0].description;
-      resObj.ownerId = result.rows[0].author_id;
-      resObj.thumbnail = result.rows[0].thumbnail;
-      resObj.rating = result.rows[0].rating;
-      resObj.likes = result.rows[0].likes;
-      resObj.liked = result.rows[0].liked;
+      resObj.name = result.rows[0]?.name;
+      resObj.description = result.rows[0]?.description;
+      resObj.ownerId = result.rows[0]?.author_id;
+      resObj.thumbnail = result.rows[0]?.thumbnail;
+      resObj.rating = result.rows[0]?.rating;
+      resObj.likes = result.rows[0]?.likes;
+      resObj.liked = result.rows[0]?.liked;
       resObj.quizesArray = [];
 
       pool.query(sql1, [courseId], function (err, result1, fields) {

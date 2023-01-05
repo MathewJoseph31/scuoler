@@ -148,6 +148,7 @@ exports.getThePage = function (req, res, next) {
     " current_page.name page_name, " +
     " current_page.payload page_payload, " +
     " current_page.next_id next_page_id, " +
+    " current_page.author_id page_author_id, " +
     " prev_page.id prev_page_id " +
     " from " +
     " module current_module " +
@@ -171,6 +172,7 @@ exports.getThePage = function (req, res, next) {
       resObj.pageIdNext = result.rows[0].next_page_id;
       resObj.pageIdPrev = result.rows[0].prev_page_id;
       resObj.pagePayload = result.rows[0].page_payload;
+      resObj.pageAuthorId = result.rows[0].page_author_id;
       //console.log(result.rows);
       setCorsHeaders(req, res);
       res.send(resObj);
@@ -199,6 +201,8 @@ exports.getTheLesson = function (req, res, next) {
     " current_module.next_id next_module_id, " +
     " current_lesson.id lesson_id, " +
     " current_lesson.name lesson_name," +
+    " current_lesson.payload lesson_payload," +
+    " current_lesson.author_id lesson_author_id, " +
     " current_lesson.next_id next_lesson_id, " +
     " prev_lesson.id prev_lesson_id, " +
     " (select count(*) from page where lesson_id=prev_lesson.id and deleted=false) prev_lesson_page_count, " +
@@ -225,6 +229,8 @@ exports.getTheLesson = function (req, res, next) {
       resObj.lessonIdPrev = result.rows[0].prev_lesson_id;
       resObj.lessonIdPrevPageCount = result.rows[0].prev_lesson_page_count;
       resObj.lessonName = result.rows[0].lesson_name;
+      resObj.lessonPayload = result.rows[0].lesson_payload;
+      resObj.lessonAuthorId = result.rows[0].lesson_author_id;
       resObj.pageIdNext = result.rows[0].next_page_id;
       resObj.pageIdPrev = result.rows[0].prev_page_id;
       //console.log(result.rows);
@@ -252,6 +258,8 @@ exports.getTheModule = function (req, res, next) {
   var sql =
     " select current_module.id module_id, " +
     " current_module.name module_name, " +
+    " current_module.payload module_payload, " +
+    " current_module.author_id module_author_id, " +
     " current_module.next_id next_module_id, " +
     " prev_module.id prev_module_id, " +
     " (select count(*) from lesson where module_id=prev_module.id and deleted=false) prev_module_lesson_count, " +
@@ -274,6 +282,8 @@ exports.getTheModule = function (req, res, next) {
       let resObj = {};
       resObj.moduleId = result.rows[0].module_id;
       resObj.moduleName = result.rows[0].module_name;
+      resObj.modulePayload = result.rows[0].module_payload;
+      resObj.moduleAuthorId = result.rows[0].module_author_id;
       resObj.moduleIdNext = result.rows[0].next_module_id;
       resObj.moduleIdPrev = result.rows[0].prev_module_id;
       resObj.moduleIdPrevLessonCount = result.rows[0].prev_module_lesson_count;
@@ -373,6 +383,53 @@ exports.moveModuleLessonPage = function (req, res, next) {
       moveReferenceObjectId,
       moveReferenceParentObjectId,
     ],
+    function (err, result, fields) {
+      pool.end(() => {});
+      if (err) next(err);
+      else {
+        //console.log(result.rows);
+        setCorsHeaders(req, res);
+        res.json({
+          updatestatus: "ok",
+        });
+      }
+    }
+  );
+};
+
+exports.editModuleLessonPage = function (req, res, next) {
+  let parentId = req.body.parentId;
+  let updateSourceId = req.body.id;
+  let name = req.body.name;
+  let payload = req.body.payload;
+  let updateType = req.body.type;
+  console.log(parentId, updateSourceId, name, payload, updateType);
+
+  var pool = new pg.Pool({
+    host: configuration.getHost(),
+    user: configuration.getUserId(),
+    password: configuration.getPassword(),
+    database: configuration.getDatabase(),
+    port: configuration.getPort(),
+    ssl: { rejectUnauthorized: false },
+  });
+
+  var sql = "";
+
+  if (updateType === "Module") {
+    sql =
+      "select course_module_update(p_course_id:=$1, p_module_id:=$2, p_name:=$3, p_payload:=$4)";
+  } else if (updateType === "Lesson") {
+    sql =
+      "select course_lesson_update(p_module_id:=$1, p_lesson_id:=$2, p_name:=$3, p_payload:=$4)";
+  } else {
+    sql =
+      "select course_page_update(p_lesson_id:=$1, p_page_id:=$2, p_name:=$3, p_payload:=$4)";
+  }
+
+  pool.query(
+    sql,
+    [parentId, updateSourceId, name, payload],
     function (err, result, fields) {
       pool.end(() => {});
       if (err) next(err);

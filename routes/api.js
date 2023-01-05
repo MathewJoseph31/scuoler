@@ -133,6 +133,7 @@ router.post("/getThePage", dbControllerPage.getThePage);
 router.post("/getTheLesson", dbControllerPage.getTheLesson);
 router.post("/getTheModule", dbControllerPage.getTheModule);
 router.post("/moveModuleLessonPage", dbControllerPage.moveModuleLessonPage);
+router.post("/editModuleLessonPage", dbControllerPage.editModuleLessonPage);
 router.post("/deleteModuleLessonPage", dbControllerPage.deleteModuleLessonPage);
 
 //ROOM
