@@ -204,6 +204,34 @@ exports.searchCourses = function (req, res, next) {
   });
 };
 
+exports.getCourseName = function (req, res, next) {
+  var queryObject = url.parse(req.url, true).query;
+
+  let courseId = queryObject.courseId;
+  var pool = new pg.Pool({
+    host: configuration.getHost(),
+    user: configuration.getUserId(),
+    password: configuration.getPassword(),
+    database: configuration.getDatabase(),
+    port: configuration.getPort(),
+    ssl: { rejectUnauthorized: false },
+  });
+
+  let sql =
+    " select A.name, A.description, A.author_id " +
+    " from course A " +
+    " where A.id=$1 ";
+
+  pool.query(sql, [courseId], function (err, result, fields) {
+    if (err) {
+      pool.end(() => {});
+      next(err);
+    } else {
+      res.json(result.rows[0]);
+    }
+  });
+};
+
 exports.getTheCourse = function (req, res, next) {
   let courseId = req.body.courseId;
   let authorName = req.body.authorName;

@@ -7,7 +7,7 @@
   },
   "scripts": {
     "start": "export NODE_ENV=production && node ./bin/www",
-    "devstart": "export NODE_ENV=production && nodemon ./bin/www",
+    "devstart": "nodemon ./bin/www",
     "heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build",
     "client": "cd client && npm start",
     "dev": "npm run devstart & npm run client"
