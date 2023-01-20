@@ -15,7 +15,7 @@ exports.setRoutes = (app, peerServer) => {
 
   app.use("/api", apiRouter);
 
-  app.use("/chat", chatRouter);
+  //app.use("/chat", chatRouter);
 
   if (process.env.NODE_ENV === "production") {
     // Serve any static files
