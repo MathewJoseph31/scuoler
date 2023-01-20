@@ -256,17 +256,7 @@ exports.getTheProblem = function (req, res, next) {
     ssl: { rejectUnauthorized: false },
   });
 
-  var sql =
-    "select A.id, A.description, A.options, " +
-    " A.answerkey, " +
-    " A.solution, A.type, A.author_id, A.source, A.solution_open,  " +
-    " avg(B.rating) rating, count(distinct C.*) likes,  " +
-    " case when exists(select 1 from user_like where id=$1 and user_id=$2 and deleted=false) then true else false end liked " +
-    " from Problem A " +
-    " left join user_rating B on A.id=B.id   " +
-    " left join user_like C on A.id=C.id and C.deleted=false " +
-    " where A.deleted=false and A.id=$1" +
-    " GROUP BY A.id, A.description, A.options, A.answerkey, A.solution, A.type, A.author_id, A.source, A.solution_open ";
+  var sql = "select * from problem_get_one(p_id:=$1, p_author_id:=$2)";
 
   var sql1 =
     "SELECT Quiz.id, Quiz.description, Quiz.name, Quiz.author_id, Quiz.duration_minutes " +

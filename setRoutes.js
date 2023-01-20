@@ -8,7 +8,7 @@ const { setCorsHeaders } = utils;
 
 const apiRouter = require("./routes/api");
 
-const chatRouter = require("./routes/chat");
+//const chatRouter = require("./routes/chat");
 
 exports.setRoutes = (app, peerServer) => {
   app.use("/peerjsServer", peerServer);
