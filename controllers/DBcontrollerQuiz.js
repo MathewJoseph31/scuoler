@@ -286,24 +286,6 @@ exports.getQuizInstanceProblems = function (req, res, next) {
   let quizInstanceId = req.body.quizInstanceId;
 
   let sql = "select * from quiz_instance_problems_get(p_quizInstanceId:=$1);";
-  /*" select quiz_instance.quiz_instance_id, quiz.description as quiz_description, quiz.name quiz_name, quiz_instance.quiz_id, quiz.duration_minutes, quiz.author_id,  quiz_instance.user_id, " +
-    " quiz_instance.create_timestamp start_timestamp, " +
-    " coalesce(quiz_instance.end_timestamp, quiz_instance.create_timestamp+quiz.duration_minutes* INTERVAL '1 minutes') as end_timestamp, " +
-    " problem_quiz.problem_id, problem.answerkey, problem.type, " +
-    " problem.description as problem_description, problem.solution as problem_solution, " +
-    " problem.option1, problem.option2, problem.option3, problem.option4, problem.options, " +
-    " problem.maxmarks,  quiz_instance_answers.create_timestamp, " +
-    " quiz_instance_answers.solution as user_solution, " +
-    " coalesce(quiz_instance_answers.marks_awarded,0) marks_awarded, " +
-    ` case when problem.type='${constants.PROBLEM_TYPE_CODE_MULTIPLE_CHOICE_SINGLE_ANSWER}' and CAST(problem.answerkey as integer) = CAST(quiz_instance_answers.solution as integer) then problem.maxmarks
-           when problem.type='${constants.PROBLEM_TYPE_CODE_MULTIPLE_CHOICE_MULTIPLE_ANSWER}' and string_to_array(problem.answerkey, ',')::int[] = string_to_array(quiz_instance_answers.solution, ',')::int[] then problem.maxmarks 
-           when problem.type='${constants.PROBLEM_TYPE_CODE_HYBRID}' then coalesce(quiz_instance_answers.marks_awarded,0)  else 0 end marks_scored ` +
-    " from quiz " +
-    " inner join problem_quiz on problem_quiz.quiz_id=quiz.id and problem_quiz.deleted=false " +
-    " inner join problem on problem_quiz.problem_id=problem.id " +
-    " inner join quiz_instance on quiz_instance.quiz_id=quiz.id " +
-    " left join quiz_instance_answers on quiz_instance.quiz_instance_id=quiz_instance_answers.quiz_instance_id and problem.id=quiz_instance_answers.problem_id " +
-    " where quiz_instance.quiz_instance_id=$1 ";*/
 
   var pool = new pg.Pool({
     host: configuration.getHost(),
@@ -330,26 +312,6 @@ exports.quizGetInstances = function (req, res, next) {
 
   let sql = "select * from quiz_instances_get(p_quizId:=$1)";
 
-  /*" select quiz_instance.quiz_instance_id, quiz.description, quiz.name, quiz_instance.quiz_id, quiz.duration_minutes, quiz.author_id,  quiz_instance.user_id, " +
-    " quiz.type as quiz_type, quiz_instance.create_timestamp start_timestamp, " +
-    " coalesce(quiz_instance.end_timestamp, quiz_instance.create_timestamp+quiz.duration_minutes* INTERVAL '1 minutes') as end_timestamp, " +
-    //'--problem_quiz.problem_id, problem.answerkey, problem.type'+
-    //'--, quiz_instance_answers.create_timestamp, '+
-    " SUM(problem.maxmarks) maxmarks,  " +
-    ` SUM(case when problem.type='${constants.PROBLEM_TYPE_CODE_MULTIPLE_CHOICE_SINGLE_ANSWER}' and CAST(problem.answerkey as integer) = CAST(quiz_instance_answers.solution as integer) then problem.maxmarks
-               when problem.type='${constants.PROBLEM_TYPE_CODE_MULTIPLE_CHOICE_MULTIPLE_ANSWER}' and string_to_array(problem.answerkey, ',')::int[] = string_to_array(quiz_instance_answers.solution, ',')::int[] then problem.maxmarks 
-               when problem.type='${constants.PROBLEM_TYPE_CODE_HYBRID}' then coalesce(quiz_instance_answers.marks_awarded,0)  else 0 end) marks_scored ` +
-    " from quiz " +
-    " inner join problem_quiz on problem_quiz.quiz_id=quiz.id " +
-    " inner join problem on problem_quiz.problem_id=problem.id " +
-    " inner join quiz_instance on quiz_instance.quiz_id=quiz.id " +
-    " left join quiz_instance_answers on quiz_instance.quiz_instance_id=quiz_instance_answers.quiz_instance_id and problem.id=quiz_instance_answers.problem_id " +
-    " where quiz.id=$1 and problem_quiz.deleted=false " +
-    " group by " +
-    " quiz_instance.quiz_instance_id, quiz.description, quiz.name, quiz_instance.quiz_id, quiz.duration_minutes, quiz.author_id,  quiz_instance.user_id, " +
-    " quiz.type, quiz_instance.create_timestamp, quiz_instance.end_timestamp " +
-    " order by  quiz_instance.create_timestamp desc, quiz_instance.quiz_instance_id, quiz_instance.quiz_id  ";*/
-
   var pool = new pg.Pool({
     host: configuration.getHost(),
     user: configuration.getUserId(),
@@ -373,25 +335,6 @@ exports.quizGetScoresForUser = function (req, res, next) {
   let userId = req.body.userId;
 
   let sql = "select * from quiz_user_scores_get(p_userId:=$1)";
-  /*" select quiz_instance.quiz_instance_id, quiz.name, quiz.description, quiz_instance.quiz_id, quiz.duration_minutes, quiz.author_id,  quiz_instance.user_id, " +
-    " quiz.type as quiz_type, quiz_instance.create_timestamp start_timestamp, " +
-    " coalesce(quiz_instance.end_timestamp, quiz_instance.create_timestamp+quiz.duration_minutes* INTERVAL '1 minutes') as end_timestamp, " +
-    //'--problem_quiz.problem_id, problem.answerkey, problem.type'+
-    //'--, quiz_instance_answers.create_timestamp, '+
-    " SUM(problem.maxmarks) maxmarks,  " +
-    ` SUM(case when problem.type='${constants.PROBLEM_TYPE_CODE_MULTIPLE_CHOICE_SINGLE_ANSWER}' and CAST(problem.answerkey as integer) = CAST(quiz_instance_answers.solution as integer) then problem.maxmarks 
-              when problem.type='${constants.PROBLEM_TYPE_CODE_MULTIPLE_CHOICE_MULTIPLE_ANSWER}' and string_to_array(problem.answerkey, ',')::int[] = string_to_array(quiz_instance_answers.solution, ',')::int[] then problem.maxmarks
-               when problem.type='${constants.PROBLEM_TYPE_CODE_HYBRID}' then coalesce(quiz_instance_answers.marks_awarded,0)  else 0 end) marks_scored ` +
-    " from quiz " +
-    " inner join problem_quiz on problem_quiz.quiz_id=quiz.id " +
-    " inner join problem on problem_quiz.problem_id=problem.id " +
-    " inner join quiz_instance on quiz_instance.quiz_id=quiz.id " +
-    " left join quiz_instance_answers on quiz_instance.quiz_instance_id=quiz_instance_answers.quiz_instance_id and problem.id=quiz_instance_answers.problem_id " +
-    " where quiz_instance.user_id=$1 and problem_quiz.deleted=false " +
-    " group by " +
-    " quiz_instance.quiz_instance_id, quiz.description, quiz.name, quiz_instance.quiz_id, quiz.duration_minutes, quiz.author_id,  quiz_instance.user_id, " +
-    " quiz.type, quiz_instance.create_timestamp, quiz_instance.end_timestamp " +
-    " order by  quiz_instance.create_timestamp desc, quiz_instance.quiz_instance_id, quiz_instance.quiz_id  ";*/
 
   var pool = new pg.Pool({
     host: configuration.getHost(),
@@ -509,8 +452,6 @@ exports.deleteQuizInDB = function (req, res, next) {
   //var q = url.parse(req.url, true).query;
   let quizId = req.body.id;
 
-  /*var sql="UPDATE QUIZ SET  deleted=true, modified_timestamp=now() where id=$1 ";
-  var sql1="UPDATE Quiz_Course SET  deleted=true, modified_timestamp=now() where quiz_id=$1 ";*/
   var sql = "select quiz_delete($1)";
 
   var pool = new pg.Pool({
@@ -661,15 +602,6 @@ exports.getTheQuiz = function (req, res, next) {
   });
 
   var sql = "select * from quiz_get_one(p_id:=$1, p_author_id:=$2)";
-  /*" SELECT A.description, A.name, " +
-    " A.author_id, A.duration_minutes, A.type, A.thumbnail,  " +
-    " avg(B.rating) rating, count(distinct C.*) likes,  " +
-    " case when exists(select 1 from user_like where id=$1 and user_id=$2 and deleted=false) then true else false end liked " +
-    " FROM Quiz A " +
-    " left join user_rating B on A.id=B.id  " +
-    " left join user_like C on A.id=C.id and C.deleted=false " +
-    " where A.id=$1 " +
-    " GROUP BY A.description, A.name, A.author_id, A.duration_minutes, A.type, A.thumbnail ";*/
 
   var sql1 =
     "SELECT id,name, description, author_id FROM Course " +

@@ -41,15 +41,7 @@ exports.getPostsForSource = function (req, res, next) {
   });
   var sql =
     "select * from posts_for_source_get(p_sourceId:=$1, p_authorId:=$2, p_offset:=$3, p_pageSize:=$4)";
-  /*" SELECT A.post_id id, A.payload, A.author_id, A.create_timestamp, " +
-    " count(distinct B.*) likes, " +
-    " case when exists(select 1 from user_like where id=A.post_id and user_id=$2 and deleted=false) then true else false end liked " +
-    "  from post_association A  " +
-    " left join user_like B on A.post_id=B.id and B.deleted=false " +
-    " where  A.deleted=false and A.source_object_id=$1 " +
-    " GROUP BY A.post_id, A.payload, A.author_id, A.create_timestamp " +
-    " order by A.create_timestamp desc " +
-    " offset $3 limit $4 ";*/
+
   pool.query(
     sql,
     [sourceId, authorId, offset, pageSize],

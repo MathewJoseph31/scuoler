@@ -89,10 +89,6 @@ exports.insertProblemToDbJson = function (req, res, next) {
     ssl: { rejectUnauthorized: false },
   });
 
-  /*var sql =
-    "select problem_insert(p_id :=$1, p_description:=$2, p_option1:=$3, p_option2:=$4," +
-    " p_option3:=$5, p_option4:=$6, p_solution:=$7, p_answerkey:=$8, p_author_id:=$9, p_quizes_id:=$10, p_type:=$11);";*/
-
   var sql =
     "select problem_insert(p_id :=$1, p_description:=$2, p_options:=$3, " +
     "  p_solution:=$4, p_answerkey:=$5, p_author_id:=$6, p_quizes_id:=$7, " +
@@ -217,8 +213,6 @@ exports.deleteProblemInDB = function (req, res, next) {
 
   //  console.log(problemId);
 
-  /*var sql="UPDATE PROBLEM SET  deleted=true, modified_timestamp=now() where id=$1 ";
-  var sql1="UPDATE PROBLEM_QUIZ SET  deleted=true, modified_timestamp=now() where problem_id=$1 ";*/
   var sql = "select problem_delete(p_id:=$1)";
 
   var pool = new pg.Pool({
