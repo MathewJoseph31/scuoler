@@ -27,7 +27,9 @@ exports.handleSocketIO = function (server) {
 
   io.on("connection", (socket) => {
     socket.on("disconnect", () => {
-      let roomId = path.basename(socket.handshake.headers.referer);
+      let roomId = socket?.handshake?.headers?.referer
+        ? path.basename(socket.handshake.headers.referer)
+        : "errRoom";
       //console.log("disconnect from room: ", socket.handshake.headers.referer);
     });
     /*socket.on("message", (chatMsg) => {
