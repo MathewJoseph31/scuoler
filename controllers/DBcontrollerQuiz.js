@@ -285,8 +285,8 @@ const constants = require("../Constants");
 exports.getQuizInstanceProblems = function (req, res, next) {
   let quizInstanceId = req.body.quizInstanceId;
 
-  let sql =
-    " select quiz_instance.quiz_instance_id, quiz.description as quiz_description, quiz.name quiz_name, quiz_instance.quiz_id, quiz.duration_minutes, quiz.author_id,  quiz_instance.user_id, " +
+  let sql = "select * from quiz_instance_problems_get(p_quizInstanceId:=$1);";
+  /*" select quiz_instance.quiz_instance_id, quiz.description as quiz_description, quiz.name quiz_name, quiz_instance.quiz_id, quiz.duration_minutes, quiz.author_id,  quiz_instance.user_id, " +
     " quiz_instance.create_timestamp start_timestamp, " +
     " coalesce(quiz_instance.end_timestamp, quiz_instance.create_timestamp+quiz.duration_minutes* INTERVAL '1 minutes') as end_timestamp, " +
     " problem_quiz.problem_id, problem.answerkey, problem.type, " +
@@ -303,7 +303,7 @@ exports.getQuizInstanceProblems = function (req, res, next) {
     " inner join problem on problem_quiz.problem_id=problem.id " +
     " inner join quiz_instance on quiz_instance.quiz_id=quiz.id " +
     " left join quiz_instance_answers on quiz_instance.quiz_instance_id=quiz_instance_answers.quiz_instance_id and problem.id=quiz_instance_answers.problem_id " +
-    " where quiz_instance.quiz_instance_id=$1 ";
+    " where quiz_instance.quiz_instance_id=$1 ";*/
 
   var pool = new pg.Pool({
     host: configuration.getHost(),
@@ -316,8 +316,9 @@ exports.getQuizInstanceProblems = function (req, res, next) {
 
   pool.query(sql, [quizInstanceId], function (err, result, fields) {
     pool.end(() => {});
-    if (err) next(err);
-    else {
+    if (err) {
+      next(err);
+    } else {
       setCorsHeaders(req, res);
       res.json(result.rows);
     }
@@ -327,8 +328,9 @@ exports.getQuizInstanceProblems = function (req, res, next) {
 exports.quizGetInstances = function (req, res, next) {
   let quizId = req.body.quizId;
 
-  let sql =
-    " select quiz_instance.quiz_instance_id, quiz.description, quiz.name, quiz_instance.quiz_id, quiz.duration_minutes, quiz.author_id,  quiz_instance.user_id, " +
+  let sql = "select * from quiz_instances_get(p_quizId:=$1)";
+
+  /*" select quiz_instance.quiz_instance_id, quiz.description, quiz.name, quiz_instance.quiz_id, quiz.duration_minutes, quiz.author_id,  quiz_instance.user_id, " +
     " quiz.type as quiz_type, quiz_instance.create_timestamp start_timestamp, " +
     " coalesce(quiz_instance.end_timestamp, quiz_instance.create_timestamp+quiz.duration_minutes* INTERVAL '1 minutes') as end_timestamp, " +
     //'--problem_quiz.problem_id, problem.answerkey, problem.type'+
@@ -346,7 +348,7 @@ exports.quizGetInstances = function (req, res, next) {
     " group by " +
     " quiz_instance.quiz_instance_id, quiz.description, quiz.name, quiz_instance.quiz_id, quiz.duration_minutes, quiz.author_id,  quiz_instance.user_id, " +
     " quiz.type, quiz_instance.create_timestamp, quiz_instance.end_timestamp " +
-    " order by  quiz_instance.create_timestamp desc, quiz_instance.quiz_instance_id, quiz_instance.quiz_id  ";
+    " order by  quiz_instance.create_timestamp desc, quiz_instance.quiz_instance_id, quiz_instance.quiz_id  ";*/
 
   var pool = new pg.Pool({
     host: configuration.getHost(),
@@ -370,8 +372,8 @@ exports.quizGetInstances = function (req, res, next) {
 exports.quizGetScoresForUser = function (req, res, next) {
   let userId = req.body.userId;
 
-  let sql =
-    " select quiz_instance.quiz_instance_id, quiz.name, quiz.description, quiz_instance.quiz_id, quiz.duration_minutes, quiz.author_id,  quiz_instance.user_id, " +
+  let sql = "select * from quiz_user_scores_get(p_userId:=$1)";
+  /*" select quiz_instance.quiz_instance_id, quiz.name, quiz.description, quiz_instance.quiz_id, quiz.duration_minutes, quiz.author_id,  quiz_instance.user_id, " +
     " quiz.type as quiz_type, quiz_instance.create_timestamp start_timestamp, " +
     " coalesce(quiz_instance.end_timestamp, quiz_instance.create_timestamp+quiz.duration_minutes* INTERVAL '1 minutes') as end_timestamp, " +
     //'--problem_quiz.problem_id, problem.answerkey, problem.type'+
@@ -389,7 +391,7 @@ exports.quizGetScoresForUser = function (req, res, next) {
     " group by " +
     " quiz_instance.quiz_instance_id, quiz.description, quiz.name, quiz_instance.quiz_id, quiz.duration_minutes, quiz.author_id,  quiz_instance.user_id, " +
     " quiz.type, quiz_instance.create_timestamp, quiz_instance.end_timestamp " +
-    " order by  quiz_instance.create_timestamp desc, quiz_instance.quiz_instance_id, quiz_instance.quiz_id  ";
+    " order by  quiz_instance.create_timestamp desc, quiz_instance.quiz_instance_id, quiz_instance.quiz_id  ";*/
 
   var pool = new pg.Pool({
     host: configuration.getHost(),
@@ -603,13 +605,6 @@ exports.editQuizInDbJson = function (req, res, next) {
 
   console.log("quizid " + id);
   console.log("ProblemsArray\n" + JSON.stringify(problemsArray));
-  /*  console.log('CoursesId\n'+coursesId);
-
-  res.setHeader('Access-Control-Allow-Origin','*');
-  res.setHeader('Access-Control-Allow-Methods','GET, POST, PUT, DELETE');
-  res.setHeader('Access-Control-Allow-Headers','Content-Type');
-  res.setHeader('Access-Control-Allow-Credentials',true);
-  res.json({"updatestatus":"ok"});*/
 
   let sql =
     "select quiz_update(p_id:=$1, p_description:=$2, p_name:=$3, " +
@@ -665,8 +660,8 @@ exports.getTheQuiz = function (req, res, next) {
     ssl: { rejectUnauthorized: false },
   });
 
-  var sql =
-    " SELECT A.description, A.name, " +
+  var sql = "select * from quiz_get_one(p_id:=$1, p_author_id:=$2)";
+  /*" SELECT A.description, A.name, " +
     " A.author_id, A.duration_minutes, A.type, A.thumbnail,  " +
     " avg(B.rating) rating, count(distinct C.*) likes,  " +
     " case when exists(select 1 from user_like where id=$1 and user_id=$2 and deleted=false) then true else false end liked " +
@@ -674,7 +669,7 @@ exports.getTheQuiz = function (req, res, next) {
     " left join user_rating B on A.id=B.id  " +
     " left join user_like C on A.id=C.id and C.deleted=false " +
     " where A.id=$1 " +
-    " GROUP BY A.description, A.name, A.author_id, A.duration_minutes, A.type, A.thumbnail ";
+    " GROUP BY A.description, A.name, A.author_id, A.duration_minutes, A.type, A.thumbnail ";*/
 
   var sql1 =
     "SELECT id,name, description, author_id FROM Course " +

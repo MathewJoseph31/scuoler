@@ -40,7 +40,8 @@ exports.getPostsForSource = function (req, res, next) {
     ssl: { rejectUnauthorized: false },
   });
   var sql =
-    " SELECT A.post_id id, A.payload, A.author_id, A.create_timestamp, " +
+    "select * from posts_for_source_get(p_sourceId:=$1, p_authorId:=$2, p_offset:=$3, p_pageSize:=$4)";
+  /*" SELECT A.post_id id, A.payload, A.author_id, A.create_timestamp, " +
     " count(distinct B.*) likes, " +
     " case when exists(select 1 from user_like where id=A.post_id and user_id=$2 and deleted=false) then true else false end liked " +
     "  from post_association A  " +
@@ -48,7 +49,7 @@ exports.getPostsForSource = function (req, res, next) {
     " where  A.deleted=false and A.source_object_id=$1 " +
     " GROUP BY A.post_id, A.payload, A.author_id, A.create_timestamp " +
     " order by A.create_timestamp desc " +
-    " offset $3 limit $4 ";
+    " offset $3 limit $4 ";*/
   pool.query(
     sql,
     [sourceId, authorId, offset, pageSize],
@@ -90,44 +91,6 @@ exports.insertPostToDbJson = function (req, res, next) {
     } else {
       setCorsHeaders(req, res);
       res.json({ insertstatus: "ok", postId: id });
-    }
-  });
-};
-
-/*api method for (un)liking a post*/
-exports.postLikeUnlike = function (req, res, next) {
-  let post_id = req.body.post_id;
-  let user_id = req.body.user_id;
-  let like_flag = req.body.like_flag;
-
-  var sql;
-
-  if (like_flag === "true") {
-    console.log(like_flag);
-    sql = "select post_like_unlike(p_id:=$1, u_id:=$2, like_flag:=true) ";
-  } else {
-    sql = "select post_like_unlike(p_id:=$1, u_id:=$2, like_flag:=false) ";
-  }
-
-  var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
-    ssl: { rejectUnauthorized: false },
-  });
-
-  pool.query(sql, [post_id, user_id], function (err, result, fields) {
-    pool.end(() => {});
-    if (err) {
-      next(err);
-      //res.json({ updatestatus: "error" });
-    } else {
-      //console.log(description+' '+solution);
-      console.log("post updated");
-      setCorsHeaders(req, res);
-      res.json({ updatestatus: "ok" });
     }
   });
 };

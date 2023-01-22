@@ -3,3 +3,13 @@ node_modules/
 build/
 client/build/
 logs/
+importLogs/Configuration.js
+refreshDB/remoteFromTest/Configuration.js
+refreshDB/remoteFromTest/ConfigurationTest.js
+refreshDB/testFromRemote/Configuration.js
+refreshDB/testFromRemote/ConfigurationTest.js
+CloudinaryConfiguration.js
+CloudinaryConfigurationAlt.js
+Configuration.js
+ConfigurationTest.js
+Constants.js

@@ -125,7 +125,6 @@ router.get("/getPostsForSource", dbControllerPost.getPostsForSource);
 router.post("/insertPostAction", dbControllerPost.insertPostToDbJson);
 router.post("/deletePost", dbControllerPost.deletePostInDB);
 router.post("/updatePost", dbControllerPost.editPostInDbJson);
-router.post("/likeUnlikePost", dbControllerPost.postLikeUnlike);
 
 //Pages
 router.get("/getPagesForCourse", dbControllerPage.getPagesForCourse);
