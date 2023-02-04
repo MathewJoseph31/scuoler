@@ -130,7 +130,7 @@ exports.getCourses = function (req, res, next) {
 
   var sql =
     sqlSubstringForGetAndSearch +
-    " FROM Course where deleted=false order by name ASC offset $1 limit $2 ";
+    " FROM Course where deleted=false order by create_timestamp DESC offset $1 limit $2 ";
   var resultArr = [];
 
   pool.query(sql, [offset, pageSize], function (err, result, fields) {
