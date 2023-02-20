@@ -72,4 +72,4 @@ SOFTWARE.
 ## Contact
 
 For inquiries, please contact [Mathew Joseph](https://scuoler.com/contactUs)
-or email me [Mathew Joseph](mathew@scuoler.com).
+or email me [Mathew Joseph](mailto:mathew@scuoler.com).
