@@ -12,6 +12,7 @@ const dbControllerRoom = require("../controllers/DBcontrollerRoom");
 const dbControllerChat = require("../controllers/DBcontrollerChat");
 const dbControllerFiles = require("../controllers/DBcontrollerFiles");
 const dbControllerPage = require("../controllers/DBcontrollerPage");
+const dbControllerStripe = require("../controllers/DBcontrollerStripe");
 const contactMailer = require("../controllers/EmailController");
 
 const { securityController } = require("../controllers/SecurityController");
@@ -165,6 +166,9 @@ router.post(
 router.post("/sendMail", contactMailer.sendMail);
 router.post("/sendReply", contactMailer.sendReply);
 router.post("/sendWelcome", contactMailer.sendWelcome);
+
+//Stripe
+router.post("/stripeSessionCheckout", dbControllerStripe.stripeSessionCheckout);
 
 JSON.safeStringify = (obj, indent = 2) => {
   let cache = [];

@@ -35,6 +35,7 @@
     "pg-sync": "^0.2.0",
     "rotating-file-stream": "^3.0.3",
     "socket.io": "^4.5.1",
+    "stripe": "^12.18.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
