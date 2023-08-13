@@ -3,7 +3,7 @@ const constants = require("../Constants");
 
 let { setCorsHeaders } = utils;
 
-const stripe = require("stripe")(constants.STRIPE_TEST_SECRET_KEY);
+const stripe = require("stripe")(constants.STRIPE_SECRET_KEY);
 
 /* function for stripe session checkout */
 exports.stripeSessionCheckout = async (req, res, next) => {
