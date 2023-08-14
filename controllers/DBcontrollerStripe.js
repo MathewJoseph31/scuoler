@@ -23,16 +23,12 @@ exports.stripeSessionCheckout = async (req, res, next) => {
       unit_amount: productPrice * 100,
       currency: "usd",
     });
-    //console.log(price);
     //let referrer = req.headers.referrer || req.headers.referer;
     let url = "";
-    if (req.headers["x-forwarded-proto"] && req.headers["x-forwarded-host"]) {
-      url =
-        req.headers["x-forwarded-proto"] +
-        "://" +
-        req.headers["x-forwarded-host"];
+    if (req.headers["x-forwarded-host"]) {
+      url = "https://" + req.headers["x-forwarded-host"];
     } else {
-      url = "http://localhost:3000";
+      url = "https://scuoler.com";
     }
 
     console.log(url);
