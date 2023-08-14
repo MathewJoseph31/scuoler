@@ -23,12 +23,18 @@ exports.stripeSessionCheckout = async (req, res, next) => {
       unit_amount: productPrice * 100,
       currency: "usd",
     });
-    console.log(price);
+    //console.log(price);
     //let referrer = req.headers.referrer || req.headers.referer;
-    const url =
-      req.headers["x-forwarded-proto"] +
-      "://" +
-      req.headers["x-forwarded-host"];
+    let url = "";
+    if (req.headers["x-forwarded-proto"] && req.headers["x-forwarded-host"]) {
+      url =
+        req.headers["x-forwarded-proto"] +
+        "://" +
+        req.headers["x-forwarded-host"];
+    } else {
+      url = "http://localhost:3000";
+    }
+
     console.log(url);
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
