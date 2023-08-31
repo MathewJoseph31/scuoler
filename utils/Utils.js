@@ -1,3 +1,5 @@
+const pg = require("pg");
+
 /*Cloudinary cloud image server initialization*/
 const cloudinary = require("cloudinary").v2;
 const cloudinaryConfiguration = require("../CloudinaryConfigurationAlt");
@@ -109,4 +111,40 @@ exports.delete_images = function (image_urls_for_delete) {
   });
 
   return "ok";
+};
+
+exports.getConfiguration = function (account_id, configuration) {
+  var pool = new pg.Pool({
+    host: configuration.getHost(),
+    user: configuration.getUserId(),
+    password: configuration.getPassword(),
+    database: configuration.getConfigDatabase(),
+    port: configuration.getPort(),
+    ssl: { rejectUnauthorized: false },
+  });
+
+  var sql =
+    "select distinct A.server,  A.port, A.database, A.user_id, A.password " +
+    " from account_connection A " +
+    " where A.deleted=false and A.account_id=$1 ";
+
+  return new Promise((resolve, reject) => {
+    pool.query(sql, [account_id], (err, result, fields) => {
+      pool.end(() => {});
+
+      let configurationClone = null;
+      if (err) resolve(configurationClone); //reject(err);
+      else {
+        if (result && result.rows && result.rows.length > 0) {
+          configurationClone = { ...configuration };
+          configurationClone.host = result.rows[0].server;
+          configurationClone.port = result.rows[0].port;
+          configurationClone.database = result.rows[0].database;
+          configurationClone.userId = result.rows[0].user_id;
+          configurationClone.password = result.rows[0].password;
+        }
+        resolve(configurationClone);
+      }
+    });
+  });
 };

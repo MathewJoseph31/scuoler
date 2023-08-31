@@ -12,7 +12,7 @@ let { setCorsHeaders } = utils;
 
 /* function for handling  http requests to retrive list of uploads for a source in database
 in json format*/
-exports.getUploadsForSource = function (req, res, next) {
+exports.getUploadsForSource = async function (req, res, next) {
   var queryObject = url.parse(req.url, true).query;
   let pageSize = queryObject.pageSize || 50;
   let currentPage = queryObject.currentPage || 1;
@@ -20,12 +20,22 @@ exports.getUploadsForSource = function (req, res, next) {
 
   const offset = pageSize * (currentPage - 1);
 
-  const pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+  let accountId = queryObject.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
+  var pool = new pg.Pool({
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 
@@ -97,19 +107,29 @@ exports.fileUploadDelete = function (req, res, next) {
   });
 };
 
-exports.fileUploadDeleteFromDB = function (req, res, next) {
+exports.fileUploadDeleteFromDB = async function (req, res, next) {
   let relativeUrl = req.body.relativeUrl;
   let sourceId = req.body.sourceId;
 
   let sql =
     "Update Upload_Association set deleted=true, modified_timestamp=now() where source_object_id=$1 and relative_url=$2";
 
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 
@@ -124,7 +144,7 @@ exports.fileUploadDeleteFromDB = function (req, res, next) {
   });
 };
 
-exports.fileUploadInsertToDB = function (req, res, next) {
+exports.fileUploadInsertToDB = async function (req, res, next) {
   let authorId = req.body.authorId;
   let sourceId = req.body.sourceId;
   let fileName = req.body.fileName;
@@ -132,12 +152,22 @@ exports.fileUploadInsertToDB = function (req, res, next) {
   let fileType = req.body.fileType;
   let timestamp = new Date();
 
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 

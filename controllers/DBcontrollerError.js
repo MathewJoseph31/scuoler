@@ -12,12 +12,22 @@ exports.insertErrorToDb = async function (err, req) {
   ip = ip.split(",")[0];
   ip = ip.split(":").slice(-1); //in case the ip returned in a format: "::ffff:146.xxx.xxx.xxx"
 
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 

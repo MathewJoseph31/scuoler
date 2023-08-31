@@ -20,19 +20,29 @@ let { setCorsHeaders } = utils;
 
 //--Employee---
 
-exports.mergeEmployee = function (req, res, next) {
+exports.mergeEmployee = async function (req, res, next) {
   let employeeId = req.body.employeeId;
   let firstName = req.body.firstName;
   let lastName = req.body.lastName;
   let email = req.body.email;
   let attachments = req.body.attachments;
 
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 
@@ -56,15 +66,25 @@ exports.mergeEmployee = function (req, res, next) {
   );
 };
 
-exports.searchEmployees = function (req, res, next) {
+exports.searchEmployees = async function (req, res, next) {
   let searchKey = req.body.searchKey;
 
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 
@@ -95,21 +115,32 @@ exports.searchEmployees = function (req, res, next) {
 
 /* function for handling  http requests to retrive list of users in database
 in json format*/
-exports.getEmployees = function (req, res, next) {
+exports.getEmployees = async function (req, res, next) {
   var queryObject = url.parse(req.url, true).query;
   let pageSize = queryObject.pageSize || 20;
   let currentPage = queryObject.currentPage || 1;
   //console.log(pageSize+', currPage '+currentPage);
   const offset = pageSize * (currentPage - 1);
 
+  let accountId = queryObject.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
+
   var sql =
     "SELECT id, first_name, last_name, address1, address2, city, zip, phone, mobile, " +
     " email, birth_date, salary, attachments, start_date, term_date FROM Employee " +
@@ -131,14 +162,25 @@ exports.getEmployees = function (req, res, next) {
   });
 };
 
-exports.getTheEmployee = function (req, res, next) {
+exports.getTheEmployee = async function (req, res, next) {
   let employeeId = req.body.employeeId;
+
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 
@@ -176,7 +218,7 @@ exports.getTheEmployee = function (req, res, next) {
 };
 
 /*api method for updating a course*/
-exports.editEmployeeInDbJson = function (req, res, next) {
+exports.editEmployeeInDbJson = async function (req, res, next) {
   //var q = url.parse(req.url, true).query;
   let id = req.body.id;
   let firstName = req.body.firstName;
@@ -202,12 +244,22 @@ exports.editEmployeeInDbJson = function (req, res, next) {
     " zip=$6, phone=$7, mobile=$8, email=$9, birth_date=$10, salary=$11, modified_timestamp=now(), " +
     " attachments=$12, start_date=$13, term_date=$14 where id=$15 ";
 
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 
@@ -250,7 +302,7 @@ exports.editEmployeeInDbJson = function (req, res, next) {
 };
 
 /* Api verison of InsertEmployeeToDB in database*/
-exports.insertEmployeeToDbJson = function (req, res, next) {
+exports.insertEmployeeToDbJson = async function (req, res, next) {
   //let id=req.body.id;
   console.log("user id" + req.userId);
   let firstName = req.body.firstName;
@@ -272,12 +324,22 @@ exports.insertEmployeeToDbJson = function (req, res, next) {
   }
   let attachments_for_delete = JSON.parse(req.body.attachments_for_delete);
 
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 
@@ -323,19 +385,29 @@ exports.insertEmployeeToDbJson = function (req, res, next) {
   );
 };
 
-exports.deleteEmployeeInDB = function (req, res, next) {
+exports.deleteEmployeeInDB = async function (req, res, next) {
   //var q = url.parse(req.url, true).query;
   let employeeId = req.body.id;
 
   var sql =
     "UPDATE EMPLOYEE SET  deleted=true, modified_timestamp=now() where id=$1 ";
 
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 

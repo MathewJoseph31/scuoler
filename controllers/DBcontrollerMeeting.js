@@ -10,12 +10,22 @@ const sqlSubstringForGetAndSearch =
   " SELECT Meeting.id, Meeting.description,  Meeting.organiser_id ";
 
 exports.getMeetingsListAsync = async function () {
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 
@@ -29,7 +39,7 @@ exports.getMeetingsListAsync = async function () {
   return result.rows;
 };
 
-exports.getMeetings = function (req, res, next) {
+exports.getMeetings = async function (req, res, next) {
   var queryObject = url.parse(req.url, true).query;
 
   let pageSize = queryObject.pageSize || 20;
@@ -37,12 +47,22 @@ exports.getMeetings = function (req, res, next) {
   //console.log(pageSize+', currPage '+currentPage);
   const offset = pageSize * (currentPage - 1);
 
+  let accountId = queryObject.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 
@@ -62,17 +82,27 @@ exports.getMeetings = function (req, res, next) {
 };
 
 /* Api verison of InsertMeetingToDB in database*/
-exports.insertMeetingToDbJson = function (req, res, next) {
+exports.insertMeetingToDbJson = async function (req, res, next) {
   let description = req.body.meetingDescription;
   let organiserId = req.body.organiserId;
   let meetingId = utils.getUniqueId(organiserId);
 
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 

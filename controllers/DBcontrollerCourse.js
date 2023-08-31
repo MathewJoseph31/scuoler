@@ -46,7 +46,7 @@ function getCourseList() {
 exports.getCourseList = getCourseList;
 
 /* API version of insertCourseToDB inserts to the course table in database*/
-exports.insertCourseToDbJson = function (req, res, next) {
+exports.insertCourseToDbJson = async function (req, res, next) {
   let courseName = req.body.courseName;
   let courseDescription = req.body.courseDescription;
   let ownerId = req.body.ownerId;
@@ -69,12 +69,23 @@ exports.insertCourseToDbJson = function (req, res, next) {
   });
 
   console.log("in course inserting to db");
+
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 
@@ -112,19 +123,29 @@ const sqlSubstringForGetAndSearch =
 
 /* function for handling http requests to retrive the records in the
  Course table in database in json format*/
-exports.getCourses = function (req, res, next) {
+exports.getCourses = async function (req, res, next) {
   var queryObject = url.parse(req.url, true).query;
   let pageSize = queryObject.pageSize || 20;
   let currentPage = queryObject.currentPage || 1;
   //console.log(pageSize+', currPage '+currentPage);
   const offset = pageSize * (currentPage - 1);
 
+  let accountId = queryObject.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 
@@ -148,16 +169,26 @@ exports.getCourses = function (req, res, next) {
   });
 };
 
-exports.searchCoursesForPrefix = function (req, res, next) {
+exports.searchCoursesForPrefix = async function (req, res, next) {
   let searchKey = req.body.searchKey;
   searchKey += "%";
 
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 
@@ -176,15 +207,25 @@ exports.searchCoursesForPrefix = function (req, res, next) {
   });
 };
 
-exports.searchCourses = function (req, res, next) {
+exports.searchCourses = async function (req, res, next) {
   let searchKey = req.body.searchKey;
 
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 
@@ -204,16 +245,27 @@ exports.searchCourses = function (req, res, next) {
   });
 };
 
-exports.getCourseName = function (req, res, next) {
+exports.getCourseName = async function (req, res, next) {
   var queryObject = url.parse(req.url, true).query;
 
   let courseId = queryObject.courseId;
+
+  let accountId = queryObject.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 
@@ -232,17 +284,29 @@ exports.getCourseName = function (req, res, next) {
   });
 };
 
-exports.getTheCourse = function (req, res, next) {
+exports.getTheCourse = async function (req, res, next) {
   let courseId = req.body.courseId;
   let authorName = req.body.authorName;
+
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
+
   let sql = "select * from course_get_one(p_id:=$1, p_author_id:=$2)";
 
   let sql1 =
@@ -297,17 +361,29 @@ exports.getTheCourse = function (req, res, next) {
 /* function for returning a Promise object that retrives the set of records in the
  Quiz table in database, related to a selected course*/
 
-exports.getQuizListForCourseJson = function (req, res, next) {
+exports.getQuizListForCourseJson = async function (req, res, next) {
   let courseId = req.body.courseId;
   var quizList = [];
+
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
+
   let sql =
     "SELECT Quiz.id, Quiz.description, Quiz.name, Quiz.author_id FROM Quiz " +
     " inner join Quiz_Course on Quiz.id=Quiz_Course.quiz_id where Quiz_Course.course_id=$1 " +
@@ -328,7 +404,7 @@ exports.getQuizListForCourseJson = function (req, res, next) {
 };
 
 /*api method for updating a course*/
-exports.editCourseInDbJson = function (req, res, next) {
+exports.editCourseInDbJson = async function (req, res, next) {
   //var q = url.parse(req.url, true).query;
 
   let courseId = req.body.courseId;
@@ -359,12 +435,22 @@ exports.editCourseInDbJson = function (req, res, next) {
   var sql =
     "select course_update(p_id:=$1, p_name:=$2, p_description:=$3, p_thumbnail:=$4,p_quizes_id:=$5, p_categories_id:=$6)";
 
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 
@@ -386,19 +472,29 @@ exports.editCourseInDbJson = function (req, res, next) {
   );
 };
 
-exports.deleteCourseInDB = function (req, res, next) {
+exports.deleteCourseInDB = async function (req, res, next) {
   //var q = url.parse(req.url, true).query;
   let courseId = req.body.id;
 
   var sql =
     "UPDATE COURSE SET  deleted=true, modified_timestamp=now() where id=$1 ";
 
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 
@@ -419,16 +515,28 @@ exports.deleteCourseInDB = function (req, res, next) {
 /* function for returning a Promise object that retrives the 
 set of categories related to a selected course*/
 
-exports.getCategoryListForCourseJson = function (req, res, next) {
+exports.getCategoryListForCourseJson = async function (req, res, next) {
   let courseId = req.body.courseId;
+
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
+
   var sql =
     "SELECT Category.id, Category.name FROM Category " +
     " inner join Course_Category on Category.id=Course_Category.category_id where Course_Category.course_id=$1 " +
@@ -448,16 +556,29 @@ exports.getCategoryListForCourseJson = function (req, res, next) {
   });
 };
 
-exports.getCategoryList = function (req, res, next) {
-  // let courseId = req.body.courseId;
+exports.getCategoryList = async function (req, res, next) {
+  var queryObject = url.parse(req.url, true).query;
+
+  let accountId = queryObject.accountId;
+
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
+
   var sql =
     "SELECT id,name FROM Category where deleted = false ORDER by name asc ";
   pool.query(sql, function (err, result, fields) {

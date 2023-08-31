@@ -21,7 +21,7 @@ const util = require("../util");
 
 /* function for handling  http requests to retrive list of posts for a course in database
 in json format*/
-exports.getPostsForSource = function (req, res, next) {
+exports.getPostsForSource = async function (req, res, next) {
   var queryObject = url.parse(req.url, true).query;
   let pageSize = queryObject.pageSize || 10;
   let currentPage = queryObject.currentPage || 1;
@@ -31,14 +31,25 @@ exports.getPostsForSource = function (req, res, next) {
   //console.log(pageSize+', currPage '+currentPage);
   const offset = pageSize * (currentPage - 1);
 
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
+
   var sql =
     "select * from posts_for_source_get(p_sourceId:=$1, p_authorId:=$2, p_offset:=$3, p_pageSize:=$4)";
 
@@ -57,18 +68,28 @@ exports.getPostsForSource = function (req, res, next) {
 };
 
 /* Api verison of InsertEmployeeToDB in database*/
-exports.insertPostToDbJson = function (req, res, next) {
+exports.insertPostToDbJson = async function (req, res, next) {
   let payload = req.body.payload;
   let author_id = req.body.author_id;
   let sourceId = req.body.sourceId;
   let id = utils.getUniqueId(author_id);
 
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 
@@ -88,7 +109,7 @@ exports.insertPostToDbJson = function (req, res, next) {
 };
 
 /*api method for updating an course*/
-exports.editPostInDbJson = function (req, res, next) {
+exports.editPostInDbJson = async function (req, res, next) {
   //var q = url.parse(req.url, true).query;
   let id = req.body.id;
   let payload = req.body.payload;
@@ -96,12 +117,22 @@ exports.editPostInDbJson = function (req, res, next) {
   var sql =
     "UPDATE POST_ASSOCIATION SET  payload=$1, modified_timestamp=now() where post_id=$2 ";
 
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 
@@ -117,19 +148,29 @@ exports.editPostInDbJson = function (req, res, next) {
   });
 };
 
-exports.deletePostInDB = function (req, res, next) {
+exports.deletePostInDB = async function (req, res, next) {
   //var q = url.parse(req.url, true).query;
   let id = req.body.id;
 
   var sql =
     "UPDATE POST_ASSOCIATION SET  deleted=true, modified_timestamp=now() where post_id=$1 ";
 
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 

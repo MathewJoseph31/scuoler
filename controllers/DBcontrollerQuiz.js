@@ -78,7 +78,7 @@ function getQuizListSync() {
 exports.getQuizListSync = getQuizListSync;
 
 /* Api version of insertQuizToDB*/
-exports.insertQuizToDbJson = function (req, res, next) {
+exports.insertQuizToDbJson = async function (req, res, next) {
   let quizDescription = req.body.quizDescription;
   let quizName = req.body.quizName;
   let duration_minutes = req.body.duration_minutes;
@@ -110,12 +110,22 @@ exports.insertQuizToDbJson = function (req, res, next) {
     problemsId.push(item.id);
   });
 
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 
@@ -158,21 +168,32 @@ exports.insertQuizToDbJson = function (req, res, next) {
 };
 
 /*Api method to be invoked before starting a quiz at front end*/
-exports.quizStart = function (req, res, next) {
+exports.quizStart = async function (req, res, next) {
   let quizId = req.body.quizId;
   let startTime = req.body.startTime;
   let userId = req.body.userId;
   let sql =
     "insert into quiz_instance(quiz_instance_id, quiz_id,  user_id) values($1,$2,$3)";
   let quizInstanceId = utils.getUniqueId(quizId);
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
+
   pool.query(sql, [quizInstanceId, quizId, userId], function (err, result) {
     pool.end(() => {});
     if (err) {
@@ -187,7 +208,7 @@ exports.quizStart = function (req, res, next) {
 };
 
 /*Api method to be invoked to submit answers of a quiz */
-exports.quizAnwersSubmit = function (req, res, next) {
+exports.quizAnwersSubmit = async function (req, res, next) {
   let quizId = req.body.quizId;
   let quizType = req.body.quizType;
   let quizInstanceId = req.body.quizInstanceId;
@@ -195,14 +216,25 @@ exports.quizAnwersSubmit = function (req, res, next) {
   //console.log(quizType);
   //console.log(JSON.stringify(answersObject));
 
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
+
   let sql =
     "update quiz_instance set end_timestamp=now() where quiz_instance_id=$1";
 
@@ -247,7 +279,7 @@ exports.quizAnwersSubmit = function (req, res, next) {
   });
 };
 
-exports.updateQuizMarksAwarded = function (req, res, next) {
+exports.updateQuizMarksAwarded = async function (req, res, next) {
   let quizInstanceId = req.body.quizInstanceId;
   let marksAwardedString = req.body.marksAwardedArray;
   let marksAwardedArray = JSON.parse(marksAwardedString);
@@ -255,12 +287,22 @@ exports.updateQuizMarksAwarded = function (req, res, next) {
 
   let sql = "select quiz_marks_awarded_update($1, $2)";
 
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 
@@ -282,17 +324,27 @@ exports.updateQuizMarksAwarded = function (req, res, next) {
 
 const constants = require("../Constants");
 
-exports.getQuizInstanceProblems = function (req, res, next) {
+exports.getQuizInstanceProblems = async function (req, res, next) {
   let quizInstanceId = req.body.quizInstanceId;
 
   let sql = "select * from quiz_instance_problems_get(p_quizInstanceId:=$1);";
 
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 
@@ -307,17 +359,27 @@ exports.getQuizInstanceProblems = function (req, res, next) {
   });
 };
 
-exports.quizGetInstances = function (req, res, next) {
+exports.quizGetInstances = async function (req, res, next) {
   let quizId = req.body.quizId;
 
   let sql = "select * from quiz_instances_get(p_quizId:=$1)";
 
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 
@@ -331,17 +393,27 @@ exports.quizGetInstances = function (req, res, next) {
   });
 };
 
-exports.quizGetScoresForUser = function (req, res, next) {
+exports.quizGetScoresForUser = async function (req, res, next) {
   let userId = req.body.userId;
 
   let sql = "select * from quiz_user_scores_get(p_userId:=$1)";
 
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 
@@ -359,7 +431,7 @@ exports.quizGetScoresForUser = function (req, res, next) {
 const sqlSubstringForGetAndSearch =
   " SELECT Quiz.id, Quiz.description, Quiz.name,  Quiz.author_id, Quiz.duration_minutes, Quiz.type, Quiz.thumbnail ";
 
-exports.getQuizes = function (req, res, next) {
+exports.getQuizes = async function (req, res, next) {
   var queryObject = url.parse(req.url, true).query;
 
   let pageSize = queryObject.pageSize || 20;
@@ -367,12 +439,22 @@ exports.getQuizes = function (req, res, next) {
   //console.log(pageSize+', currPage '+currentPage);
   const offset = pageSize * (currentPage - 1);
 
+  let accountId = queryObject.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 
@@ -391,16 +473,26 @@ exports.getQuizes = function (req, res, next) {
   });
 };
 
-exports.searchQuizesForPrefix = function (req, res, next) {
+exports.searchQuizesForPrefix = async function (req, res, next) {
   let searchKey = req.body.searchKey;
   searchKey += "%";
 
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 
@@ -419,15 +511,25 @@ exports.searchQuizesForPrefix = function (req, res, next) {
   });
 };
 
-exports.searchQuizes = function (req, res, next) {
+exports.searchQuizes = async function (req, res, next) {
   let searchKey = req.body.searchKey;
 
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 
@@ -448,18 +550,28 @@ exports.searchQuizes = function (req, res, next) {
   });
 };
 
-exports.deleteQuizInDB = function (req, res, next) {
+exports.deleteQuizInDB = async function (req, res, next) {
   //var q = url.parse(req.url, true).query;
   let quizId = req.body.id;
 
   var sql = "select quiz_delete($1)";
 
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 
@@ -476,7 +588,7 @@ exports.deleteQuizInDB = function (req, res, next) {
   });
 };
 
-exports.addQuizToCourse = function (req, res, next) {
+exports.addQuizToCourse = async function (req, res, next) {
   let quizId = req.body.quizId;
   let courseId = req.body.courseId;
 
@@ -484,12 +596,22 @@ exports.addQuizToCourse = function (req, res, next) {
 
   var sql = "select quiz_addto_course(p_quiz_id:=$1, p_course_id:=$2);";
 
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 
@@ -508,7 +630,7 @@ exports.addQuizToCourse = function (req, res, next) {
 };
 
 /*api method for updating a quiz*/
-exports.editQuizInDbJson = function (req, res, next) {
+exports.editQuizInDbJson = async function (req, res, next) {
   //var q = url.parse(req.url, true).query;
   let id = req.body.id;
   let type = req.body.type;
@@ -552,12 +674,22 @@ exports.editQuizInDbJson = function (req, res, next) {
     " p_duration_minutes:=$4, p_type:=$5, p_courses_id:=$6, p_problems_id:=$7, " +
     " p_categories_id:=$8, p_thumbnail:=$9)";
 
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 
@@ -589,15 +721,26 @@ exports.editQuizInDbJson = function (req, res, next) {
 };
 
 /*Api version of showTheQuiz*/
-exports.getTheQuiz = function (req, res, next) {
+exports.getTheQuiz = async function (req, res, next) {
   let quizId = req.body.quizId;
   let authorName = req.body.authorName;
+
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 
@@ -669,16 +812,27 @@ exports.getTheQuiz = function (req, res, next) {
   });
 };
 
-exports.getProblemListForQuizJson = function (req, res, next) {
+exports.getProblemListForQuizJson = async function (req, res, next) {
   let quizId = req.body.quizId;
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
+
   var sql =
     "SELECT id, description, options, solution, author_id, type " +
     " FROM Problem " +
@@ -701,16 +855,27 @@ exports.getProblemListForQuizJson = function (req, res, next) {
 
 /* function for returning a Promise object that retrives the 
 set of categories related to a selected quiz*/
-exports.getCategoryListForQuizJson = function (req, res, next) {
+exports.getCategoryListForQuizJson = async function (req, res, next) {
   let quizId = req.body.quizId;
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
+
   var sql =
     "SELECT Category.id, Category.name FROM Category " +
     " inner join Quiz_Category on Category.id=Quiz_Category.category_id where Quiz_Category.quiz_id=$1 " +

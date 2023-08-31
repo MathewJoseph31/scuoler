@@ -14,22 +14,32 @@ let { setCorsHeaders } = utils;
 
 //----PROBLEM----
 
-exports.addProblemToQuiz = function (req, res, next) {
+exports.addProblemToQuiz = async function (req, res, next) {
   let problemId = req.body.problemId;
   let quizId = req.body.quizId;
 
   //console.log(problemId+'-'+quizId);
 
-  var sql = "select problem_addto_quiz(p_problem_id:=$1, p_quiz_id:=$2);";
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
 
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
+
+  var sql = "select problem_addto_quiz(p_problem_id:=$1, p_quiz_id:=$2);";
 
   pool.query(sql, [problemId, quizId], function (err, result, fields) {
     pool.end(() => {});
@@ -48,7 +58,7 @@ exports.addProblemToQuiz = function (req, res, next) {
 //----PROBLEM----
 
 /* API version of insertproblemToDB table in database*/
-exports.insertProblemToDbJson = function (req, res, next) {
+exports.insertProblemToDbJson = async function (req, res, next) {
   //let quizId=req.body.quizId;
   let quizesArray = JSON.parse(req.body.quizesArray);
   let problemDescription = req.body.probDescription;
@@ -80,12 +90,22 @@ exports.insertProblemToDbJson = function (req, res, next) {
     quizesId.push(item.id);
   });
 
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 
@@ -123,7 +143,7 @@ exports.insertProblemToDbJson = function (req, res, next) {
   );
 };
 
-exports.editProblemInDB = function (req, res, next) {
+exports.editProblemInDB = async function (req, res, next) {
   //var q = url.parse(req.url, true).query;
   let problemId = req.body.id;
   let description = req.body.description;
@@ -170,12 +190,22 @@ exports.editProblemInDB = function (req, res, next) {
     "select problem_update(p_id:=$1,p_description:=$2,p_options:=$3, " +
     " p_solution:=$4, p_answerkey:=$5, p_quizes_id:=$6, p_categories_id:=$7, p_type:=$8, p_solution_open:=$9);";
 
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 
@@ -207,7 +237,7 @@ exports.editProblemInDB = function (req, res, next) {
   );
 };
 
-exports.deleteProblemInDB = function (req, res, next) {
+exports.deleteProblemInDB = async function (req, res, next) {
   //var q = url.parse(req.url, true).query;
   let problemId = req.body.id;
 
@@ -215,12 +245,22 @@ exports.deleteProblemInDB = function (req, res, next) {
 
   var sql = "select problem_delete(p_id:=$1)";
 
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 
@@ -237,16 +277,26 @@ exports.deleteProblemInDB = function (req, res, next) {
   });
 };
 
-exports.getTheProblem = function (req, res, next) {
+exports.getTheProblem = async function (req, res, next) {
   let problemId = req.body.problemId;
   let authorId = req.body.authorId;
 
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 
@@ -309,7 +359,7 @@ exports.getTheProblem = function (req, res, next) {
   });
 };
 
-exports.getProblems = function (req, res, next) {
+exports.getProblems = async function (req, res, next) {
   var queryObject = url.parse(req.url, true).query;
   let pageSize = queryObject.pageSize || 30;
   let currentPage = queryObject.currentPage || 1;
@@ -317,12 +367,22 @@ exports.getProblems = function (req, res, next) {
 
   const offset = pageSize * (currentPage - 1);
 
+  let accountId = queryObject.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 
@@ -349,15 +409,25 @@ exports.getProblems = function (req, res, next) {
   });
 };
 
-exports.searchProblems = function (req, res, next) {
+exports.searchProblems = async function (req, res, next) {
   let searchKey = req.body.searchKey;
 
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
   var pool = new pg.Pool({
-    host: configuration.getHost(),
-    user: configuration.getUserId(),
-    password: configuration.getPassword(),
-    database: configuration.getDatabase(),
-    port: configuration.getPort(),
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
 
