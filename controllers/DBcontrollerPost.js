@@ -31,7 +31,7 @@ exports.getPostsForSource = async function (req, res, next) {
   //console.log(pageSize+', currPage '+currentPage);
   const offset = pageSize * (currentPage - 1);
 
-  let accountId = req.body.accountId;
+  let accountId = queryObject.accountId;
   let accountConfiguration = configuration;
 
   if (accountId) {

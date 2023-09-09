@@ -282,6 +282,7 @@ exports.getTheProblem = async function (req, res, next) {
   let authorId = req.body.authorId;
 
   let accountId = req.body.accountId;
+
   let accountConfiguration = configuration;
 
   if (accountId) {

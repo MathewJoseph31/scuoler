@@ -132,11 +132,10 @@ exports.getConfiguration = function (account_id, configuration) {
     pool.query(sql, [account_id], (err, result, fields) => {
       pool.end(() => {});
 
-      let configurationClone = null;
-      if (err) resolve(configurationClone); //reject(err);
+      let configurationClone = { ...configuration };
+      if (err) resolve(configurationClone);
       else {
         if (result && result.rows && result.rows.length > 0) {
-          configurationClone = { ...configuration };
           configurationClone.host = result.rows[0].server;
           configurationClone.port = result.rows[0].port;
           configurationClone.database = result.rows[0].database;
