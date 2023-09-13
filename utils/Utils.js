@@ -147,3 +147,10 @@ exports.getConfiguration = function (account_id, configuration) {
     });
   });
 };
+const padL = (nr, len = 2, chr = `0`) => `${nr}`.padStart(2, chr);
+
+exports.convertDateToString = (dt) => {
+  return `${dt.getFullYear()}-${padL(dt.getMonth() + 1)}-${padL(
+    dt.getDate()
+  )}T${padL(dt.getHours())}:${padL(dt.getMinutes())}:${padL(dt.getSeconds())}`;
+};

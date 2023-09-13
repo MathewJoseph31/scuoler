@@ -123,3 +123,30 @@ exports.sendWelcome = function (req, res, next) {
     }
   });
 };
+
+exports.sendEmailGeneric = (sender, recipients, subject, body, isHtml) => {
+  let mailMessage = isHtml
+    ? {
+        from: sender,
+        to: recipients,
+        subject: subject,
+        html: body,
+      }
+    : {
+        from: sender,
+        to: recipients,
+        subject: subject,
+        text: body,
+      };
+
+  return new Promise((resolve, reject) => {
+    transporter.sendMail(mailMessage, function (error, info) {
+      if (error) {
+        reject(err);
+      } else {
+        console.log("Email reply sent: " + info.response);
+        resolve({ emailSentStatus: "ok" });
+      }
+    });
+  });
+};
