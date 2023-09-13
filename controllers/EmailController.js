@@ -142,7 +142,7 @@ exports.sendEmailGeneric = (sender, recipients, subject, body, isHtml) => {
   return new Promise((resolve, reject) => {
     transporter.sendMail(mailMessage, function (error, info) {
       if (error) {
-        reject(err);
+        reject(error);
       } else {
         console.log("Email reply sent: " + info.response);
         resolve({ emailSentStatus: "ok" });
