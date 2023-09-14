@@ -12,6 +12,13 @@ let { setCorsHeaders } = utils;
   },
 });*/
 
+const tlsObj = {
+  ciphers: "SSLv3",
+  secure: true,
+  ignoreTLS: false,
+  rejectUnauthorized: true,
+};
+
 const transporter = nodemailer.createTransport({
   host: constants.MAIL_JET_HOST,
   port: constants.MAIL_JET_PORT,
@@ -20,12 +27,18 @@ const transporter = nodemailer.createTransport({
     user: constants.MAIL_JET_USER_ID,
     pass: constants.MAIL_JET_PASSWORD,
   },
-  tls: {
-    ciphers: "SSLv3",
-    secure: true,
-    ignoreTLS: false,
-    rejectUnauthorized: true,
+  tls: tlsObj,
+});
+
+const transporterAlt = nodemailer.createTransport({
+  host: constants.MAIL_JET_HOST,
+  port: constants.MAIL_JET_PORT,
+  secure: false,
+  auth: {
+    user: constants.MAIL_JET_USER_ID_ALT,
+    pass: constants.MAIL_JET_PASSWORD_ALT,
   },
+  tls: tlsObj,
 });
 
 exports.sendMail = function (req, res, next) {
@@ -124,7 +137,45 @@ exports.sendWelcome = function (req, res, next) {
   });
 };
 
-exports.sendEmailGeneric = (sender, recipients, subject, body, isHtml) => {
+exports.sendEmailGenericHandler = function (req, res, next) {
+  let recipients = req.body.recipients;
+  let subject = req.body.subject;
+  let emailBody = req.body.emailBody;
+  let isHtml = Boolean(req.body.isHtml);
+  let accessTokenSecret = req.body.accessTokenSecret;
+  if (constants.ACCESS_TOKEN_SECRET !== accessTokenSecret) {
+    let err = new Error("Not Authorized: Access token incorrect");
+    next(err);
+  } else {
+    //console.log(recipients, subject, emailBody, isHtml);
+    sendEmailGeneric(
+      "noreply@mail.scuoler.com",
+      recipients,
+      subject,
+      emailBody,
+      isHtml,
+      true
+    )
+      .then((output) => {
+        console.log(output);
+        setCorsHeaders(req, res);
+        res.json({ sendstatus: "ok" });
+      })
+      .catch((err1) => {
+        console.log(err1);
+        next(err1);
+      });
+  }
+};
+
+const sendEmailGeneric = (
+  sender,
+  recipients,
+  subject,
+  body,
+  isHtml,
+  useAlternateMailjet
+) => {
   let mailMessage = isHtml
     ? {
         from: sender,
@@ -140,7 +191,8 @@ exports.sendEmailGeneric = (sender, recipients, subject, body, isHtml) => {
       };
 
   return new Promise((resolve, reject) => {
-    transporter.sendMail(mailMessage, function (error, info) {
+    let transp = useAlternateMailjet ? transporterAlt : transporter;
+    transp.sendMail(mailMessage, function (error, info) {
       if (error) {
         reject(error);
       } else {
@@ -150,3 +202,5 @@ exports.sendEmailGeneric = (sender, recipients, subject, body, isHtml) => {
     });
   });
 };
+
+exports.sendEmailGeneric = sendEmailGeneric;

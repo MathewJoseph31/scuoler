@@ -166,6 +166,7 @@ router.post(
 router.post("/sendMail", contactMailer.sendMail);
 router.post("/sendReply", contactMailer.sendReply);
 router.post("/sendWelcome", contactMailer.sendWelcome);
+router.post("/sendEmailGeneric", contactMailer.sendEmailGenericHandler);
 
 //Stripe
 router.post("/stripeSessionCheckout", dbControllerStripe.stripeSessionCheckout);

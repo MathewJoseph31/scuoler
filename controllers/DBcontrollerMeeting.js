@@ -229,7 +229,8 @@ exports.insertMeetingToDbJson = async function (req, res, next) {
           recipients,
           emailSubject,
           htmlBody,
-          true
+          true,
+          false
         )
           .then((output) => {
             //console.log(output);
