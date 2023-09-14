@@ -136,6 +136,7 @@ exports.insertMeetingToDbJson = async function (req, res, next) {
   let timezoneDescription = req.body.timezoneDescription;
   let startDateTime = req.body.startDateTime;
   let endDateTime = req.body.endDateTime;
+  let notifyMinutes = req.body.notifyMinutes;
   let meetingId = uuidv4();
   //utils.getUniqueId(organiserId);
 
@@ -149,7 +150,8 @@ exports.insertMeetingToDbJson = async function (req, res, next) {
   //   timezoneDescription,
   //   meetingId,
   //   startDateTime,
-  //   endDateTime
+  //   endDateTime,
+  //   notifyMinutes
   // );
 
   let accountId = req.body.accountId;
@@ -185,10 +187,10 @@ exports.insertMeetingToDbJson = async function (req, res, next) {
   );
   let startDateTime_utc = convertDateToString(dt_startDateTime_utc);
   let endDateTime_utc = convertDateToString(dt_endDateTime_utc);
-  // console.log(startDateTime_utc, endDateTime_utc);
-  let sql = `select meeting_insert(p_id:=$1, p_description:=$2, p_participant_email_ids:=$3, 
-          p_timezone:=$4, p_timezone_description:=$5, p_start_time:=$6, 
-          p_end_time:=$7, p_organiser_id:=$8);`;
+  //console.log("here", startDateTime_utc, endDateTime_utc);
+  let sql = `select meeting_insert(p_id:=$1, p_description:=$2, p_participant_email_ids:=$3,
+          p_timezone:=$4, p_timezone_description:=$5, p_start_time:=$6,
+          p_end_time:=$7, p_organiser_id:=$8, p_notify_before_minutes:=$9 );`;
 
   pool.query(
     sql,
@@ -201,6 +203,7 @@ exports.insertMeetingToDbJson = async function (req, res, next) {
       startDateTime_utc,
       endDateTime_utc,
       organiserId,
+      notifyMinutes,
     ],
     (err, result) => {
       pool.end(() => {});
