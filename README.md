@@ -49,7 +49,7 @@ https://scuoler.com/
 
 ## Releases
 
-# 1.1
+# Release 1.1
 
 - Basic LMS Application
 - Problem CRUD operations
@@ -58,18 +58,21 @@ https://scuoler.com/
 - User CRUD operations
 - Post CRUD operations
 
-## 1.2
+## Release 1.2
 
 - Video Calling
 - Authentication using Microsoft
 - Recording during Video Calls
 - Page CRUD operation in courses
 
-## 1.3
+## Release 1.3
 
 - Account creation and Platform as a service, private data server for customers.
 - Event/Meeting/Video call Scheduler
 - Advance Notification feature before event/meeting/call start
+
+![Scuoler Event Scheduler Snapshot](./img/scuoler_scheduler.png)
+![Sample Event Notification Snapshot](./img/scuoler_notification.png)
 
 ## MIT License
 
