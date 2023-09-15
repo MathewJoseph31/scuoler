@@ -69,6 +69,7 @@ https://scuoler.com/
 https://scuoler.com/chat
 
 ![Scuoler Video Chat Snapshot](./img/scuoler_chat.png)
+_Courtesy: Elenor Thomas._
 
 ## Release 1.3
 
