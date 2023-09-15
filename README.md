@@ -22,7 +22,7 @@ At Scuoler, we are thoroughly passionate about innovative ideas and their implem
 
 - [Posgresql](https://www.postgresql.org/)
 - [Heroku](https://www.heroku.com)
-- [NPM Apollo Client Package](https://www.npmjs.com/package/stripe)
+- [NPM Stripe Package](https://www.npmjs.com/package/stripe)
 - [NPM Apollo-Server-Express Package](https://www.npmjs.com/package/apollo-server-express)
 - [NPM GraphQL Package](https://www.npmjs.com/package/graphql)
 - [NPM Bcrypt Package](https://www.npmjs.com/package/bcrypt)
@@ -46,6 +46,30 @@ At Scuoler, we are thoroughly passionate about innovative ideas and their implem
 ## Deployed Application
 
 https://scuoler.com/
+
+## Releases
+
+# 1.1
+
+- Basic LMS Application
+- Problem CRUD operations
+- Quiz CRUD operations
+- Course CRUD operations
+- User CRUD operations
+- Post CRUD operations
+
+## 1.2
+
+- Video Calling
+- Authentication using Microsoft
+- Recording during Video Calls
+- Page CRUD operation in courses
+
+## 1.3
+
+- Account creation and Platform as a service, private data server for customers.
+- Event/Meeting/Video call Scheduler
+- Advance Notification feature before event/meeting/call start
 
 ## MIT License
 

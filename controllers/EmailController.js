@@ -149,7 +149,7 @@ exports.sendEmailGenericHandler = function (req, res, next) {
   } else {
     //console.log(recipients, subject, emailBody, isHtml);
     sendEmailGeneric(
-      "noreply@mail.scuoler.com",
+      constants.SCUOLER_NOREPLY_EMAIL_ID_ALT,
       recipients,
       subject,
       emailBody,
