@@ -64,12 +64,20 @@ https://scuoler.com/
 - Authentication using Microsoft
 - Recording during Video Calls
 - Page CRUD operation in courses
+- links:
+
+https://scuoler.com/chat
+
+![Scuoler Video Chat Snapshot](./img/scuoler_chat.png)
 
 ## Release 1.3
 
 - Account creation and Platform as a service, private data server for customers.
 - Event/Meeting/Video call Scheduler
 - Advance Notification feature before event/meeting/call start
+- links:
+
+https://scuoler.com/scheduler
 
 ![Scuoler Event Scheduler Snapshot](./img/scuoler_scheduler.png)
 ![Sample Event Notification Snapshot](./img/scuoler_notification.png)
