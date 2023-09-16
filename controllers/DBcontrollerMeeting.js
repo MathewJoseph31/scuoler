@@ -132,7 +132,7 @@ exports.insertMeetingToDbJson = async function (req, res, next) {
   let description = req.body.meetingDescription;
   let organiserId = req.body.organiserId;
   let recipients = req.body.recipients;
-  let timezone = req.body.timezone;
+  let timezone = Number(req.body.timezone);
   let timezoneDescription = req.body.timezoneDescription;
   let startDateTime = req.body.startDateTime;
   let endDateTime = req.body.endDateTime;
@@ -175,16 +175,24 @@ exports.insertMeetingToDbJson = async function (req, res, next) {
 
   let arrRecipients = recipients.split(",").map((val) => val.trim());
   let dt_startDateTime = new Date(startDateTime);
-  /* set the time zone as UTC by appending the date string with a Z */
   let dt_endDateTime = new Date(endDateTime);
+  /* The follow two statements converts start/end times 
+        to millis format (milliseconds past EPOC) */
+  let startDateTimeMillis = dt_startDateTime.getTime();
+  let endDateTimeMillis = dt_endDateTime.getTime();
   let offsetHours = timezone * -1;
-  /* The timezone offset needs to be taken to account for actual UTC conversion */
-  let dt_startDateTime_utc = new Date(
+  //console.log("offset", offsetHours);
+  /* The timezone offset needs to be taken to account for UTC conversion */
+  startDateTimeMillis += offsetHours * 60 * 60 * 1000;
+  endDateTimeMillis += offsetHours * 60 * 60 * 1000;
+  let dt_startDateTime_utc = new Date(startDateTimeMillis);
+  let dt_endDateTime_utc = new Date(endDateTimeMillis);
+  /*  let dt_startDateTime_utc = new Date(
     dt_startDateTime.setHours(dt_startDateTime.getHours() + offsetHours)
   );
   let dt_endDateTime_utc = new Date(
     dt_endDateTime.setHours(dt_endDateTime.getHours() + offsetHours)
-  );
+  );*/
   let startDateTime_utc = convertDateToString(dt_startDateTime_utc);
   let endDateTime_utc = convertDateToString(dt_endDateTime_utc);
   //console.log("here", startDateTime_utc, endDateTime_utc);
@@ -209,7 +217,6 @@ exports.insertMeetingToDbJson = async function (req, res, next) {
       pool.end(() => {});
       if (err) {
         next(err);
-        //res.json({"insertstatus":"error"});
       } else {
         let htmlBody = makeEmailInviteBody(
           recipients,
@@ -233,12 +240,10 @@ exports.insertMeetingToDbJson = async function (req, res, next) {
           false
         )
           .then((output) => {
-            //console.log(output);
             setCorsHeaders(req, res);
             res.json({ insertstatus: "ok", meetingId: meetingId });
           })
           .catch((err1) => {
-            //console.log(err1);
             next(err1);
           });
       }
