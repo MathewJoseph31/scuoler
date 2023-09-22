@@ -147,6 +147,8 @@ exports.getConfiguration = function (account_id, configuration) {
     });
   });
 };
+
+
 const padL = (nr, len = 2, chr = `0`) => `${nr}`.padStart(2, chr);
 
 exports.convertDateToString = (dt) => {
@@ -154,3 +156,34 @@ exports.convertDateToString = (dt) => {
     dt.getDate()
   )}T${padL(dt.getHours())}:${padL(dt.getMinutes())}:${padL(dt.getSeconds())}`;
 };
+
+
+/*
+offsets the input date object with the input hours and minutes,
+1st param- Date object, 2nd parm: Number hours to add/subtract
+2nd parm: Number minutes to add/subtract*/
+exports.dateAddHoursMinutes = (d, hours, minutes) => {
+  let dateTimeMillis = d.getTime();
+  dateTimeMillis += hours * 60 * 60 * 1000;
+  dateTimeMillis += minutes * 60 * 1000;
+  return new Date(dateTimeMillis);
+};
+
+/*
+offsets the input date object with the input hours,
+1st param- Date object, 2nd parm: Number hours to add/subtract*/
+exports.dateAddHours = (d, hours) => {
+  let dateTimeMillis = d.getTime();
+  dateTimeMillis += hours * 60 * 60 * 1000;
+  return new Date(dateTimeMillis);
+};
+
+/*
+offsets the input date object with the input minutes,
+1st param- Date object, 2nd parm: Number minutes to add/subtract*/
+exports.dateAddMinutes = (d, minutes) => {
+  let dateTimeMillis = d.getTime();
+  dateTimeMillis += minutes * 60 * 1000;
+  return new Date(dateTimeMillis);
+};
+

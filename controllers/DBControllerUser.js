@@ -63,7 +63,7 @@ exports.verifyUserJson = async function (req, res, next) {
   });
 
   var sql =
-    "SELECT  count(*) as count, max(case when admin=true then 1 else 0 end) as admin, trim(max(first_name)||' '||max(last_name)) as full_name,  max(password) as password  FROM Customer where id=$1 ";
+    "SELECT  count(*) as count, max(case when admin=true then 1 else 0 end) as admin, trim(max(first_name)||' '||max(last_name)) as full_name,  max(password) as password,   max(email) as email  FROM Customer where id=$1 ";
 
   pool.query(sql, [userId], async function (err, result, fields) {
     pool.end(() => {});
@@ -87,6 +87,7 @@ exports.verifyUserJson = async function (req, res, next) {
             login: "ok",
             admin: result.rows[0].admin,
             full_name: result.rows[0].full_name,
+            email: result.rows[0].email,
             accessToken,
           };
         } else {
