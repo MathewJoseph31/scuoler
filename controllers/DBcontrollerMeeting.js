@@ -196,6 +196,11 @@ exports.insertMeetingToDbJson = async function (req, res, next) {
   let meetingUrl = `https://scuoler.com/chat/${meetingId}`;
 
   let accountId = req.body.accountId;
+  let ignoreConflicts = false;
+  if (req.body.ignoreConflicts === "true") {
+    ignoreConflicts = true;
+  }
+
   let accountConfiguration = configuration;
 
   if (accountId) {
@@ -270,7 +275,7 @@ exports.insertMeetingToDbJson = async function (req, res, next) {
       dt_endDateTime_utc,
       organiserId,
       notifyMinutes,
-      false,
+      ignoreConflicts,
     ],
     (err, result) => {
       pool.end(() => {});
@@ -278,7 +283,7 @@ exports.insertMeetingToDbJson = async function (req, res, next) {
         next(err);
       } else {
         let resObj = result.rows[0].meeting_insert;
-        //console.log(resObj);
+        console.log(resObj);
 
         if (resObj.insertstatus === "ok") {
           let htmlBody = makeMeetingInviteBody(
