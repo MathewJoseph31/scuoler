@@ -119,7 +119,8 @@ exports.getMeetingsOfUser = async function (req, res, next) {
     select id, description, participant_email_ids,
     timezone, timezone_description, start_time,
     end_time, organiser_id, notify_before_minutes 
-    from meetings_of_user_get(p_user_id:=$1, p_offset:=$2, p_limit:=$3);
+    from meetings_of_user_get(p_user_id:=$1, p_offset:=$2, p_limit:=$3)
+    order by start_time desc;
     `;
 
   pool.query(sql, [userId, offset, pageSize], function (err, result, fields) {
@@ -254,7 +255,8 @@ exports.insertMeetingToDbJson = async function (req, res, next) {
   //  console.log("here", startDateTime_str, " sep ", endDateTime_str);
   let sql = `select meeting_insert(p_id:=$1, p_description:=$2, p_participant_email_ids:=$3,
           p_timezone:=$4, p_timezone_description:=$5, p_start_time:=$6,
-          p_end_time:=$7, p_organiser_id:=$8, p_notify_before_minutes:=$9 );`;
+          p_end_time:=$7, p_organiser_id:=$8, p_notify_before_minutes:=$9,
+          p_ignore_conflicts:=$10 );`;
 
   pool.query(
     sql,
@@ -268,40 +270,53 @@ exports.insertMeetingToDbJson = async function (req, res, next) {
       dt_endDateTime_utc,
       organiserId,
       notifyMinutes,
+      false,
     ],
     (err, result) => {
       pool.end(() => {});
       if (err) {
         next(err);
       } else {
-        let htmlBody = makeMeetingInviteBody(
-          recipients,
-          description,
-          timezoneDescription,
-          startDateTime_str,
-          endDateTime_str,
-          meetingUrl
-        );
-        let emailSubject = `Meeting Invite:  + ${description.substring(
-          0,
-          100
-        )} ...`;
+        let resObj = result.rows[0].meeting_insert;
+        //console.log(resObj);
 
-        sendEmailGeneric(
-          constants.SCUOLER_NOREPLY_EMAIL_ID,
-          recipients,
-          emailSubject,
-          htmlBody,
-          true,
-          false
-        )
-          .then((output) => {
-            setCorsHeaders(req, res);
-            res.json({ insertstatus: "ok", meetingId: meetingId });
-          })
-          .catch((err1) => {
-            next(err1);
+        if (resObj.insertstatus === "ok") {
+          let htmlBody = makeMeetingInviteBody(
+            recipients,
+            description,
+            timezoneDescription,
+            startDateTime_str,
+            endDateTime_str,
+            meetingUrl
+          );
+          let emailSubject = `Meeting Invite:  + ${description.substring(
+            0,
+            100
+          )} ...`;
+
+          sendEmailGeneric(
+            constants.SCUOLER_NOREPLY_EMAIL_ID,
+            recipients,
+            emailSubject,
+            htmlBody,
+            true,
+            false
+          )
+            .then((output) => {
+              setCorsHeaders(req, res);
+              res.json({ insertstatus: "ok", meetingId: meetingId });
+            })
+            .catch((err1) => {
+              next(err1);
+            });
+        } else {
+          setCorsHeaders(req, res);
+          res.json({
+            insertstatus: "error",
+            starttime: resObj.start_time,
+            endtime: resObj.end_time,
           });
+        }
       }
     }
   );
