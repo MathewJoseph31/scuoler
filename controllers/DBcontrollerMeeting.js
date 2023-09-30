@@ -385,6 +385,10 @@ exports.updateMeeting = async function (req, res, next) {
   let meetingUrl = `https://scuoler.com/chat/${meetingId}`;
 
   let accountId = req.body.accountId;
+  let ignoreConflicts = false;
+  if (req.body.ignoreConflicts === "true") {
+    ignoreConflicts = true;
+  }
   let accountConfiguration = configuration;
 
   if (accountId) {
@@ -442,10 +446,10 @@ exports.updateMeeting = async function (req, res, next) {
     .substring(0, endDateTime_str.length - 5)
     .replace("T", " ");
 
-  //  console.log("here", startDateTime_str, " sep ", endDateTime_str);
   let sql = `select meeting_update(p_id:=$1, p_description:=$2, p_participant_email_ids:=$3,
           p_timezone:=$4, p_timezone_description:=$5, p_start_time:=$6,
-          p_end_time:=$7, p_organiser_id:=$8, p_notify_before_minutes:=$9 );`;
+          p_end_time:=$7, p_organiser_id:=$8, p_notify_before_minutes:=$9,
+          p_ignore_conflicts:=$10 );`;
 
   pool.query(
     sql,
@@ -459,40 +463,53 @@ exports.updateMeeting = async function (req, res, next) {
       dt_endDateTime_utc,
       organiserId,
       notifyMinutes,
+      ignoreConflicts,
     ],
     (err, result) => {
       pool.end(() => {});
       if (err) {
         next(err);
       } else {
-        let htmlBody = makeMeetingUpdateBody(
-          recipients,
-          description,
-          timezoneDescription,
-          startDateTime_str,
-          endDateTime_str,
-          meetingUrl
-        );
-        let emailSubject = `Meeting Update:  + ${description.substring(
-          0,
-          100
-        )} ...`;
+        let resObj = result.rows[0].meeting_update;
+        console.log(resObj);
 
-        sendEmailGeneric(
-          constants.SCUOLER_NOREPLY_EMAIL_ID,
-          recipients,
-          emailSubject,
-          htmlBody,
-          true,
-          false
-        )
-          .then((output) => {
-            setCorsHeaders(req, res);
-            res.json({ updatestatus: "ok", meetingId: meetingId });
-          })
-          .catch((err1) => {
-            next(err1);
+        if (resObj.updatestatus === "ok") {
+          let htmlBody = makeMeetingUpdateBody(
+            recipients,
+            description,
+            timezoneDescription,
+            startDateTime_str,
+            endDateTime_str,
+            meetingUrl
+          );
+          let emailSubject = `Meeting Update:  + ${description.substring(
+            0,
+            100
+          )} ...`;
+
+          sendEmailGeneric(
+            constants.SCUOLER_NOREPLY_EMAIL_ID,
+            recipients,
+            emailSubject,
+            htmlBody,
+            true,
+            false
+          )
+            .then((output) => {
+              setCorsHeaders(req, res);
+              res.json({ updatestatus: "ok", meetingId: meetingId });
+            })
+            .catch((err1) => {
+              next(err1);
+            });
+        } else {
+          setCorsHeaders(req, res);
+          res.json({
+            updatestatus: "error",
+            starttime: resObj.start_time,
+            endtime: resObj.end_time,
           });
+        }
       }
     }
   );
