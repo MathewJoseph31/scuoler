@@ -1,4 +1,4 @@
-# Scuoler Server: An Open Learning Management System (LMS)
+# Scuoler: An Open Learning Management System (LMS)
 
 [![License: MIT](https://img.shields.io/github/license/mathewjoseph31/schools?style=plastic)](https://opensource.org/licenses/MIT)
 
