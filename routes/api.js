@@ -24,6 +24,7 @@ router.all("/*", securityController);
 //MEETING
 router.post("/insertMeetingAction", dbControllerMeeting.insertMeetingToDbJson);
 router.post("/updateMeeting", dbControllerMeeting.updateMeeting);
+router.post("/getTheMeeting", dbControllerMeeting.getTheMeeting);
 router.get("/getMeetings", dbControllerMeeting.getMeetings);
 router.get("/getMeetingsOfUser", dbControllerMeeting.getMeetingsOfUser);
 

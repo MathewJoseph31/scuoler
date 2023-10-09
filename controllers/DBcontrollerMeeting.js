@@ -139,13 +139,69 @@ exports.getMeetingsOfUser = async function (req, res, next) {
   });
 };
 
+exports.getTheMeeting = async (req, res, next) => {
+  const eventId = req.body.eventId;
+  const authorId = req.body.authorId;
+  const accountId = req.body.accountId;
+
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
+  var pool = new pg.Pool({
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
+    ssl: { rejectUnauthorized: false },
+  });
+
+  const sql = "select * from meeting_get_one(p_id:=$1, p_user_id:=$2)";
+
+  let resObj = {};
+  pool.query(sql, [eventId, authorId], function (err, result, fields) {
+    if (err) {
+      pool.end(() => {});
+      next(err);
+    } else {
+      if (result.rows !== undefined && result.rows.length > 0) {
+        resObj.id = result.rows[0].id;
+        resObj.description = result.rows[0].description;
+        resObj.participant_email_ids = result.rows[0].participant_email_ids;
+        if (!resObj.participant_email_ids) resObj.participant_email_ids = [];
+
+        resObj.timezone = result.rows[0].timezone;
+        resObj.timezone_description = result.rows[0].timezone_description;
+        resObj.start_time = result.rows[0].start_time;
+        resObj.end_time = result.rows[0].end_time;
+        resObj.organiser_id = result.rows[0].organiser_id;
+        resObj.notify_before_minutes = result.rows[0].notify_before_minutes;
+        resObj.rating = result.rows[0].rating;
+        resObj.likes = result.rows[0].likes;
+        resObj.liked = result.rows[0].liked;
+
+        resObj.participant_email_ids = resObj.participant_email_ids.join(", ");
+      }
+      setCorsHeaders(req, res);
+      res.json(resObj);
+    }
+  });
+};
+
 const makeMeetingInviteBody = (
   recipients,
   description,
   timezoneDescription,
   startDateTime,
   endDateTime,
-  meetingUrl
+  meetingUrl,
+  meetingEditUrl
 ) => {
   const html = `<html>
   <body>
@@ -155,7 +211,7 @@ const makeMeetingInviteBody = (
   <hr>
   <br/>
   <p style="color:#332233;font-size: 17px;font-weight: bolder">Event:<p/> 
-  <span style="margin-left:20px; background-color: #1a759f; color: white; font-size: 17px; border-radius:5px; padding: 10px">${description}</span> <br/><br/>
+  <a href="${meetingEditUrl}"><span style="margin-left:20px; background-color: #1a759f; color: white; font-size: 17px; border-radius:5px; padding: 10px">${description}</span></a> <br/><br/>
   <span style="color:#332233;font-size: 17px;font-weight: bolder">Participants</span>: <ul style="list-style:none">${recipients
     .split(",")
     .map((val) => {
@@ -164,7 +220,9 @@ const makeMeetingInviteBody = (
   <p style="color:#332233;font-size: 18px;font-weight: bolder">Timezone:</p> <span style="margin-left:18px; font-size: 18px; color: #223322"; background-color:#c7cdd2;>${timezoneDescription}</span> <br/><br/>
   <span style="font-size:18px;font-weight: bolder; width: 100px">From:</span> <span style="color:#3322ff;font-size: 18px; background-color:#c7cdd2; padding: 3px; border-radius: 2px;">${startDateTime}</span> <br/><br/>
   <span style="font-size:18px;font-weight: bolder; width: 100px">To:</span> <span style="color:#3322ff;font-size: 18px; background-color:#c7cdd2; padding: 3px; border-radius: 2px;">${endDateTime}</span> <br/><br/>
-  <p style="font-size:20px;font-weight: bolder">Where:</p> <span style="margin-left:20px; font-size: 18px;"><a  href="${meetingUrl}">${meetingUrl}</a><span>
+  <p style="font-size:20px;font-weight: bolder">Where:</p> <span style="margin-left:20px; font-size: 18px;"><a  href="${meetingUrl}">${meetingUrl}</a><span><br/><br/>
+  <span style="font-size: 18px; color: #223322"; background-color:#c7cdd2;>Click the following Url to Edit the Event</span> <br/>
+  <p style="font-size:20px;font-weight: bolder">Edit Url:</p> <span style="margin-left:20px; font-size: 18px;"><a  href="${meetingEditUrl}">${meetingEditUrl}</a><span>
   <br/>
   <hr>
   <h4>Thank You from <a href="https://scuoler.com">Scuoler</a> team<br/></h4>
@@ -190,11 +248,11 @@ exports.insertMeetingToDbJson = async function (req, res, next) {
   let startDateTime = req.body.startDateTime;
   let endDateTime = req.body.endDateTime;
   let notifyMinutes = req.body.notifyMinutes;
-  let meetingId = uuidv4();
+  const meetingId = uuidv4();
   //utils.getUniqueId(organiserId);
 
-  let meetingUrl = `https://scuoler.com/chat/${meetingId}`;
-
+  const meetingUrl = `https://scuoler.com/chat/${meetingId}`;
+  const meetingEditUrl = `https://scuoler.com/eventShowSelected/${meetingId}`;
   let accountId = req.body.accountId;
   let ignoreConflicts = false;
   if (req.body.ignoreConflicts === "true") {
@@ -292,7 +350,8 @@ exports.insertMeetingToDbJson = async function (req, res, next) {
             timezoneDescription,
             startDateTime_str,
             endDateTime_str,
-            meetingUrl
+            meetingUrl,
+            meetingEditUrl
           );
           let emailSubject = `Meeting Invite:  + ${description.substring(
             0,
@@ -333,7 +392,8 @@ const makeMeetingUpdateBody = (
   timezoneDescription,
   startDateTime,
   endDateTime,
-  meetingUrl
+  meetingUrl,
+  meetingEditUrl
 ) => {
   const html = `<html>
   <body>
@@ -343,7 +403,7 @@ const makeMeetingUpdateBody = (
   <hr>
   <br/>
   <p style="color:#332233;font-size: 17px;font-weight: bolder">Event:<p/> 
-  <span style="margin-left:20px; background-color: #1a759f; color: white; font-size: 17px; border-radius:5px; padding: 10px">${description}</span> <br/><br/>
+  <a href="${meetingEditUrl}"><span style="margin-left:20px; background-color: #1a759f; color: white; font-size: 17px; border-radius:5px; padding: 10px">${description}</span></a> <br/><br/>
   <span style="color:#332233;font-size: 17px;font-weight: bolder">Participants</span>: <ul style="list-style:none">${recipients
     .split(",")
     .map((val) => {
@@ -352,7 +412,9 @@ const makeMeetingUpdateBody = (
   <p style="color:#332233;font-size: 18px;font-weight: bolder">Timezone:</p> <span style="margin-left:18px; font-size: 18px; color: #223322"; background-color:#c7cdd2;>${timezoneDescription}</span> <br/><br/>
   <span style="font-size:18px;font-weight: bolder; width: 100px">From:</span> <span style="color:#3322ff;font-size: 18px; background-color:#c7cdd2; padding: 3px; border-radius: 2px;">${startDateTime}</span> <br/><br/>
   <span style="font-size:18px;font-weight: bolder; width: 100px">To:</span> <span style="color:#3322ff;font-size: 18px; background-color:#c7cdd2; padding: 3px; border-radius: 2px;">${endDateTime}</span> <br/><br/>
-  <p style="font-size:20px;font-weight: bolder">Where:</p> <span style="margin-left:20px; font-size: 18px;"><a  href="${meetingUrl}">${meetingUrl}</a><span>
+  <p style="font-size:20px;font-weight: bolder">Where:</p> <span style="margin-left:20px; font-size: 18px;"><a  href="${meetingUrl}">${meetingUrl}</a><span><br/><br/>
+  <span style="font-size: 18px; color: #223322"; background-color:#c7cdd2;>Click the following Url to Edit the Event</span> <br/>
+  <p style="font-size:20px;font-weight: bolder">Edit Url:</p> <span style="margin-left:20px; font-size: 18px;"><a  href="${meetingEditUrl}">${meetingEditUrl}</a><span>
   <br/>
   <hr>
   <h4>Thank You from <a href="https://scuoler.com">Scuoler</a> team<br/></h4>
@@ -382,7 +444,8 @@ exports.updateMeeting = async function (req, res, next) {
   let meetingId = id;
   //utils.getUniqueId(organiserId);
 
-  let meetingUrl = `https://scuoler.com/chat/${meetingId}`;
+  const meetingUrl = `https://scuoler.com/chat/${meetingId}`;
+  const meetingEditUrl = `https://scuoler.com/eventShowSelected/${meetingId}`;
 
   let accountId = req.body.accountId;
   let ignoreConflicts = false;
@@ -480,7 +543,8 @@ exports.updateMeeting = async function (req, res, next) {
             timezoneDescription,
             startDateTime_str,
             endDateTime_str,
-            meetingUrl
+            meetingUrl,
+            meetingEditUrl
           );
           let emailSubject = `Meeting Update:  + ${description.substring(
             0,
