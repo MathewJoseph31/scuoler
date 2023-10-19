@@ -120,7 +120,6 @@ exports.getMeetingsOfUser = async function (req, res, next) {
     timezone, timezone_description, start_time,
     end_time, organiser_id, notify_before_minutes 
     from meetings_of_user_get(p_user_id:=$1, p_offset:=$2, p_limit:=$3)
-    order by start_time desc;
     `;
 
   pool.query(sql, [userId, offset, pageSize], function (err, result, fields) {
