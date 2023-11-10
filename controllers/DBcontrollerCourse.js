@@ -177,7 +177,7 @@ exports.insertScormCourse = async function (req, res, next) {
       console.log("Index File written successfully\n");
 
       const sql =
-        "select course_scorm_insertdb(p_id:=$1, p_name:=$2,  p_author_id:=$3, p_thumbnail:=$4, p_scorm_launch_file:=$5, p_categories_id:=$6)";
+        "select course_scorm_insertdb(p_id:=$1, p_name:=$2, p_description:=$3,  p_author_id:=$4, p_thumbnail:=$5, p_scorm_launch_file:=$6, p_categories_id:=$7)";
 
       const pool = new pg.Pool({
         host: accountConfiguration.getHost(),
@@ -198,7 +198,15 @@ exports.insertScormCourse = async function (req, res, next) {
       );
       pool.query(
         sql,
-        [courseId, courseName, ownerId, thumbnail, launchFile, categoriesId],
+        [
+          courseId,
+          courseName,
+          courseName,
+          ownerId,
+          thumbnail,
+          launchFile,
+          categoriesId,
+        ],
         function (err, result) {
           pool.end(() => {});
           if (err) {
