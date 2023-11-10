@@ -1,8 +1,0 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
-<navigation name="My Course" buildId="" xml:lang="en-us">
-  <settings mediaLocation="Local" skipWelcomePage="false" reviewMode="false" pageFeedbackType="None" evaluationsDisabled="false" contentAreaMinWidth="700" contentAreaMinHeight="466">
-    <mediaURL><![CDATA[http://smoothstreamit.gtm.corp.microsoft.com/SMSGR/]]></mediaURL>
-    <courseTranscript><![CDATA[]]></courseTranscript>
-  </settings>
-  <level0 name="New Module" pageId="" mustCompletePrevModules="false" modulesToComplete="" mustCompleteRequiredPages="false" expanded="true" hidden="false" />
-</navigation>
