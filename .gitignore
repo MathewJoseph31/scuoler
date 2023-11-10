@@ -3,6 +3,7 @@ node_modules/
 build/
 client/build/
 logs/
+public/
 importLogs/Configuration.js
 refreshDB/remoteFromTest/Configuration.js
 refreshDB/remoteFromTest/ConfigurationTest.js
