@@ -3,8 +3,8 @@ node_modules/
 build/
 client/build/
 logs/
-public/uploadFiles/
-public/scormFiles/
+public/uploadFiles/*
+public/scormFiles/*
 importLogs/Configuration.js
 refreshDB/remoteFromTest/Configuration.js
 refreshDB/remoteFromTest/ConfigurationTest.js
