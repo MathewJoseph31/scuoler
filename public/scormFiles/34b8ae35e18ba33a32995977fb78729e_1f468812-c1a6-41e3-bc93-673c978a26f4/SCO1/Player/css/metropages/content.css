@@ -1,0 +1,251 @@
+﻿
+
+
+/****************** miscellaneous styles ******************/
+.clear{line-height:0px;clear:both;}
+.page_container img{border:none;}
+
+a.icon, a.button{display:block;cursor:pointer;}
+.tab_popup .media_bar a img.play{display:none;}
+.tile_popup_header a.close{display:none;}
+/********************************************************************/
+
+
+/****************** container placement and sizing ******************/
+/*content_wrapper is the available area into which the content is placed; content_container is the subregion conforming to the 2:1 aspect ratio (size set in javascript)*/
+.page_container{position:absolute;top:0px;left:0px;height:100%;width:100%;background:transparent;}
+.content_wrapper{position:relative;width:90%;margin-left:10%;height:100%;}
+.content_container{position:relative;overflow:visible;opacity:0;}
+
+.tile{position:relative;float:left;margin-right:1.5%;margin-bottom:1.5%;}
+.tile_background, .tile_background_overlay{position:absolute;width:100%;height:100%;overflow:hidden;}
+.tile_footer{position:absolute;bottom:0%;left:0%;width:100%;min-height:9%;}
+.tile_popup{position:absolute;top:100%;height:100%;width:100%;}
+.tile_popup_header{position:absolute;bottom:100%;left:0%;width:100%;min-height:9%;} 
+.tile_popup_header a.expand, .tile_popup_header a.close{position:absolute;top:0%;right:0%;}
+.tile .tile_title, .tile .tile_subtitle, .tile .tile_content {position:relative;}
+         
+.square{width:48.5%;height:97%;overflow:hidden;}
+.square .tile_title{position:relative;margin:7% 6% 0% 5.6%;}
+.square .tile_subtitle{margin:0% 6% 0% 6%;}
+.square .tile_content{position:relative;margin:5% 0% 3% 0%;}
+.square .tile_detail{margin:0% 10% 2% 6%;}
+.square .tile_footer_content{margin:2.2% 6% 2.6% 6%;}
+.square .tile_popup_header_content{margin:2.2% 10% 2.6% 6%;}
+.square .tile_popup_header a.expand, .square .tile_popup_header a.close{margin-top:3%;margin-right:3%;}
+.square .tile_detail ul{padding:0% 18% 0% 4%;}
+
+.small_square{width:36%;height:72%;}
+.small_square .tile_title{position:relative;margin:9.33% 8% 0% 7.47%;}
+.small_square .tile_subtitle{margin:0% 8% 0% 8%;}
+.small_square .tile_content{position:relative;margin:6.67% 0% 4% 0%;}
+.small_square .tile_detail{margin:0% 13.33% 2.67% 8%;}
+.small_square .tile_footer_content{margin:2.93% 8% 3.47% 8%;}
+.small_square .tile_popup_header_content{margin:2.93% 13.33% 3.47% 8%;}
+.small_square .tile_popup_header a.expand, .small_square .tile_popup_header a.close{margin-top:4%;margin-right:4%;}
+.small_square .tile_detail ul{padding:0% 24% 0% 5.33%;}
+
+.half_square{width:23.5%;height:47%;overflow:hidden;}
+.half_square .tile_title{position:relative;margin:14.29% 8% 0% 8%;}
+.half_square .tile_subtitle{margin:0% 8% 0% 8%;}
+.half_square .tile_content{position:relative;margin:10.21% 0% 6.12% 0%;}
+.half_square .tile_detail{margin:0% 14% 4.08% 8%;}
+.half_square .tile_footer_content{margin:4.49% 8% 5.31% 8%;}
+.half_square .tile_popup_header_content{margin:4.49% 14% 5.31% 8%;}
+.half_square .tile_popup_header a.expand, .half_square .tile_popup_header a.close{margin-top:6.12%;margin-right:6.12%;}
+.half_square .tile_detail ul{padding:0% 36.76% 0% 8.17%;}
+
+.widescreen{width:98.5%;height:97%;overflow:hidden;}
+.widescreen .tile_title{margin:3.5% 3% 0% 2.8%;}
+.widescreen .tile_subtitle{margin:0% 3% 0% 3%;}
+.widescreen .tile_content{margin:2.5% 0% 1.5% 0%;}
+.widescreen .tile_detail{margin:0% 5% 1% 3%;}
+.widescreen .tile_footer_content{margin:1.1% 3% 1.3% 3%;}
+.widescreen .tile_popup_header_content{margin:1.1% 5% 1.3% 3%;}
+.widescreen .tile_popup_header a.expand, .widescreen .tile_popup_header a.close{margin-top:1.5%;margin-right:1.5%;}
+.widescreen .tile_detail ul{padding:0% 9% 0% 2%;}
+
+.large_rectangle{width:68.5%;height:97%;overflow:hidden;}
+.large_rectangle .tile_title{margin:4.95% 4.25% 0% 3.97%;}
+.large_rectangle .tile_subtitle{margin:0% 4.25% 0% 4.25%;}
+.large_rectangle .tile_content{margin:3.54% 0% 2.12% 0%;}
+.large_rectangle .tile_detail{margin:0% 7.08% 1.42% 4.25%;}
+.large_rectangle .tile_footer_content{margin:1.56% 4.25% 1.84% 4.25%;}
+.large_rectangle .tile_popup_header_content{margin:1.56% 7.08% 1.84% 4.25%;}
+.large_rectangle .tile_popup_header a.expand, .large_rectangle .tile_popup_header a.close{margin-top:2.12%;margin-right:2.12%;}
+.large_rectangle .tile_detail ul{padding:0% 12.75% 0% 2.83%;}
+
+.medium_rectangle{width:61%;height:97%;overflow:hidden;}
+.medium_rectangle .tile_title{margin:5.57% 4.77% 0% 4.45%;}
+.medium_rectangle .tile_subtitle{margin:0% 4.77% 0% 4.77%;}
+.medium_rectangle .tile_content{margin:3.98% 0% 2.39% 0%;}
+.medium_rectangle .tile_detail{margin:0% 7.95% 1.59% 4.77%;}
+.medium_rectangle .tile_footer_content{margin:1.75% 4.77% 2.07% 4.77%;}
+.medium_rectangle .tile_popup_header_content{margin:1.75% 7.95% 2.07% 4.77%;}
+.medium_rectangle .tile_popup_header a.expand, .large_rectangle .tile_popup_header a.close{margin-top:2.39%;margin-right:2.39%;}
+.medium_rectangle .tile_detail ul{padding:0% 14.31% 0% 3.81%;}
+
+.small_rectangle{width:28.5%;height:36%;overflow:hidden;}
+.small_rectangle .tile_title{margin:6% 7.2% 0% 5.88%;}
+.small_rectangle .tile_subtitle{margin:0% 6.3% 0% 6.3%;}
+.small_rectangle .tile_content{margin:5.11% 0%;}
+.small_rectangle .tile_detail{margin:0% 17% 3.4% 6.3%;}
+.small_rectangle .tile_footer{min-height:24.25%;}
+.small_rectangle .tile_footer_content{margin:3.74% 6.3% 4.24% 6.3%;}
+.small_rectangle .tile_popup_header_content{margin:3.74% 17% 4.24% 6.3%;}
+.small_rectangle .tile_popup_header a.expand, .small_rectangle .tile_popup_header a.close{margin-top:5.1%;margin-right:5.1%;}
+.small_rectangle .tile_detail ul{padding:0% 30.63% 0% 6.81%;}
+
+.module_info_tile .tile_title{margin-top:10%;}
+.support_materials_tile .tile_subtitle{margin:16% 6.3% -2% 6.3%;}
+.support_materials_tile .tile_title{margin-top:0%;}
+.support_materials_tile a.button{position:absolute;top:0%;right:0%;margin-top:3%;margin-right:3%;}
+
+.tab_container{position:relative;width:50%;height:100%;float:left;}
+.tab_container .square{width:97%;}
+.tab_container .small_square{width:72%;}
+.tile_block{position:absolute;width:100%;height:100%;}
+.scrolling_block{position:relative;}
+.tab, .tab_placeholder{width:47%;height:47%;margin-right:3%;margin-bottom:3%;float:left;}
+.small_tab{width:30.33333333333333%;height:30.33333333333333%;}
+.tiny_tab{width:22%;height:22%;}
+
+.wide_container{width:100%;}
+.wide_container .square{width:48.5%;}
+.wide_container .small_square{width:36%;}
+.wide_container .tab{width:23.5%;margin-right:1.5%;margin-bottom:1.5%;}
+.wide_container .small_tab{width:15.1666666666666%;}
+.wide_container .tiny_tab{width:11%;}
+
+.tab_number{position:absolute;bottom:3%;left:5%;}
+.tab_title{position:relative;margin:16% 7%;height:48%;}
+.tab a.expand{position:absolute;bottom:5%;right:5%;}
+.tab a.expand span, .tab_popup a.close span{position:absolute;right:100%;margin-right:50%;vertical-align:top;}
+.tab .completion_indicator{position:absolute;top:5%;right:5%;}
+
+.tab_popup{position:absolute;width:0%;height:0%;z-index:50;overflow:hidden;opacity:0;}
+.tab_popup .tab_number{position:relative;float:left;margin-top:9%;left:auto;margin-left:4%;}
+.tab_popup .tab_title{position:relative;margin:8.5% 16% 4% 20%;height:auto;}
+.tab_popup .tab_description{position:relative;margin:0% 16% 2% 10%;}
+.tab_popup a.close{position:absolute;bottom:3%;right:3%;}
+.tab_popup .media_bar{position:relative;height:9%;}
+.tab_popup .media_bar a{margin:1.5% 2%;display:block;float:left;}
+.tab_popup .media_bar a.button{float:left;}
+.tab_popup .scroll_box{max-height:57%;}
+
+.wide_container .tab_popup .tab_number{margin-top:4.5%;margin-left:2%;}
+.wide_container .tab_popup .tab_title{margin:4.25% 8% 2% 10%;}
+.wide_container .tab_popup .tab_description{position:relative;margin:0% 8% 1% 5%;}
+.wide_container .tab_popup a.close{position:absolute;right:1.5%;}
+.wide_container .tab_popup .media_bar a{margin:0.75% 1%;display:block;float:left;}
+.module_number{position:absolute;bottom:3%;right:5%;}
+.module_title{position:relative;margin:16% 8% 4% 8%;}
+.module_duration{position:relative;margin:0% 8%;}
+.module_link .completion_indicator, .module_link .locked_indicator{position:absolute;left:8%;bottom:12%;}
+.module_link .completion_indicator img{position:absolute;left:0%;bottom:80%;width:220%;height:220%;}
+.module_link .locked_indicator img{position:absolute;left:0%;bottom:80%;width:140%;height:140%;}
+
+.tile_background img, .tile_background_overlay img{min-width:100%;max-width:100%;}
+a.icon img, a.button img{max-width:100%;min-width:100%;}
+.completion_indicator img{min-width:220%;max-width:220%;position:absolute;right:0%;}
+.small_tab .completion_indicator img{min-width:175%;max-width:175%;max-height:175%;min-height:175%;}
+.tiny_tab .completion_indicator img{min-width:110%;max-width:110%;max-height:110%;min-height:110%;}
+
+li{margin-bottom:0.5em;list-style-position:outside;}
+/********************************************************************/
+
+
+
+/******************  font definitions and sizing  ******************/
+.content_container{font-family:Segoe WP, Segoe UI;line-height:1.18;}
+.page_container a{text-decoration:none;outline:none;}
+
+.tile_title, .page_title{font-family:Segoe WP Light, Segoe UI Light;font-weight:100;font-size:2em;line-height:1.1;}
+.tile_subtitle{font-family:Segoe WP Semibold, Segoe UI Semibold;font-size:0.83333333em;}
+.tile_detail, .page_description{font-size:0.83333333em;}
+.tile_footer{font-family:Segoe WP Semibold, Segoe UI Semibold;font-size:0.83333333em;}
+.tile_popup_header{font-family:Segoe WP Semibold, Segoe UI Semibold;font-size:0.83333333em;}
+.subtle{font-family:Segoe WP Semilight, Segoe UI;font-size:1.2em;line-height:1.13}
+.progress_tile .tile_title{font-size:3em;}
+.support_materials_tile .tile_title{font-size:1.55em;}
+.support_materials_tile .tile_subtitle{font-size:0.66666667em;}
+
+.tab_number{font-family:Segoe WP Light, Segoe UI Light;font-weight:100;font-size:3.61em;line-height:1.1;}
+.tab_title{font-family:Segoe WP Semibold, Segoe UI Semibold;}
+.small_tab .tab_number{font-size:2.4em;}
+.tiny_tab .tab_number{font-size:1.8em;}
+.small_tab .tab_title{font-size:0.6666666667em;}
+.tiny_tab .tab_title{font-size:0.5em;}
+
+.module_number{font-family:Segoe WP Light, Segoe UI Light;font-weight:100;font-size:3.61em;line-height:1.1;}
+.module_title{font-family:Segoe WP Semibold, Segoe UI Semibold;text-transform:uppercase;font-size:0.83333333em;}
+.module_duration{font-family:Segoe WP Semibold, Segoe UI Semibold;font-size:0.83333333em;}
+.tab_popup .tab_number{font-size:3.33333333em;}
+.tab_popup .tab_title{font-size:0.83333333em;}
+.tab_popup .tab_description{font-size:0.83333333em;}
+
+.tab_popup .media_bar{font-size:0.7em;line-height:3;}
+
+a.expand, a.close{font-size:0.72em;line-height:1;font-family:Segoe WP Semibold, Segoe UI Semibold;}
+.small_tab a.expand{font-size:0.6em;line-height:1.2;}
+.tiny_tab a.expand{font-size:0.42em;line-height:1.8;}
+/********************************************************************/
+
+
+
+/******************        colors and themes      ******************/
+.page_container{background:transparent;color:#ffffff;}
+.light_theme .page_container{color:#000000;}
+.light_theme .page_container .tile, .light_theme .page_container .tab_popup{color:#ffffff;}
+
+.page_container a:link, .page_container a:visited, .page_container a:hover, .page_container a:active{color:#ffffff;}
+.light_theme .page_container a:link, .light_theme .page_container a:visited, .light_theme  .page_container a:hover, .light_theme a:active{color:#000000;}
+.light_theme .page_container .tile a:link, .light_theme .page_container .tile a:visited, .light_theme .page_container .tile a:hover, .light_theme .page_container .tile a:active {color:#ffffff;}
+
+.subtle{color:#B3B5B7;}
+.disabled{opacity:0.2;filter:alpha(opacity=20);}
+
+.light_theme .subtle{color:#4c4a48;}
+
+.tile{background:#333333;}
+.light_theme .tile{background:#CCCCCC;}
+
+.tile_popup, .tile_popup_header{background:#221f1f;background:rgba(9,8,8,0.9);}
+.light_theme .tile_popup, .light_theme .tile_popup_header{background:#dde0e0;background:rgba(246,247,247,0.9);}
+
+.tab{background:#49484A;}
+.light_theme .tab{background:#b6b7b4;}
+
+.tab_popup{background:#221f1f;}
+.light_theme .tab_popup{background:#dde0e0;}
+
+.tab_popup .media_bar{background:#393636;}
+.light_theme .tab_popup .media_bar{background:#c6c9c9;}
+
+/*accent colour should override others, so keep this at the bottom of colors and themes section*/
+.accent, .light_theme .accent{background:#F2A740;color:#ffffff;}
+.accent_text{color:#F2A740;}
+/********************************************************************/
+
+
+
+/******************            scroll boxes          ******************/
+.scroll_box{position:relative;overflow:hidden;}
+.scroll_content{position:relative;top:0px;padding-bottom:1px;}
+.scroll_up_arrow, .scroll_down_arrow{position:absolute;height:0px;width:0px;display:none;right:0px;}
+.scroll_up_arrow{top:0px;}
+.scroll_down_arrow{bottom:0px;}
+.scroll_up_arrow img, .mobile .scroll_down_arrow img{width:100%;height:100%;}
+.scroll_arrow_disabled img{opacity:0.3;}
+.scroll_track{position:absolute;top:0px;right:0px;}
+.scroll_line{position:absolute;top:0px;right:0px;width:100%;height:100%;background:#797676;}
+.light_theme .scroll_line{background:#868989;}
+.scroll_ball{position:absolute;top:0px;right:0px;width:100%;height:58px;cursor:pointer;}
+.accent .scroll_line{background:#ffffff;opacity:0.3;}
+.accent .scroll_ball{background:#ffffff;}
+.light_theme .accent .scroll_ball{background:#ffffff;}
+/********************************************************************/
+
+/* native scroll bar scrolling */
+.scrolling_box{position:relative;overflow:auto;overflow-x:hidden;padding-right:17px;height:100%;}
+/********************************************************************/

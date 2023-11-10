@@ -1,0 +1,54 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html style="overflow:auto">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link type="text/css" href="../../../Player/css/jquery-ui-1.8.17.custom.css" rel="stylesheet" />
+<link type="text/css" href="../../../Player/css/playerstyles.css" rel="stylesheet" />
+<link type="text/css" href="../../../Custom/css/playerstyles.css" rel="stylesheet" />
+<script type="text/javascript">
+	 function popupLoaded() {
+		// notify popup loaded to the opener
+        window.opener.player.helpDeskInfoPopupLoaded(this);
+    }
+	// copy text area content to clipboard
+	function copyToClipboard() {
+		if (window.clipboardData && clipboardData.setData) {
+			clipboardData.setData('text', courseInfoTextArea.value);
+		}
+	}
+</script>
+<title>Help Desk Information</title>
+<meta http-equiv="X-UA-Compatible" content="IE=7" />
+</head>
+
+<body style="margin:20px;" onload="popupLoaded()">
+
+	<div class="PopupMenu">
+        <table cellpadding="0" cellspacing="0" align="right">
+    	    <tr>
+    	        <td>&nbsp;</td>
+		        <td><a href="#" onClick="window.print();return false;" onKeyPress="window.print();return false;">Print</a></td>
+		        <td>&nbsp;</td>
+		        <td><a href="#" onClick="window.close()" onKeyPress="window.close()">Close</a></td>
+		    </tr>
+        </table>
+
+        <table cellpadding="0" cellspacing="0">
+		    <tr>
+		        <td>Help Desk Info</td>
+		    </tr>
+		</table>
+	</div>
+
+<div>
+<!-- START CONTENT HERE -->
+
+	<p>Copy to clipboard and paste to help desk email.</p>
+	<textarea id="courseInfoTextArea" style="height:270px; width:100%;"></textarea>
+	<p><button type="button" onclick="copyToClipboard()">Copy to Clipboard</button></p>
+
+<!-- END CONTENT HERE -->
+</div>
+
+</body>
+</html>

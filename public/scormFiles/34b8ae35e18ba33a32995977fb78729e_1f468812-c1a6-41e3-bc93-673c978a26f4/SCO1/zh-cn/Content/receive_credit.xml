@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Version 3.10 -->
+<langStrings>
+	<string var="_sIncompleteModules"><![CDATA[You must complete module(s) %%modules. <br><br>After you complete the modules, return to this page to confirm your understanding of the action items and receive credit for the course.]]></string>
+	<string var="_sIncompletePages"><![CDATA[You must complete page(s) %%pages. <br><br>After you complete the pages, return to this page to confirm your understanding of the action items and receive credit for the course.]]></string>
+	<string var="_sComplete"><![CDATA[You have successfully completed the necessary requirements for this course.  Click the button below to confirm your understanding of the content and receive credit.]]></string>
+	<string var="_sCreditReceived"><![CDATA[Congratulations! You are ready to apply the material presented in this course.<br><br>You have successfully completed the requirements and have received credit for this course.]]></string>
+	<string var="_sReceiveCredit">Receive Credit</string>
+</langStrings>

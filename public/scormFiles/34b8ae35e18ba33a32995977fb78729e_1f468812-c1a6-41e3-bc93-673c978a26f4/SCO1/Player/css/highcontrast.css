@@ -1,0 +1,50 @@
+/* high-contrast mode stylesheet */
+#NextMetroButton:before { content: url(../theme/dark/images/arrow.right.normal.png); }
+.light_theme #NextMetroButton:before { content: url(../theme/light/images/arrow.right.normal.png); }
+#PreviousMetroButton:before {content: url(../theme/dark/images/arrow.left.normal.png);}
+.light_theme #PreviousMetroButton:before {content: url(../theme/light/images/arrow.left.normal.png);}
+#InfoMetroButton:before {content: url(../theme/dark/images/i.normal.png);}
+.light_theme #InfoMetroButton:before {content: url(../theme/light/images/i.normal.png);}
+#BranchingPreviousButton:before { content: url(../theme/dark/images/arrow34.left.normal.png) !important;}
+.light_theme #BranchingPreviousButton:before { content: url(../theme/light/images/arrow34.left.normal.png) !important;}
+#BranchingNextButton:before { content: url(../theme/dark/images/arrow34.right.normal.png);}
+.light_theme #BranchingNextButton:before { content: url(../theme/light/images/arrow34.right.normal.png);}
+.AssessmentPreviousButton:before {content: url(../theme/dark/images/arrow34.left.normal.png);}
+.light_theme .AssessmentPreviousButton:before {content: url(../theme/light/images/arrow34.left.normal.png);}
+.AssessmentNextButton:before {content: url(../theme/dark/images/arrow34.right.normal.png) !important;}
+.light_theme .AssessmentNextButton:before {content: url(../theme/light/images/arrow34.right.normal.png) !important;}
+.AudioPlayerShowPlay:before {content: url(../theme/dark/images/media.play.normal.png);}
+.light_theme .AudioPlayerShowPlay:before {content: url(../theme/light/images/media.play.normal.png);}
+.AudioPlayerShowPause:before {content: url(../theme/dark/images/media.pause.normal.png);}
+.light_theme .AudioPlayerShowPause:before {content: url(../theme/light/images/media.pause.normal.png);}
+.tile.progress .tileActionButton:before{content:"\21D2";}
+.QuestionTile-Pass .QuestionTileStatus:before{content:"\221A";}
+.QuestionTile-Fail .QuestionTileStatus:before{content: "\03A7";}
+.Question-Answered:before{content: "\2217";}
+#brandingLogo:before{content:url(../theme/dark/images/mslogo.png);}
+.light_theme #brandingLogo:before{content:url(../theme/light/images/mslogo.png);}
+.videoControls{background-color:transparent;}
+.help_category > a.toggle:before{content:url(../../Player/theme/dark/images/add.nocircle.png);}
+.help_category > a.toggle{width:auto;height:auto;}
+.sliderContainer{background-color:transparent !important;}
+.videoVolume .Slider{background-color:transparent;}
+.videoControlsBottomOverlay{background-color:transparent;}
+.videoSpeed > ul > li > .accent2_text, .videoQuality > ul > li > .accent2_text{font-style:italic;}
+.videoSpeed > ul > li > .accent2_text:before,.videoQuality > ul > li > .accent2_text:before{content:"\2217";}
+.ContentsModuleLocked:before{content:url(../../Player/theme/dark/images/lock.png);}
+.light_theme .ContentsModuleLocked:before{content:url(../../Player/theme/light/images/lock.png);}
+.ContentsModuleBoxLocked:before{content:url(../../Player/theme/dark/images/lock16.png);}
+.light_theme .ContentsModuleBoxLocked:before{content:url(../../Player/theme/light/images/lock16.png);}
+.ContentsModuleBoxComplete:before{content:url(../../Player/theme/dark/images/checkmark16.png);}
+.light_theme .ContentsModuleBoxComplete:before{content:url(../../Player/theme/light/images/checkmark16.png);}
+.ContentsModuleComplete:before{content:url(../../Player/theme/dark/images/checkmark.png);}
+.light_theme .ContentsModuleComplete:before{content:url(../../Player/theme/light/images/checkmark.png);}
+
+.ResultsRadioOff:before{content:url(../../Player/theme/dark/images/radiobutton_off.png);}
+.ResultsRadioOn:before{content:url(../../Player/theme/dark/images/radiobutton_on.png);}
+.ResultsCheckOff:before{content:url(../../Player/theme/dark/images/checkbox_off.png);}
+.ResultsCheckOn:before{content:url(../../Player/theme/dark/images/checkbox_on.png);}
+.light_theme .ResultsRadioOff:before{content:url(../../Player/theme/light/images/radiobutton_off.png);}
+.light_theme .ResultsRadioOn:before{content:url(../../Player/theme/light/images/radiobutton_on.png);}
+.light_theme .ResultsCheckOff:before{content:url(../../Player/theme/light/images/checkbox_off.png);}
+.light_theme .ResultsCheckOn:before{content:url(../../Player/theme/light/images/checkbox_on.png);}

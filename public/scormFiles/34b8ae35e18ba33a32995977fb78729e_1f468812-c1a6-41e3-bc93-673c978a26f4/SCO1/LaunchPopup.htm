@@ -1,0 +1,545 @@
+﻿<!doctype html>
+<html>
+<head>
+    <style type="text/css">
+        html, body {
+            overflow:hidden;
+        }
+    </style>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title></title>
+    <link type="text/css" href="Player/css/playerstyles.css" rel="stylesheet" />
+    <link type="text/css" href="Custom/css/playerstyles.css" rel="stylesheet" />
+    <script type="text/javascript" src="Player/js/scorm/sco_api.js" ></script>
+    <script type="text/javascript" src="Configuration/definitions.js"></script>
+
+    <script type="text/javascript">
+        // get the URL to calc the LMS Name
+        var _sLmsName = location.href.toLowerCase();
+
+        // These lines look at the URL we were launched from. If we find a match to Learning Central (or one of the LC dev servers)
+        // we load paths.js. The paths.js defines varaialbe we use to get information about the offline status of this course
+        if (_sLmsName.indexOf("\/learningcentral") != -1) {
+            // 7.6 production configuration
+            document.write('<s' + 'cript src="/OfflinePlayerAspx/paths.js" type="text/javascript"><\/s' + 'cript>');
+        } else if (_sLmsName.indexOf("\/lcstage") != -1) {
+            // 7.6 staging configuration
+            document.write('<s' + 'cript src="/OfflinePlayerAspx/paths.js" type="text/javascript"><\/s' + 'cript>');
+        } else if (_sLmsName.indexOf("\/lcdit") != -1) {
+            // 7.6 dev configuration
+            document.write('<s' + 'cript src="/OfflinePlayerAspx/paths.js" type="text/javascript"><\/s' + 'cript>');
+        }
+        // LEAVE THESE LINES IN - MAY BE USED FOR PLCS OFFLINE PLAYER
+        //else if (_sLmsName.indexOf("\/sqa01plx.parttest.extranettest") != -1 || _sLmsName.indexOf("\/plxpreprodadmin.training.partner") != -1 || _sLmsName.indexOf("\/training.partner") != -1) {
+        //    // PLC production, staging, test
+        //    document.write('<s' + 'cript src="/xpoint/paths.js" type="text/javascript"><\/s' + 'cript>');
+        //}
+
+        /*** paths.js provides these variables and functions we need to use the offline player and to deliver evaluations
+            _sOpPublish
+            _sOpCheck
+            _sOpInit
+            getLmsName()
+            getCbtPathId()
+            getLaunchArgs()
+            getAttemptId()
+            getEvaluationURL()
+            courseWantsToClose()
+        ***/
+
+        // NEED THESE TO HANDLE SCORM STATE
+        var _aState = new Array();  		 // holds the state data
+        var _sSep = "{{"; 
+
+        // popup the real course window - we are doing this because Learning Central cannot handle HTML5 content
+        function init() {
+            // check if we need to transfer data within the offline player, quit if that is the case
+            if (offlinePlayerTransfer() == true)
+                return;
+
+            // init SCORM here so we can get SCORM data if needed for handling the offline player
+            initCommunications();
+            
+            // see if we are running online and this course can be downloaded
+            // AND we are running in Learning Central
+            if ((location.protocol == "http:" || location.protocol == "https:") && _bDownloadable && window.getCbtPathId) {
+                // it can, get the cbt path id for this course
+                var sCbtPathId = getCbtPathId();
+
+                // get the user ID
+                var sUserId = getUserId();
+
+                // get the args from the launch URL
+                sArgs = getLaunchArgs();
+
+                // load the server-side page to get the actual download status of the course
+                // add the cbt path ID, the user ID and the parameters of the launch URL as parameters to the URL
+                // frames['CONTENT'].location.replace("/offlineplayer/checkDownload.asp?cbtpathid=" + sCbtPathId + "&userid=" + sUserId + "&launchargs=" + sArgs);
+                // the server-side page will call setDownloadData() or checkDownloadError()
+                frames['CONTENT'].location.replace(_sOpCheck + "?cbtpathid=" + sCbtPathId + "&userid=" + sUserId + "&launchargs=" + sArgs);
+            } else {
+                // cannot be downloaded, move ahead online
+                moveAhead();
+            }
+        }
+
+        // gets the download status of this course and this learner
+        //	nCourse = 1 if the course can be downloaded, else 0
+        //	nUser = 1 if the user has downloaded the course, else 0
+        //	nType - 1 = lo res, 2 = hi res, 3 = both
+        //	nLow - low res download bytes
+        //	nHigh - high res download bytes
+        function setDownloadData(nCourse, nUser, nType, nLow, nHigh) {
+            // we got called from the server-side page, check if the course is launched for the first time by this learner - we do this here just to make sure the course has a valid status
+            // so the LMS will not mark the course complete by mistake
+            if (isFirstLaunch()) {
+                // it is, set the status to incomplete so the LMS knows the learner is not done with this SCO yet
+                if (getCompletionStatus() == "not attempted")
+                setCompletionStatus("incomplete");
+
+                // we will need to get the bookmark in the next session so tell the LMS that the learner may return in the future
+                learnerWillReturn(true);
+            }
+
+            // load the suspend_data
+            loadState();
+
+            // record the download data in suspend data
+            setState("DOWNLOAD", nCourse + "," + nUser + "," + nType + "," + nLow + "," + nHigh);
+
+            // make sure Voyager sends the data to the server
+            saveState();
+
+            // continue on to loading the course
+            setTimeout("moveAhead()", 1);
+        }
+
+        // Error handler for checkDownload.asp
+        function checkDownloadError(nError) {
+            // show the error - plain text here because we have not read the language XML file
+            //alert("There was an error checking the download status of this course. The error code is: " + nError + ". You will be able to take the course online.");
+
+            // continue with the course
+            moveAhead();
+        }
+
+        // this function is either called directly by the init() function or is called by the server-side page to get the launch parameters
+        function moveAhead() {
+            // this function may have been called from /offlineplayer/checkDownload.aspx
+            // we had to make a call to an absolute path to call checkDownload.aspx, so we need to reset the path back to the course folder
+            // so, get the URL of this page
+            var sPath = window.location.href;
+
+            // strip off the file name portion of the URL
+            sPath = sPath.substring(0, sPath.lastIndexOf("/")) + "/";
+
+            // see if the parent of this page is using HTML 5
+            if (parent.document.compatMode == "CSS1Compat") {
+                // it is, that means the player will render correctly so load the Launch.htm in this window
+                location.replace(sPath + "Launch.htm");
+            } else {
+                // the parent is not a HTML 5 page, so popup the player
+                document.getElementById("PageContents").innerHTML = "Your course has been launched in a popup window. Do not close this window until you have closed the popup window to make sure your course results are recorded.";
+
+                // set the popup window parameters
+                var sLaunchParams = 'left=0,top=0,location=no,menubar=no,resizable=yes,status=yes,toolbar=no,scrollbars=yes' + "," + getWindowSizeParams();
+
+                // open the real course
+                wSCO = window.open(sPath + "Launch.htm", "CoursePopup", sLaunchParams);
+                wSCO.focus();
+
+                // check on the existence of the popup window
+                setTimeout("checkCourseWindow()", 500);
+            }
+        }
+
+
+        // load and read the imsmanifest for opening width & height
+        // width = 1021, height = 734,
+        function getWindowSizeParams() {
+            try {
+                // get the XML document
+                var oXML = getXmlDocument("../imsmanifest.xml");
+
+                // get the name of this course
+                var oWidthElement = oXML.getElementsByTagName("c2lcp:Width");
+                var oHeightElement = oXML.getElementsByTagName("c2lcp:Height");
+                _sWidth = oWidthElement[0].text;
+                _sHeight = oHeightElement[0].text;
+            } catch (err) {
+                _sWidth = "1021";
+                _sHeight = "734";
+            }
+            return "width=" + _sWidth + ",height=" + _sHeight;
+        }
+
+        // return the user ID
+        function getUserId() {
+            // see if this is SCORM 2004
+            if (_sAPI == "API_1484_11") {
+                // it is, get the user ID from the SCORM
+                var sID = scormGetValue("cmi.learner_id");
+            } else {
+                // SCORM 1.2, get the user ID from the SCORM
+                var sID = scormGetValue("cmi.core.student_id");
+            }
+
+            // return the user ID
+            return sID;
+        }
+
+        // get the XML document from a file name
+        function getXmlDocument(sFile) {
+            var xmlHttp, oXML;
+
+            // try to use the native XML parser
+            try {
+                xmlHttp = new XMLHttpRequest();
+                xmlHttp.open("GET", sFile, false); // Use syncronous communication
+                xmlHttp.send(null);
+                oXML = xmlHttp.responseXML;
+            } catch (e) {
+                // can't use the native parser, use the ActiveX instead
+                xmlHttp = getXMLObject();
+                xmlHttp.async = false;            // Use syncronous communication
+                xmlHttp.resolveExternals = false;
+                xmlHttp.load(sFile);
+                oXML = xmlHttp;
+            }
+
+            // return the XML document object
+            return oXML;
+        }
+
+        // get the best ActiveX object that can read XML
+        function getXMLObject() {
+            // create an array with the XML ActiveX versions
+            var aVersions = new Array("Msxml2.DOMDocument.6.0", "Msxml2.DOMDocument.3.0");
+
+            // loop through the array until we can create an activeX control
+            for (var i = 0; i < aVersions.length; i++) {
+                // return when we can create the activeX control
+                try {
+                    var oXML = new ActiveXObject(aVersions[i]);
+                    return oXML;
+                } catch (e) {
+                }
+            }
+
+            // could not create an activeX, return a null
+            return null;
+        }
+
+        // check on the popup course window
+        function checkCourseWindow() {
+            // see if the popup window exists
+            if (!wSCO || wSCO.closed) {
+                // it does not, change our message
+                document.getElementById("PageContents").innerHTML = "Your course results have been recorded. You can now close this window.";
+
+                // see if paths.js has a shutdown function
+                if (window.courseOpenerWantsToClose) {
+                    // it does, call it to close this window
+                    courseOpenerWantsToClose();
+                }
+            } else {
+                // popop exists, check again
+                setTimeout("checkCourseWindow()", 500);
+            }
+        }
+
+        // ## STATE MANAGEMENT
+
+        // set the state
+        function setState(sId, sValue) {
+            // set the state in our state array
+            _aState[sId] = sValue;
+        }
+
+
+        // Load the suspend data into our state array
+        function loadState() {
+            // get the suspend_data
+            var sSuspend = getSuspendData();
+
+            // load the data into a temp array
+            var aParts = sSuspend.split(_sSep);
+
+            /* loop through the array */
+            for (var i = 0; i < aParts.length; i = i + 2) {
+                // see if we have an id
+                if (aParts[i] != "") {
+                    // we do, copy the data to the state array
+                    _aState[aParts[i]] = aParts[i + 1];
+                }
+            }
+        }
+
+        // Set the state in suspend data  - we do this by flattening the data stored in the state array
+        function saveState() {
+            // buffer for the state array
+            var sSuspend = calcSuspendData();
+
+            //alert('save State' + sSuspend);
+            // see if there is any data to set
+            if (sSuspend != "") {
+                // there is, store this with SCORM
+                setSuspendData(sSuspend);
+            }
+        }
+
+        // creates and returns a string of all of the state data we want to store in cmi.suspend_data
+        function calcSuspendData() {
+            // buffer for the state array
+            var sSuspend = "";
+
+            // loop through the array
+            for (var i in _aState) {
+                sSuspend += i + _sSep + _aState[i] + _sSep;
+            }
+
+            // return the data
+            return sSuspend;
+        }
+
+    // gets the data fro the LMS, and calls top.external.SetLmsData() to write the data in the local XML store
+    function sendValue(item) {
+        var s;
+    
+	    // get data from the LMS
+        s = scormGetValue(item);
+	
+	    // no need to set the data if it is blank or there is an error
+        if ( s == "" && scormGetLastError() != "0" )
+            return;
+    
+	    // write the data to the local XML file
+        top.external.SetLmsData(item,s);
+    }
+
+    // transefer data between the LMS and the offline player
+    function offlinePlayerTransfer() {
+	    var mode;
+	    var item;
+	    var data;
+	    var i;
+	    var count;
+    
+	    // get the direction of the transfer
+	    try {
+		    mode = top.external.GetTransferMode();
+	    } catch(e) {
+		    return false;
+	    }
+
+	    // initialize the communication with the LMS
+	    initCommunications();
+   
+   	    // see if we want to download the data from the LMS to the offline player
+	    if ( mode == "download" ) {
+		    // see if this is SCORM 1.2
+		    if (_sAPI == "API") {
+			    // SCORM 1.2, send the LMS SCORM data items to the local XML file
+			    // these are all of the readable items in SCORM, the commented items are NOT used by the template
+			    // no need to waste time getting them
+			    sendValue("cmi.core.student_id");
+			    sendValue("cmi.core.student_name");
+			    sendValue("cmi.core.lesson_location");
+			    sendValue("cmi.core.credit");
+			    sendValue("cmi.core.lesson_status");
+			    sendValue("cmi.core.entry");
+			    sendValue("cmi.core.score.raw");
+			    sendValue("cmi.core.score.min");
+			    sendValue("cmi.core.score.max");
+			    sendValue("cmi.core.total_time");
+			    sendValue("cmi.core.lesson_mode");
+			    sendValue("cmi.suspend_data");
+			    //sendValue("cmi.launch_data");
+			    sendValue("cmi.comments");
+			    //sendValue("cmi.comments_from_lms");
+			    //sendValue("cmi.student_data.mastery_score");
+			    //sendValue("cmi.student_data.max_time_allowed");
+			    //sendValue("cmi.student_data.time_limit_action");
+			    //sendValue("cmi.student_preference.audio");
+			    //sendValue("cmi.student_preference.language");
+			    //sendValue("cmi.student_preference.speed");
+			    //sendValue("cmi.student_preference.text");
+			
+			    // loop through all of the objectives and transfer them too
+			    count = scormGetValue("cmi.objectives._count")
+			    for(i = 0; i < count; i++) {        
+				    item = "cmi.objectives." + i;
+				    sendValue(item + ".id");
+				    sendValue(item + ".score.raw");
+				    sendValue(item + ".score.min");
+				    sendValue(item + ".score.max");
+				    sendValue(item + ".status");
+			    }
+			
+			    // send the count of interactions
+			    sendValue("cmi.interactions._count");
+		    } else {
+			    // send all of the comments
+			    count = scormGetValue("cmi.comments_from_learner._count");
+			    for(i = 0; i < count; i++) {        
+				    item = "cmi.comments_from_learner." + i;
+				    sendValue(item + ".comment");
+				    sendValue(item + ".location");
+				    sendValue(item + ".timestamp");
+			    }
+
+			    // send all of the LMS comments - not used in the template so commented out
+			    /* 
+			    count = scormGetValue("cmi.comments_from_lms._count");
+			    for(i = 0; i < count; i++)
+			    {        
+				    item  = "cmi.comments_from_lms." + i;
+				    sendValue(item + ".comment");
+				    sendValue(item + ".location");
+				    sendValue(item + ".timestamp");
+			    }
+			    */
+			
+			    // send some scalar values
+			    sendValue("cmi.completion_status");
+			    sendValue("cmi.completion_threshold");
+			    sendValue("cmi.credit");
+			    sendValue("cmi.entry");
+
+			    // send all of the interactions
+			    count = scormGetValue("cmi.interactions._count");
+			    for(i = 0; i < count; i++) {        
+				    item  = "cmi.interactions." + i;
+				
+				    sendValue(item + ".id");
+				    sendValue(item + ".type");
+		  
+				    count2 = scormGetValue(item + ".objectives._count");
+				    for(x = 0; x < count2; x++)
+					    sendValue(item + ".objectives." + x + ".id");
+			
+				    sendValue(item + ".timestamp");
+				
+				    count2 = scormGetValue(item + ".correct_responses._count");
+				    for(x = 0; x < count2; x++)
+					    sendValue(item + ".correct_responses." + x + ".pattern");
+				
+				    sendValue(item + ".weighting");
+				    sendValue(item + ".learner_response");
+				    sendValue(item + ".result");
+				    sendValue(item + ".latency");
+				    sendValue(item + ".description");
+			    }
+	
+			    // send more scalar values
+			    //sendValue("cmi.launch_data");
+			    sendValue("cmi.learner_id");
+			    sendValue("cmi.learner_name");
+			    //sendValue("cmi.learner_preference.audio_level");
+			    //sendValue("cmi.learner_preference.language");
+			    //sendValue("cmi.learner_preference.delivery_speed");
+			    //sendValue("cmi.learner_preference.audio_captioning");
+			    sendValue("cmi.location");
+			    sendValue("cmi.max_time_allowed");
+			    sendValue("cmi.mode");
+	
+			    // send all of the objectives
+			    count = scormGetValue("cmi.objectives._count");
+			    for(i = 0; i < count; i++) {
+				    item = "cmi.objectives." + i;
+				    sendValue(item + ".id");
+				    sendValue(item + ".score.scaled");
+				    sendValue(item + ".score.raw");
+				    sendValue(item + ".score.min");
+				    sendValue(item + ".score.max");
+				    sendValue(item + ".success_status");
+				    sendValue(item + ".completion_status");
+				    sendValue(item + ".progress_measure");
+				    sendValue(item + ".description");
+			    }
+			
+			    // send the final batch of scalar values
+			    sendValue("cmi.progress_measure");
+			    sendValue("cmi.scaled_passing_score");
+			    sendValue("cmi.score.scaled");
+			    sendValue("cmi.score.raw");
+			    sendValue("cmi.score.min");
+			    sendValue("cmi.score.max");
+			    sendValue("cmi.success_status");
+			    sendValue("cmi.suspend_data");
+			    sendValue("cmi.time_limit_action");
+			    sendValue("cmi.total_time");
+		    }
+	    } else {
+		    // uploading data, see if this is SCORM 1.2
+		    if (_sAPI == "API") {
+		
+			    // Learning Central displays a confirm() message when a course is complete, suppress that message by definign a blank function for confirm()
+			    var win = window; 
+			    while ((win['API'] == null) && (win.parent != null) && (win.parent != win)) 
+					    win = win.parent;
+			    win.confirm=function(str){};
+			
+			
+			    /* get the next writable element */
+			    for(i=0; (item=top.external.GetLmsItem(i)) != ""; i++ ) {
+				    // see if this is the session time
+				    if (item == "cmi.core.session_time") {
+					    // it is, get the total time from the offline player
+					    var sValue = top.external.GetItemValue("cmi.core.total_time");
+			
+					    // set the value of session_time using the value from total_time
+					    // we do this because we want Voyager to have the correct total_time taken when the course
+					    // is run offline – we cannot set total_time directly so we use the value in total_time to set the session_time
+					    scormSetValue(item, sValue);
+				    } else {
+					    // not session_time, just get the value from the offline player for this item
+					    data = top.external.GetLmsData();
+								
+					    // send the value to Voyager
+					    scormSetValue(item,data);
+				    }
+			    }
+		    } else {
+			    // SCORM 2004
+			    /* get the next writable element */
+			    for(i=0; (item=top.external.GetLmsItem(i)) != ""; i++ ) {
+				    // see if this is the session time
+				    if (item == "cmi.session_time") {
+					    // it is, get the total time from the offline player
+					    var sValue = top.external.GetItemValue("cmi.total_time");
+			
+					    // set the value of session_time using the value from total_time
+					    // we do this because we want Voyager to have the correct total_time taken when the course
+					    // is run offline – we cannot set total_time directly so we use the value in total_time to set the session_time
+					    scormSetValue(item, sValue);
+				    } else {
+					    // not session_time, just get the value from the offline player for this item
+					    data = top.external.GetLmsData();
+								
+					    // send the value to Voyager
+					    scormSetValue(item,data);
+				    }
+			    }
+		    }
+
+		    // terminate the SCORM session
+		    scormTerminate();
+	    }
+    
+	    // tell the offline player that we are done transfering data
+	    top.external.TransferDone();
+    
+	    return true;
+    }
+ 
+    </script>
+</head>
+<body onload="init()">
+
+<div id="PageContents" style="padding:1em;text-align:center;">
+<iframe id="CONTENT" name="CONTENT" src="about:blank" width="100%" height="100%" frameBorder="0" noResize scrolling="auto"></iframe>
+
+</div>
+</body>
+</html>

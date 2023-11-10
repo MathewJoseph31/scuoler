@@ -1,0 +1,3000 @@
+
+/* =============================================================================
+   JQUERY OVERRIDES
+   ========================================================================== */
+.ui-widget-overlay {background:#FFFFFF;}
+.light_theme .ui-widget-overlay {background:#000000;opacity: .80;filter:Alpha(Opacity=80);}
+.ui-widget-content {background: rgba(0,0,0,0.95);padding:0px;}
+.light_theme .ui-widget-content {background: rgba(255, 255, 255, 0.85); color:#000000;}
+.ui-dialog {font-size:1.25em;}
+.ui-dialog-titlebar {padding:0px 20px;height:56px;background:#2A2A2A;}
+.light_theme .ui-dialog-titlebar {background:#F2F2F2;}
+.ui-dialog .ui-dialog-title {font-size:32px;padding:0px;margin-left:0px;margin:0px 75px 0px 0px;border-width:0px;background:transparent;font-weight:normal;font-family:Segoe UI Light;color:#cccccc;}
+.light_theme .ui-dialog .ui-dialog-title{color:#333333;}
+.ui-widget-header {padding:0px 20px;background:#2A2A2A;}
+.light_theme .ui-widget-header {color:#000000;background:#F2F2F2;}
+.light_theme .ui-widget-header a {color: #000000;}
+.ui-widget-header .ui-icon.ui-icon-closethick{background-image:url(../../Player/theme/dark/images/close.png) !important;background-position:right center !important;width:auto !important;height:20px;line-height:18px;text-indent:0px;position:relative !important;right:0px !important;margin-right:0px !important;padding-right:22px;}
+.light_theme .ui-widget-header .ui-icon.ui-icon-closethick{background-image:url(../../Player/theme/light/images/close.png) !important;}
+.ui-dialog .ui-dialog-titlebar-close {padding:0px;margin:0px;position:absolute;top:19px;right:20px;font-size:20px;text-transform:uppercase;line-height:1;color:#CCCCCC !important;height:auto;width:auto;font-weight:bold !important;}
+.light_theme .ui-dialog-titlebar-close{color:#333333 !important;}
+.ui-icon .ui-icon-text{padding-right:0.5em;}
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-state-focus, .ui-widget-content .ui-state-focus{background:transparent;font-weight:normal;color:#ffffff;}
+.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited{color:#ffffff;text-decoration:none;}
+.ui-state-hover,.ui-widget-content .ui-state-hover{background:transparent;font-weight:normal;color:#ccc;}
+.ui-widget-header .ui-state-hover{font-weight:bold;color:#ffffff;}
+.ui-state-hover a, .ui-state-hover a:hover{color:#ccc;text-decoration:none;}
+.light_theme .ui-state-hover a, .light_theme .ui-state-hover a:hover {color:#333333;}
+.ui-widget :active {outline:none;}
+.ui-state-active, .ui-widget-content .ui-state-active{background:transparent;font-weight:normal;color:#333;}
+.ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited{color:#cccccc;text-decoration:none;}
+.light_theme .ui-state-active a, .light_theme .ui-state-active a:link, .light_theme .ui-state-active a:visited {color:#333333;}
+.ui-widget-content .ui-state-default{color:#CCCCCC;}
+.light_theme .ui-widget-content .ui-state-default{color:#333333;}
+.light_theme .ui-widget-content .ui-state-default a, .light_theme .ui-widget-content .ui-state-default a:link, .light_theme .ui-widget-content .ui-state-default a:visited{color:#333333;}
+.ui-widget-content .ui-state-default a, .ui-widget-content .ui-state-default a:link, .ui-widget-content .ui-state-default a:visited{color:#333333;} 
+.ui-widget-content .ui-state-active{ background:transparent;color:#CCCCCC;}
+.light_theme .ui-widget-content .ui-state-active{ background:transparent;color:#333333;}
+.ui-dialog .ui-dialog-titlebar-close span{margin:0px;}
+.ui-icon{position:absolute;top:0px;right:100%;margin-right:5px !important;width:15px;height:15px;}
+.ui-icon-text{position:relative;line-height:13px;padding-right:0px;right:auto;}
+.ui-state-hover .ui-icon-text{padding-right:0px;}
+
+
+/* =============================================================================
+   Base
+   ========================================================================== */
+* {-webkit-box-sizing:border-box;-moz-box-sizing: border-box;box-sizing:border-box;}
+
+/*
+ * 1. Correct text resizing oddly in IE6/7 when body font-size is set using em units
+ *    http://clagnut.com/blog/348/#c790
+ * 2. Force vertical scrollbar in non-IE
+ * 3. Remove Android and iOS tap highlight color to prevent entire container being highlighted
+ *    www.yuiblog.com/blog/2010/10/01/quick-tip-customizing-the-mobile-safari-tap-highlight-color/
+ * 4. Prevent iOS text size adjust on device orientation change, without disabling user zoom
+ *    www.456bereastreet.com/archive/201012/controlling_text_size_in_safari_for_ios_without_disabling_user_zoom/
+ */
+html {margin:0px;padding: 0px;font-size:100%;overflow-y:hidden;-webkit-overflow-scrolling:touch;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-text-size-adjust:100%;-ms-text-size-adjust: 100%;}
+body {margin:0;height:100%;font:12px/1.231 Segoe UI, Verdana, Arial, sans-serif;}
+
+iframe.fullscreen{position:fixed !important;top:0px !important;left:0px !important;width:100% !important;height:100% !important;z-index:9999 !important;background:black;}
+
+/* These selection declarations have to be separate
+ * No text-shadow: twitter.com/miketaylr/status/12228805301
+ * Also: hot pink! */
+::-moz-selection{background:#fe57a1;color:#fff;text-shadow:none;}
+::selection{background:#fe57a1;color:#fff;text-shadow:none;}
+
+/* =============================================================================
+   Links
+   ========================================================================== */
+a {text-decoration:none !important;}
+
+/* Improve readability when focused and hovered in all browsers: people.opera.com/patrickl/experiments/keyboard/test */
+a:hover, a:active {outline:0;}
+
+/* =============================================================================
+   HTML5 element display
+   ========================================================================== */
+article, aside, details, figcaption, figure, footer, header, hgroup, nav, section {display: block;}
+audio[controls], canvas, video {display: inline-block; *display: inline;*zoom: 1;}
+
+/* =============================================================================
+   Typography
+   ========================================================================== */
+abbr[title] { border-bottom: 1px dotted; }
+b, strong { font-weight: bold; }
+blockquote { margin: 1em 40px; }
+dfn { font-style: italic; }
+hr { display: block; height: 1px; border: 0; border-top: 1px solid #ccc; margin: 1em 0; padding: 0; }
+ins { background: #ff9; color: #000; text-decoration: none; }
+mark { background: #ff0; color: #000; font-style: italic; font-weight: bold; }
+
+/* Redeclare monospace font family: en.wikipedia.org/wiki/User:Davidgothberg/Test59 */
+pre, code, kbd, samp { font-family: monospace, monospace; _font-family: 'courier new', monospace; font-size: 1em; }
+
+/* Improve readability of pre-formatted text in all browsers */
+pre { white-space: pre; white-space: pre-wrap; word-wrap: break-word; }
+
+q { quotes: none; }
+q:before, q:after { content: ""; content: none; }
+small { font-size: 85%; }
+
+/* Position subscript and superscript content without affecting line-height: gist.github.com/413930 */
+sub, sup { font-size: 75%; line-height: 0; position: relative; vertical-align: baseline; }
+sup { top: -0.5em; }
+sub { bottom: -0.25em; }
+
+/* =============================================================================
+   Lists
+   ========================================================================== */
+ul, ol { margin: 1em 0; padding: 0 0 0 40px; }
+dd { margin: 0 0 0 40px; }
+nav ul, nav ol { list-style: none; margin: 0; padding: 0; }
+
+/* =============================================================================
+   Embedded content
+   ========================================================================== */
+/* Improve image quality when scaled in IE7
+ * code.flickr.com/blog/2008/11/12/on-ui-quality-the-little-things-client-side-image-resizing*/
+img {border:0;-ms-interpolation-mode:bicubic;}
+
+/* Correct overflow displayed oddly in IE9  */
+svg:not(:root) {overflow: hidden;}
+
+/* =============================================================================
+   Figures
+   ========================================================================== */
+figure { margin: 0; }
+
+/* =============================================================================
+   Forms
+   ========================================================================== */
+form { margin: 0; }
+fieldset { border: 0; margin: 0; padding: 0; }
+iframe { border:0px; }
+
+/*  1. Correct color not inheriting in IE6/7/8/9 
+ * 2. Correct alignment displayed oddly in IE6/7 */
+legend {border: 0; *margin-left:-7px;padding: 0;}
+
+/* Indicate that 'label' will shift focus to the associated form element */
+label {cursor:pointer;}
+
+/* 1. Correct font-size not inheriting in all browsers
+ * 2. Remove margins in FF3/4 S5 Chrome
+ * 3. Define consistent vertical alignment display in all browsers */
+button, input, select, textarea {margin: 0;font-size: 100%;vertical-align: baseline; *vertical-align: middle;font-family:Segoe UI, Verdana, Arial, sans-serif;color:#222;}
+
+/* 1. Define line-height as normal to match FF3/4 (set using !important in the UA stylesheet)
+ * 2. Correct inner spacing displayed oddly in IE6/7 */
+button, input {line-height: normal;*overflow: visible; }
+
+/* 1. Display hand cursor for clickable form elements
+ * 2. Allow styling of clickable form elements in iOS */
+button, input[type=button], input[type=reset], input[type=submit] { cursor: pointer; -webkit-appearance: button; }
+
+/* Consistent box sizing and appearance */
+input[type=checkbox], input[type=radio] { box-sizing: border-box; }
+input[type=search] { -moz-box-sizing: content-box; -webkit-box-sizing: content-box; box-sizing: content-box; }
+
+/* Remove inner padding and border in FF3/4
+ * www.sitepen.com/blog/2008/05/14/the-devils-in-the-details-fixing-dojos-toolbar-buttons */
+button::-moz-focus-inner, input::-moz-focus-inner { border: 0; padding: 0; }
+
+/* Remove default vertical scrollbar in IE6/7/8/9 */
+textarea { overflow: auto; vertical-align: top; }
+
+/* Colors for form validity */
+input:valid, textarea:valid {  }
+input:invalid, textarea:invalid { background-color: #f0dddd; }
+
+/* =============================================================================
+   Tables
+   ========================================================================== */
+table { border-collapse: collapse; border-spacing: 0; }
+
+/* =============================================================================
+   Non-semantic helper classes
+   Please define your styles before this section.
+   ========================================================================== */
+/* For image replacement */
+.ir { display: block; text-indent: -999em; overflow: hidden; background-repeat: no-repeat; text-align: left; direction: ltr; }
+.ir br { display: none; }
+
+/* Hide for both screenreaders and browsers:
+   css-discuss.incutio.com/wiki/Screenreader_Visibility */
+.hidden { display: none; visibility: hidden; }
+
+/* Hide only visually, but have it available for screenreaders: by Jon Neal.
+  www.webaim.org/techniques/css/invisiblecontent/  &  j.mp/visuallyhidden */
+.visuallyhidden { border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px; }
+
+/* Extends the .visuallyhidden class to allow the element to be focusable when navigated to via the keyboard: drupal.org/node/897638 */
+.visuallyhidden.focusable:active, .visuallyhidden.focusable:focus { clip: auto; height: auto; margin: 0; overflow: visible; position: static; width: auto; }
+
+/* Hide visually and from screenreaders, but maintain layout */
+.invisible { visibility: hidden; }
+
+/* Contain floats: nicolasgallagher.com/micro-clearfix-hack/ */ 
+.clearfix:before, .clearfix:after { content: ""; display: table; }
+.clearfix:after { clear: both; }
+.clearfix { zoom: 1; }
+
+/* =============================================================================
+   PLACEHOLDER Media Queries for Responsive Design.
+   These override the primary ('mobile first') styles
+   Modify as content requires.
+   ========================================================================== */
+@media only screen and (min-width: 480px) {
+  /* Style adjustments for viewports 480px and over go here */
+}
+
+@media only screen and (min-width: 768px) {
+  /* Style adjustments for viewports 768px and over go here */
+}
+
+/* =============================================================================
+   Print styles.
+   Inlined to avoid required HTTP connection: www.phpied.com/delay-loading-your-print-css/
+   ========================================================================== */ 
+@media print {
+  * { background: transparent !important; color: black !important; text-shadow: none !important; filter:none !important; -ms-filter: none !important; } /* Black prints faster: sanbeiji.com/archives/953 */
+  a, a:visited, .light_theme a, .light_theme a:visited { color: #444 !important; text-decoration: underline; }
+  a[href]:after { content: " (" attr(href) ")"; }
+  abbr[title]:after { content: " (" attr(title) ")"; }
+  .ir a:after, a[href^="javascript:"]:after, a[href^="#"]:after { content: ""; }  /* Don't show links for images, or javascript/internal links */
+  pre, blockquote { border: 1px solid #999; page-break-inside: avoid; }
+  thead { display: table-header-group; } /* css-discuss.incutio.com/wiki/Printing_Tables */
+  tr, img { page-break-inside: avoid; }
+  img { max-width: 100% !important; }
+  @page { margin: 0.5cm; }
+  p, h2, h3 { orphans: 3; widows: 3; }
+  h2, h3{ page-break-after: avoid; }
+}
+
+img.showOnLight, span.showOnLight{display:none;}
+.light_theme img.showOnLight, .light_theme span.showOnLight{display:inline-block;}
+.light_theme img.showOnDark, .light_theme span.showOnDark{display:none;}
+
+/*=========================================
+  accent colors
+  ========================================*/
+.accent, .hoveraccent:hover, .hoveraccent.ui-state-hover{background-color:#FF8300 !important;color:#ffffff !important;}
+.accent_text, .hoveraccent_text:hover, .hoveraccent_text.ui-state-hover{color:#FF8300 !important;}
+.accent_border, .hoveraccent_border:hover, .hoveraccent_border.ui-state-hover{border-color:#FF8300 !important;}
+
+.accent2, .hoveraccent2:hover, .hoveraccent2.ui-state-hover{background-color:#00B2E8 !important;color:#ffffff !important;}
+.accent2_text, .hoveraccent2_text:hover, .hoveraccent2_text.ui-state-hover{color:#00B2E8 !important;}
+.accent2_border, .hoveraccent2_border:hover, .hoveraccent2_border.ui-state-hover{border-color:#00B2E8 !important;}
+
+.accent3, .hoveraccent3:hover, .hoveraccent3.ui-state-hover{background-color:#F3D02C !important;color:#1f1f1f !important;}
+.accent3_text, .hoveraccent3_text:hover, .hoveraccent3_text.ui-state-hover{color:#F3D02C !important;}
+.accent3_border, .hoveraccent3_border:hover, .hoveraccent3_border.ui-state-hover{border-color:#F3D02C !important;}
+
+.accent4, .hoveraccent4:hover, .hoveraccent4.ui-state-hover{background-color:#4668BB !important;color:#ffffff !important;}
+.accent4_text, .hoveraccent4_text:hover, .hoveraccent4_text.ui-state-hover{color:#4668BB !important;}
+.accent4_border, .hoveraccent4_border:hover, .hoveraccent4_border.ui-state-hover{border-color:#4668BB !important;}
+
+.accent5, .hoveraccent5:hover, .hoveraccent5.ui-state-hover{background-color:#F75121 !important;color:#ffffff !important;}
+.accent5_text, .hoveraccent5_text:hover, .hoveraccent5_text.ui-state-hover{color:#F75121 !important;}
+.accent5_border, .hoveraccent5_border:hover, .hoveraccent5_border.ui-state-hover{border-color:#F75121 !important;}
+
+.accent6, .hoveraccent6:hover, .hoveraccent6.ui-state-hover{background-color:#84BA00 !important;color:#ffffff !important;}
+.accent6_text, .hoveraccent6_text:hover, .hoveraccent6_text.ui-state-hover{color:#84BA00 !important;}
+.accent6_border, .hoveraccent6_border:hover, .hoveraccent6_border.ui-state-hover{border-color:#84BA00 !important;}
+
+/* if an accent style uses dark foreground color, the background images for icons should be switched to the light theme versions */
+.accent3.SplitterExpanded, .hoveraccent3.SplitterExpanded:hover, .hoveraccent3.SplitterExpanded.ui-state-hover{background-image:url(../theme/dark/images/arrow.right.png);}
+.accent3.SplitterCollapsed, .hoveraccent3.SplitterCollapsed:hover, .hoveraccent3.SplitterCollapsed.ui-state-hover{background-image:url(../theme/dark/images/arrow.left.png);}
+/*========================================*/
+
+/* =============================================================================
+   colors used throughout the UI
+   ============================================================================*/
+.accent_not_selected, .light_theme .accent_not_selected, .light_theme .accent_not_selected:visited { background: #FFCC66; color: #ffffff; }
+.accent_selected, .light_theme .accent_selected, .light_theme .accent_selected:visited {background: #808080; color: #ffffff;}
+.non_accent, .light_theme .non_accent, .light_theme .non_accent:visited {background: #808080; color: #ffffff;}
+.non_accent2, .light_theme .non_accent2, .light_theme .non_accent2:visited {background: #000000; color: #ffffff;}
+.subtle{color:#B3B5B7;}
+
+/* where are these used????*/
+.accent_link, .light_theme .accent_link, .light_theme .accent_link:visited {background:#FF8300; color:#ffffff; border: 1px #FF8300 solid;}
+.accent_link:hover, .accent_link:focus {border: 1px #FF8300 solid;}
+.accent_link_not_selected, .light_theme .accent_link_not_selected, .light_theme .accent_link_not_selected:visited { background: #FFCC66; color: #ffffff; border: 1px #FFCC66 solid;}
+.accent_link_not_selected:hover, .accent__link_not_selected:focus {border: 1px #FF8300 solid;}
+.accent_link_selected, .light_theme .accent_link_selected, .light_theme .accent_link_selected:visited {background: #808080; color: #ffffff; border: 1px #808080 solid;}
+.accent_link_selected:hover, .accent_link_selected:focus {border: 1px #FF8300 solid;}
+.non_accent_link, .light_theme .non_accent_link, .light_theme .non_accent_link:visited {background: #808080; color: #ffffff; border: 1px #808080 solid;}
+.non_accent_link:hover, .non_accent_link:focus {border: 1px #FF8300 solid;}
+.non_accent2_link, .light_theme .non_accent2_link, .light_theme .non_accent2_link:visited {background: #000000; color: #ffffff; border: 1px #000000 solid;}
+.non_accent2_link:hover, .non_accent2_link:focus {border: 1px #FF8300 solid;}
+.transparent_link, .light_theme .transparent_link, .light_theme .transparent_link:visited {background: transparent; color: #ffffff; border: 1px transparent solid;}
+.transparent_link:hover, .transparent_link:focus {border: 1px #FF8300 solid;}
+/*************************/
+
+
+/* global colours */
+html {background:#000000;}
+html.light_theme{background:white;}
+body {color:White;
+  scrollbar-face-color : #909090;
+  scrollbar-highlight-color : #909090;
+  scrollbar-3dlight-color : #909090;
+  scrollbar-darkshadow-color : #C3C3C3;
+  scrollbar-arrow-color : #000000;
+  scrollbar-shadow-color : #909090;
+  scrollbar-track-color: #C3C3C3;
+}
+.light_theme body{color:#333333;}
+a{color:#FFFFFF;}
+.light_theme a{color:#333333;}
+
+/* header colours */
+#Header{border-bottom:1px solid #4D4D4D;background:black;}
+.light_theme #Header {background:#E9E9E9;border-bottom-color:transparent;}
+.pageNameModule {color:#5A5A5A;filter:alpha(opacity=80);-moz-opacity: 0.8;opacity:0.8;-khtml-opacity: 0.8;}
+.light_theme .pageNameModule{color:#cccccc;}
+.menuButton{color:#989898;}
+.menuButton:hover{color:#C3C3C3;}
+.light_theme .menuButton{color:#787878;}
+.light_theme .menuButton:hover {color:#666666;}
+.menuButton .expandVisual{border-right-color:#989898;}
+.menuButton:hover .expandVisual{border-right-color:#C3C3C3;}
+.light_theme .menuButton .expandVisual{border-right-color:#787878;}
+.light_theme .menuButton:hover .expandVisual{border-right-color:#666666;}
+#quickLinks{background:#22221f url(../theme/dark/images/tilegradient.png) no-repeat left top;background-size:100% 100%;}
+.light_theme #quickLinks{background-color:#F2F2F2;}
+#quickLinks a:hover{filter:alpha(opacity=60);-moz-opacity: 0.6;opacity: 0.6;-khtml-opacity: 0.6;}
+
+/* contents widget colours */
+.ContentsWidget {background:#5A5A5A;}
+.ContentsWidgetHeader {background:#333333;}
+.light_theme .ContentsWidget {background:#E8E8E8;}
+.light_theme .ContentsWidgetHeader {background:#999999;color:white;}
+.ContentsWidgetFooter{color:#FFFFFF;}
+a.ContentsWidgetItem, a.ContentsWidgetItem:visited {color:#ffffff;}
+a.ContentsWidgetSubItem {color:#ffffff;}
+.light_theme a.ContentsWidgetItem, .light_theme a.ContentsWidgetItem:visited, .light_theme a.ContentsWidgetSubItem{color:#333333;}
+
+/* footer colours */
+.navbar {background-color:#333333;}
+.light_theme .navbar{background-color:#E9E9E9;}
+
+div.MetroIcon{filter:alpha(opacity=60);-moz-opacity: 0.6;opacity: 0.6;-khtml-opacity: 0.6;}
+a.MetroButton:hover div.MetroIcon {filter:alpha(opacity=60);-moz-opacity: 0.8;opacity: 0.8;-khtml-opacity: 0.8;}
+a.MetroButton:hover .MetroButtonLabel {color: #777777;}
+.light_theme .MetroButtonLabel {color:#ffffff;}
+.light_theme a.MetroButton:hover .MetroButtonLabel {color:#707070;}
+.InfoMetroButton{opacity:0.6;filter:alpha(opacity=60);}
+.InfoMetroButton:hover{opacity:0.8;filter:alpha(opacity=80);}
+a.MetroButton.disabled div.MetroIcon, a.MetroButton.disabled:hover div.MetroIcon{filter:alpha(opacity=20);-moz-opacity: 0.2;opacity: 0.2;-khtml-opacity: 0.2;}
+
+#Main {background-color:transparent;}
+
+/* =============================================================================
+   font definitions and sizing
+   ============================================================================*/
+.page_title{font-size:2.25em;line-height:1;}
+.content_container{font-family:Segoe WP, Segoe UI;line-height:1.18;}
+.tile_title, .page_title{font-family:Segoe WP Light, Segoe UI Light;font-weight:100;font-size:2em;line-height:1.1;}
+.tile_subtitle{font-family:Segoe WP Semibold, Segoe UI Semibold;font-size:0.83333333em;}
+.tile_detail, .page_description{font-size:0.83333333em;}
+.tile_footer{font-family:Segoe WP Semibold, Segoe UI Semibold;font-size:0.83333333em;}
+.tile_popup_header{font-family:Segoe WP Semibold, Segoe UI Semibold;font-size:0.83333333em;}
+.subtle{font-family:Segoe WP Semilight, Segoe UI;font-size:1.2em;line-height:1.13}
+.progress_tile .tile_title{font-size:3em;}
+.support_materials_tile .tile_title{font-size:1.55em;}
+.support_materials_tile .tile_subtitle{font-size:0.66666667em;}
+.tab_number{font-family:Segoe WP Light, Segoe UI Light;font-weight:100;font-size:3.61em;line-height:1.1;}
+.tab_title{font-family:Segoe WP Semibold, Segoe UI Semibold;}
+.small_tab .tab_number{font-size:2.4em;}
+.tiny_tab .tab_number{font-size:1.8em;}
+.small_tab .tab_title{font-size:0.6666666667em;}
+.tiny_tab .tab_title{font-size:0.5em;}
+.tab_popup .tab_number{font-size:3.33333333em;}
+.tab_popup .tab_title{font-size:0.83333333em;}
+.tab_popup .tab_description{font-size:0.83333333em;}
+.tab_popup .media_bar{font-size:0.7em;line-height:3;}
+a.expand, a.close{font-size:0.72em;line-height:1;font-family:Segoe WP Semibold, Segoe UI Semibold;}
+.small_tab a.expand{font-size:0.6em;line-height:1.2;}
+.tiny_tab a.expand{font-size:0.42em;line-height:1.8;}
+
+/* ==========================================================================
+   Overall UI - placement, sizing, fonts
+   =========================================================================*/
+.clear{clear:both;}
+#container {position:absolute;bottom:0px;right:0px;left:0px;top:0px;min-width:600px;}
+#Header {position:relative;height:107px;padding:0px 20px;margin:0px;overflow:visible;z-index:10;}
+#Main {position:absolute;top:10em;bottom:7em;right:20%;left:30px;}
+#Main.ExpandedMain {position:absolute;right:30px;left:30px;}
+#Footer {position:absolute;bottom:0px;left:0px;height:67px;width:100%;}
+#brandingLogo{height:48px;width:221px;left:30px;top:50%;margin-top:-24px;position:absolute;background:url(../../Player/theme/dark/images/mslogo.png) no-repeat left top;}
+.light_theme #brandingLogo{background-image:url(../../Player/theme/light/images/mslogo.png);}
+
+#courseName {display:none;margin:0em;}
+#Header #pageName {display:none;position:absolute;bottom:0px;right:30px;font-size:0px;text-align:right;}
+.pageNameModule {display:none;font:100 50px/1 Segoe UI Light, Segoe WP Light;text-transform:lowercase;white-space:nowrap;}
+
+/*** Menu Buttons + Quicklinks ***/
+.menuButtons {position:absolute;right:1em;bottom:5px;}
+.menuButton {position:relative;margin-left:15px;padding:10px 15px;display:inline-block;font-size:1.3em;font-weight:bold;cursor:pointer;}
+#menuButton{display:none;}
+.menuButton .expandVisual{display:block;position:absolute;bottom:12px;right:0px;height:0px;width:0px;border-top:10px dashed transparent;border-right-width:10px;border-right-style:solid;}
+#quickLinksContainer{position:absolute;height:0px;margin-top:5px;margin-left:15px;overflow:hidden;z-index:10;}
+#quickLinks{position:absolute;bottom:0px;right:0px;min-width:127px;padding:0.5em;}
+#quickLinks a{display:block;padding:0.5em 1em;font-size:15px;}
+
+/**** Contents Widget ****/
+.ContentsWidgetContainer {position:absolute;top:10em;bottom:7em;right:1%;width:18%;z-index:8;}
+.ContentsWidgetContainer.collapsed{width:8px;}
+.Splitter {position:absolute;width:8px;height:100%;z-index:100;cursor:pointer;background-position:center;background-repeat:no-repeat;border:1px solid transparent}
+.SplitterExpanded {background-image:url(../theme/dark/images/arrow.right.png);}
+.SplitterCollapsed {background-image:url(../theme/dark/images/arrow.left.png);}
+.ContentsWidgetContainer.CollapsedWidget {display:none;}
+.ContentsWidget {position:absolute;height:100%;left:8px;right:0px;overflow:hidden;}
+.ContentsWidgetContainer.collapsed .ContentsWidget {display:none;}
+
+.ContentsWidgetContent {position:absolute;overflow:auto;overflow-x:hidden;top:0%;margin-top:23%;bottom:0px;left:0px;right:0px;padding-top:6%;}
+.ContentsWidgetHeader {position:relative;height:0px;padding:6% 6% 17% 6%;overflow:hidden;font:1.1em/1 Segoe UI Semibold, Segoe WP Semibold;}
+.ContentsWidgetRequiredIndicator {float:right;font:0.61em/1 Segoe UI, Segoe WP;margin-top:3%;}
+.ContentsWidgetHeader img{float:right;margin-right:2.5%;margin-top:3%;width:10%;}
+.ContentsWidgetItems {position:relative;}
+.ContentsWidgetSubItems {position:relative;height:0px;overflow:hidden;}
+
+.ContentsWidgetIcon {display:inline-block;position:absolute;width:7%;left:-10.5%;margin-top:0.5%;background-repeat:no-repeat;background-position:left top; background-size:100%;}
+.ContentsWidgetIcon img {width:100%;}
+.ContentsWidgetSubItem .StatusIcon{float:right;position:relative;left:auto;margin-left:5%;margin-right:-4%;width:10%;}
+.ContentsWidget .ExpandedSubItems {height:auto;margin-bottom:8%;margin-top:-5%;}
+a.ContentsWidgetItem, a.ContentsWidgetItem:visited {display:block;position:relative;margin:0% 8% 8% 12%;padding:2% 0%;font:0.833333em/1 Segoe WP Semibold, Segoe UI Semibold;text-transform:uppercase;}
+.ContentsWidgetItems > a.ContentsWidgetItem{margin-bottom:8%;}
+a.ContentsWidgetItem.CurrentPage .StatusIcon{display:none;}
+a.ContentsWidgetSubItem {display:block;position:relative;margin:0% 8% 3% 12%;padding:2% 0%;font:0.75em/1 Segoe WP, Segoe UI;}
+.ContentsWidget .ContentsLevel3 {padding-left:1em;text-indent:0px;}
+.ContentsWidget .ContentsLevel4 {padding-left:2em;text-indent:0px;}
+.ContentsWidget .ContentsLevel5 {padding-left:3em;text-indent:0px;}
+.ContentsWidget .ContentsLevel6 {padding-left:4em;text-indent:0px;}
+
+#progressWidget{position:absolute;right:1em;top:1em;background:#424242 url(../../Player/theme/dark/images/flag.png) no-repeat 1.2em center;color:#ffffff;padding:0.7em 1.2em 0.72em 3.1em;font:normal 1em Segoe UI Semibold, Segoe WP Semibold;text-transform:uppercase;border-radius:6px;}
+.light_theme #progressWidget{background-color:#999999;}
+#progressWidget.progressWidget-courseComplete{background-image:url(../../Player/theme/dark/images/credit.png);background-position:1.1em 0.4em;padding-left:3.4em;}
+
+/*** Footer + Metro buttons***/
+.navbar {padding:10px 20px;text-align:right;}
+a.MetroButton {display: inline-block;margin:0px 0 0 10px;}
+div.MetroIcon {display: inline-block;width:48px;height:48px;min-width:48px;min-height:48px;background-repeat:no-repeat;}
+div.Metro24Icon {display: inline-block;width:24px;height:24px;min-width:24px;min-height:24px;background-repeat:no-repeat;background-size:100%;}
+.InfoMetroButton{position:absolute;z-index:2;top:9px;left:-36px;}
+
+#DownloadMetroButton {background-image: url(../theme/dark/images/download.normal.png);}
+#InfoMetroButton {background-image: url(../theme/dark/images/i.normal.png);}
+#NextMetroButton {background-image: url(../theme/dark/images/arrow.right.normal.png);}
+#PreviousMetroButton {background-image: url(../theme/dark/images/arrow.left.normal.png);}
+
+.light_theme #DownloadMetroButton { background-image: url(../theme/light/images/download.normal.png);}
+.light_theme #InfoMetroButton{background-image: url(../theme/light/images/i.normal.png);}
+.light_theme #NextMetroButton { background-image: url(../theme/light/images/arrow.right.normal.png);}
+.light_theme #PreviousMetroButton { background-image: url(../theme/light/images/arrow.left.normal.png);}
+
+#CaptionsContainer { width:500px;height:55px;position:absolute;text-align:left;display:none;}
+
+/** Tile sizes */
+.tile_190_200 {width:190px;height:200px;}
+.whatsNext {display:none;vertical-align:top;margin-top:17px;margin-right:5px;}
+
+.default_margin { margin:15px; }
+.default_margin_right { margin-right:15px; }
+.default_padding { padding:15px; }
+.default_margin_bottom { margin-bottom:10px; }
+
+/* PAGE-LEVEL AUDIO PLAYER */
+#PageLevelAudio {
+	position:absolute;
+	bottom:5px;
+	left:10px;
+}
+
+/* POPUP AUDIO PLAYER */
+#FeedbackPopupAudio, #PopupAudio {
+	position:absolute;
+	bottom:10px;
+	left:10px;
+}
+
+/* AUDIO PLAYER */
+.AudioPlayer {
+	width:500px;
+	height: 40px;
+}
+
+.AudioPlayerProgressSlider {
+	height:4px;
+	width:110px;
+	position:absolute;
+}
+
+.AudioPlayerCaptions {
+	top:-15px;
+	left:128px;
+	width:400px;
+	position:absolute;
+}
+
+.AudioPlayerProgressSlider.ui-widget-content .ui-state-default  {
+	background: white !important;
+	height:10px;
+}
+.ui-slider .ui-slider-handle { z-index: 0; }
+
+.AudioPlayerPlayPauseButton {
+	display:block;
+	width:24px;
+	height:24px;
+	top:12px;
+	position:absolute;
+}
+
+.AudioPlayerPlayPauseButton:hover {
+	 filter:alpha(opacity=60);
+	-moz-opacity: 0.6;
+	opacity: 0.6;
+	-khtml-opacity: 0.6;
+}
+
+.AudioPlayerShowPlay {
+	background-image: url(../theme/dark/images/media.play.normal.png);
+}
+
+.AudioPlayerShowPause {
+	background-image: url(../theme/dark/images/media.pause.normal.png);
+}
+
+.AudioPlayerTranscript {
+	display:block;
+	width:24px;
+	height:24px;
+	top:12px;
+	position:absolute;
+	left:27px;
+	background-image: url(../theme/dark/images/properties24.normal.png);
+}
+
+.AudioPlayerTranscript:hover {
+	 filter:alpha(opacity=60);
+	-moz-opacity: 0.6;
+	opacity: 0.6;
+	-khtml-opacity: 0.6;
+}
+
+.AudioPlayerLocation {
+	top:17px;
+	left:54px;
+	position:absolute;
+}
+
+.light_theme .AudioPlayerProgressSlider.ui-widget-content .ui-state-default  { background: #999; }
+.light_theme .AudioPlayerShowPlay { background-image: url(../theme/light/images/media.play.normal.png); }
+.light_theme .AudioPlayerShowPause { background-image: url(../theme/light/images/media.pause.normal.png); }
+.light_theme .AudioPlayerTranscript { background-image: url(../theme/light/images/properties24.normal.png); }
+
+/* DIALOG BOXES */
+.dialogInstructions {margin-bottom:1em;}
+
+/* DOWNLOAD PROBLEM DIALOG BOX */
+.DownloadProblemIntroduction {margin-bottom:10px;}
+.DownloadProblemLink {display:block;margin-bottom:10px;padding:1em 1em 1em 1em;border: 1px solid transparent;background-image:url(../theme/dark/images/arrow24.right.normal.png);
+	background-repeat:no-repeat;
+	background-position:10px 20px;
+	background-color: #808080;
+	
+}
+.DownloadProblemLink:hover, .DownloadProblemLink:focus {
+	border: 1px #cbcbcb solid;
+}
+.light_theme .DownloadProblemLink:hover, .light_theme .DownloadProblemLink:focus {
+	border: 1px #333333 solid;
+}
+.DownloadProblemTitle {
+	font-size:150%;
+	margin-left: 35px;
+}
+.DownloadProblemMessage {
+	margin-left: 35px;
+}
+.DownloadProblemHelp {
+	font-weight:bold;
+	margin-bottom:10px;
+}
+
+/* TRACKS DIALOG BOX */
+.tracksCheckbox {
+	margin-left:1em;
+	margin-right:1em;
+}
+
+.tracksDialogTrackName {
+	font-weight: bold;
+	font-size:2em;
+}
+
+.tracksDialogTrackDescription{
+	margin-bottom:1em;
+	margin-left:4em;
+}
+
+#tracksDialogWarning {
+	text-align:right;
+	color:red;
+	clear:both;
+	height:20px;
+	position:absolute;
+	bottom:0px;
+	right:40px;
+}
+
+.tracksBoxContainer {
+	overflow:auto;
+	height: 100% !important;
+	margin: 0 auto 0px;
+}
+
+.tracksBox {
+	border:2px double white;
+	float:left;
+	position:relative;
+	width:30%;
+	height:18%;
+	overflow:auto;
+	margin: 2px 2px 2px 2px;
+	padding: 5px 10px;
+}
+.light_theme .tracksBox 
+{
+	border-color:black;
+	background-color:#666;
+	color: #ffffff;
+}
+.light_theme .tracksBox a, .light_theme .tracksBox a:visited{ color: #ffffff; }
+
+.tracksBox:hover {
+	 filter:alpha(opacity=60);
+	-moz-opacity: 0.6;
+	opacity: 0.6;
+	-khtml-opacity: 0.6;
+}
+
+.tracksBoxUnselected {
+	background-color:#808080;
+}
+
+/* LANGUAGE DIALOG BOX */
+.LanguageBoxContainer {
+	font-size:1.2em;
+	height: 90% !important;
+	background-color:#414042;
+	padding:1em;
+}
+
+.LanguageBox {
+	display:block;
+	border:2px double white;
+	float:left;
+	position:relative;
+	width:30%;
+	overflow:auto;
+	margin: 2px 2px 2px 2px;
+	padding: 5px;
+	line-height:2em;
+	text-align:center;
+}
+
+.LanguageBox:hover, .LanguageBox:focus  {
+	 filter:alpha(opacity=60);
+	-moz-opacity: 0.6;
+	opacity: 0.6;
+	-khtml-opacity: 0.6;
+}
+
+.LanguageBoxUnselected {
+	background-color:#808080;
+}
+
+/* CONTENTS DIALOG BOX */
+#ContentsDialog {
+	padding:15px;
+}
+.ContentsBoxContainer {
+	overflow:hidden;
+	width:100%;
+}
+
+/* CONTENT DIALOG - COLUMNS */
+.ContentsLeftColumn {
+    float: left;
+    margin-right:10px;
+    max-width:224px;
+    min-width:140px;
+ }
+.ContentsCenterColumn {
+    position:relative;
+    overflow:auto;
+ }
+ .ContentsTOC {
+	background-color:#000000;
+	padding:1em;
+ }
+.ContentsRightColumn {
+    float:right;
+    margin-left:10px;
+}
+ .light_theme .ContentsTOC { background-color:#333; }
+ .light_theme .ContentsTOC a,.light_theme .ContentsTOC a:visited { color:#ffffff; }
+ 
+ /* CONTENT DIALOG - LEFT COLUMN */
+.ContentsTestOutLink, .light_theme .ContentsTestOutLink, .light_theme .ContentsTestOutLink:visited {
+	margin-bottom:10px;
+	padding:10px;
+	background-image: url(../theme/dark/images/properties24.normal.png);
+	background-repeat:no-repeat;
+	background-position:90% 20%;
+	line-height:300%;
+	display:block;
+	border: 1px transparent solid;
+	font-size:1.25em;
+}
+.ContentsTestOutLink:hover,  .ContentsTestOutLink:focus {
+	border: 1px #cbcbcb solid;
+}
+.light_theme .ContentsTestOutLink:hover, .light_theme .ContentsTestOutLink:focus {
+	border: 1px #333333 solid;
+}
+.ContentsWelcomeLink, .light_theme .ContentsWelcomeLink, .light_theme .ContentsWelcomeLink:visited {
+	margin-bottom:10px;
+	padding:10px;
+	background-image: url(../theme/dark/images/home24.normal.png);
+	background-repeat:no-repeat;
+	background-position:90% 20%;
+	line-height:300%;
+	display:block;
+	border: 1px transparent solid;
+	font-size:1.25em;
+}
+.ContentsWelcomeLink:hover,  .ContentsWelcomeLink:focus {
+	border: 1px #cbcbcb solid;
+}
+.light_theme .ContentsWelcomeLink:hover, .light_theme .ContentsWelcomeLink:focus {
+	border: 1px #333333 solid;
+}
+.ContentsModuleBoxContainer {
+	padding-left:10px;
+	padding-top:10px;
+	padding-bottom:10px;
+	overflow:auto;
+	font-size:1.25em;
+}
+.ContentsModuleBox {
+	margin-right:10px;
+	margin-top:10px;
+	padding:0.5em;
+	float:left;
+	display:block;
+	border: 1px transparent solid;
+}
+.ContentsModuleBox:hover,  .ContentsModuleBox:focus {
+	border: 1px #808080 solid;
+}
+.ContentsModuleBoxLocked  {
+	width:40px;
+	height:16px;
+	background-image: url(../theme/dark/images/lock16.png);
+	background-repeat:no-repeat;
+	background-position:24px 0px;
+}
+.ContentsModuleBoxComplete {
+	width:40px;
+	height:16px;
+	background-image: url(../theme/dark/images/checkmark16.png);
+	background-repeat:no-repeat;
+	background-position:24px 0px;
+}
+.ContentsModuleBoxNone {
+	width:40px;
+	height:16px;
+}
+.ContentsModulesLabel {
+	clear:both;
+	margin-top:1em;
+	padding-top:1em;
+}
+
+ /* CONTENT DIALOG - CENTER COLUMN */
+.ContentsModuleLabel  {
+}
+.ContentsModuleGap {
+	height:30px;
+}
+.ContentsModuleComplete  {
+	float:right;
+	width:32px;
+	height:32px;
+	background-image: url(../theme/dark/images/checkmark.png);
+}
+.ContentsModuleLocked  {
+	float:right;
+	width:32px;
+	height:32px;
+	background-image: url(../theme/dark/images/lock.png);
+}
+/* ADDED FOR TOC */
+.toc_module_number{font-family:Segoe WP Semilight, Segoe UI;font-size:22pt;line-height:1.1}
+.toc_module_name{font-family:Segoe WP Semibold, Segoe UI Semibold;font-size:12pt;color:#cccccc;}
+.ContentPageSelected {
+	background:transparent;
+	padding-bottom:2px;
+}
+.ContentsLevel1 {
+	text-transform:uppercase;
+	margin-bottom:0.5em;
+}
+.ContentsLevel2 {
+	margin-top:0.5em;
+	display:block;
+	font-family:Segoe WP Semibold, Segoe UI Semibold;
+	font-size:12pt;
+}
+.ContentsLevel3 {
+	text-indent:1em;
+	display:block;
+	font-family:Segoe WP, Segoe UI;
+	font-size:12pt;
+}
+.ContentsLevel4 {
+	text-indent:2em;
+	display:block;
+	font-family:Segoe WP, Segoe UI;
+	font-size:12pt;
+}
+.ContentsLevel5 {
+	text-indent:3em;
+	display:block;
+	font-family:Segoe WP, Segoe UI;
+	font-size:12pt;
+}
+.ContentsLevel6 {
+	text-indent:4em;
+	display:block;
+	font-family:Segoe WP, Segoe UI;
+	font-size:12pt;
+}
+
+ /* CONTENT DIALOG - RIGHT COLUMN */
+ .ContentsProgressBoxWrapper {
+	height:200px;
+	margin-bottom:10px;
+}
+
+.ContentsProgressBox {
+	position:relative;
+}
+.ContentsProgressComplete 
+{
+	position:absolute;
+	left:15px;
+	top:18px;
+	font-size:3.75em;
+	line-height:1;
+	font-family:Segoe UI Light, Segoe WP Light;
+	font-weight:100;
+}
+.ContentsProgressCompleteWord 
+{
+	position:absolute;
+	font-weight:bold;
+	text-transform:uppercase;
+	left:15px;
+	top:84px;
+	font-size:1em;
+	line-height:1;
+}
+.ContentsProgressNext 
+{
+	font-size:1em;
+	font-weight:bold;
+	position:absolute;
+	left:15px;
+	top:108px;
+	right:15px;
+	display:none;
+}
+.ContentsProgressMyProgress 
+{
+	position:absolute;
+	left:15px;
+	bottom:12px;
+	font-size:1.125em;
+	font-family:Segoe UI Semibold, Segoe WP Semibold;
+}
+#ContentsDialog .ContentsProgressNext
+{
+	display:block;
+}
+
+
+/* RESOURCES DIALOG BOX */
+#ResourcesDialog {
+
+}
+.ResourcesDialogTable {
+	border-collapse:collapse;
+	border: 0px solid white;
+	text-align:left;
+	width:100%;
+}
+.ResourcesDialogTable th, .ResourcesDialogTable td {
+	border: 0px solid white;
+	text-align:left;
+	padding: 6px;
+}
+.ResourcesDialogTable td a,  .ResourcesDialogTable td a:hover, .ResourcesDialogTable td a:visited {
+	text-decoration:underline !important;
+}
+.ResourcesDialogHeader {
+	cursor: pointer;
+}
+.ResourcesDialogExpanded {
+	background: url(../theme/dark/images/folder-expanded.png) no-repeat 1px 2px;
+}
+.ResourcesDialogCollapsed {
+	background: url(../theme/dark/images/folder-collapsed.png) no-repeat 1px 2px;
+}
+.ResourcesDialogToggle  {
+	width:1em;
+}
+.ResourcesDialogLabels  {
+	background-color:Navy;
+}
+.ResourcesDialogLink  {
+	font-size:1em;
+}
+.ResourcesDialogDescription  {
+	color:#ffffff;
+	font-size:1em;
+	margin-bottom:0.5em;
+}
+.light_theme .ResourcesDialogTable th, .light_theme .ResourcesDialogTable td { border-color:Black; }
+.light_theme .ResourcesDialogTable td a, .light_theme .ResourcesDiaolgTable td a:hover, .ResourcesDialogTable td a:visited { color: #666; }
+.light_theme .ResourcesDialogExpanded { background: url(../theme/light/images/folder-expanded.png) no-repeat 1px 2px; }
+.light_theme .ResourcesDialogCollapsed { background: url(../theme/light/images/folder-collapsed.png) no-repeat 1px 2px; }
+.light_theme .ResourcesDialogLabels { color:#ffffff; }
+.light_theme .ResourcesDialogDescription {color:#000000;}
+
+/* GLOSSARY DIALOG BOX */
+#GlossaryDialog {
+	padding:15px;
+	overflow:hidden;
+}
+.GlossaryMenuContainer  {
+	float:left;
+	width:300px;
+	overflow:auto;
+	margin-right:10px;
+}
+.GlossaryMenuItem  {
+	float:left;
+	width:2em;
+	height:2em;
+	padding:0.5em;
+	margin-right:1em;
+	margin-bottom:1em;
+	font-size:1.25em;
+}
+.GlossaryMenuItem:hover, .GlossaryMenuItem:focus{
+	filter:alpha(opacity=60);
+	-moz-opacity: 0.6;
+	opacity: 0.6;
+	-khtml-opacity: 0.6;
+}
+.GlossaryContents  {
+	overflow:auto;
+	padding:1em;
+	height:100%
+}
+.GlossaryWord  {
+	font-size:200%;
+}
+.GlossaryDefinition  {
+	margin-top:0.5em;
+	margin-bottom:1em;
+}
+
+.GlossaryMenuItemEmpty{
+	background-color:gray;
+}
+.GlossaryMenuItemEmpty:hover, .GlossaryMenuItemEmpty:focus{
+	filter:alpha(opacity=100);
+	-moz-opacity: 1;
+	opacity: 1;
+	-khtml-opacity: 1;
+}
+.GlossarySection{
+	float:none;
+	width:2em;
+	height:2em;
+	padding:0.5em;
+	margin-right:1em;
+	margin-bottom:1em;
+	font-size:1.25em;
+    font-weight:normal;
+}
+.light_theme a.GlossaryMenuItem, .light_theme a.GlossaryMenuItem:visited { color:#ffffff; }
+.light_theme .GlossaryContents { background-color:#333; }
+.light_theme .GlossaryMenuItemEmpty {	background-color:#666; }
+
+/* Branching Container*/
+#Branching, #ContentsPopupBranching
+{
+	position:absolute;
+	display:none;
+	top:0px;
+	right:0px;
+	left:0px;
+	font-size:1.2em;
+}
+#Branching
+{
+	bottom:20px;
+}
+#ContentsPopupBranching
+{
+	bottom:25px;
+}
+.BranchingPopupDialog .ui-widget-header .ui-icon-closethick, .light_theme .BranchingPopupDialog .ui-widget-header .ui-icon-closethick{background-image:none !important;padding-right:0px;}
+#Main #Branching
+{
+    top:-12px;
+	right:0px;
+	left:-30px;
+	bottom:-16px;
+	z-index:2;
+}
+#Main.ExpandedMain #Branching
+{
+	right:-30px;
+}
+#BranchingContentView  {
+	position:relative;
+	width:125%;
+	height:100%;
+}
+#Main.ExpandedMain #BranchingContentView
+{
+	width:100%;
+}
+#ContentsPopupBranching #BranchingContentView
+{
+	width:100%;
+}
+#BranchingContentViewForeground
+{
+	position:absolute;
+	top:30px;
+	left:55px;
+	right:19%;
+	margin-right:55px;
+	bottom:53px;
+}
+#Main.ExpandedMain #BranchingContentViewForeground
+{
+	right:1%;
+	margin-right:63px;
+}
+#Main.ExpandedMain .Branching-playerNavigation #BranchingContentViewForeground
+{
+	right:30px;
+	left:30px;
+	margin-right:0px;
+}
+#ContentsPopupBranching #BranchingContentViewForeground
+{
+	left:35px;
+	right:35px;
+	margin-right:0px;
+	bottom:45px;
+}
+#BranchingContentIframe
+{
+	position:absolute;
+	top:0px;
+	left:0px;
+	width:100%;
+	height:100%;
+	display:none;
+}
+#BranchingPreviousButton 
+{
+	position:absolute;
+	left:0px;
+	margin-left:15px;
+	top:50%;
+	margin-top:-17px;
+	display: inline-block;
+	width:34px;
+	height:34px;
+  min-width: 34px;
+  min-height: 34px;
+  border-width:0px;
+  padding:0px;
+  background-repeat: no-repeat !important;
+  background-size:100% !important;
+  background-image: url(../theme/dark/images/arrow34.left.normal.png) !important;
+  background-color:transparent;
+}
+.light_theme #BranchingPreviousButton {background-image: url(../theme/light/images/arrow34.left.normal.png) !important;}
+#ContentsPopupBranching #BranchingPreviousButton{margin-top:-24px;width:48px;height:48px;min-width:48px;min-height:48px;background-image: url(../theme/dark/images/arrow.left.normal.png) !important;}
+.light_theme #ContentsPopupBranching #BranchingPreviousButton{width:48px;height:48px;min-width:48px;min-height:48px;background-image: url(../theme/light/images/arrow.left.normal.png) !important;}
+#BranchingNextButton 
+{
+	position:absolute;
+	right:-1.25%;
+	margin-right:15px;
+	top:50%;
+	margin-top:-17px;
+	display: inline-block;
+	width:34px;
+	height:34px;
+  min-width: 34px;
+  min-height: 34px;
+  border-width:0px;
+  padding:0px;
+  background-repeat: no-repeat !important;
+  background-size:100% !important;
+  background-image: url(../theme/dark/images/arrow34.right.normal.png) !important;
+  background-color:transparent;
+}
+.light_theme #BranchingNextButton {background-image: url(../theme/light/images/arrow34.right.normal.png) !important;}
+#Main.ExpandedMain #BranchingNextButton
+{
+	right:1%;
+	margin-right:23px;
+}
+#ContentsPopupBranching #BranchingNextButton{right:0px;margin-top:-24px;width:48px;height:48px;min-width:48px;min-height:48px;background-image: url(../theme/dark/images/arrow.right.normal.png) !important;}
+.light_theme #ContentsPopupBranching #BranchingNextButton{width:48px;height:48px;min-width:48px;min-height:48px;background-image: url(../theme/light/images/arrow.right.normal.png) !important;}
+#BranchingNavButtons > button:disabled{opacity:0.2;filter:alpha(opacity=20);}
+#ContentsPopupBranching.BranchingView-popupOpen #BranchingNavBar
+{
+	display:none;
+}
+#Main .Branching-playerNavigation #BranchingNavBar
+{
+	display:none;
+}
+#ContentsPopupBranching #BranchingNavButtons{position:absolute;bottom:-15px;right:0px;width:136px;height:48px;}
+#ContentsPopupBranching.Branching-pathComplete.Branching-terminus #BranchingNextButton{display:none;}
+#ContentsPopupBranching #BranchingPopupExitButton
+{
+	display:none;
+	position:absolute;
+	right:0px;
+	bottom:-15px;
+	width:48px;
+	height:48px;
+	min-width:48px;
+	min-height:48px;
+  border-width:0px;
+  padding:0px;
+  margin-right:15px;
+	background-image: url(../theme/dark/images/arrow.right.normal.png) !important;
+	background-color:transparent;
+	background-repeat: no-repeat !important;
+	background-size:100% !important;
+}
+.light_theme #ContentsPopupBranching #BranchingPopupExitButton {background-image: url(../theme/light/images/arrow.right.normal.png) !important;}
+#ContentsPopupBranching.Branching-pathComplete.Branching-terminus #BranchingPopupExitButton{display: inline-block;}
+#ContentsPopupBranching.Branching-pathComplete.Branching-terminus.BranchingView-popupOpen #BranchingPopupExitButton{display:none;}
+
+#BranchingQuestionView 
+{
+	position:relative;
+	padding:30px 30px 53px 30px;
+	width:125%;
+	height:100%;
+}
+#Main.ExpandedMain #BranchingQuestionView
+{
+	width:100%;
+}
+#ContentsPopupBranching #BranchingQuestionView
+{
+	width:100%;
+}
+#BranchingQuestionView .scroll-padding-bottom-mask 
+{
+	display:none;
+}
+
+#BranchingQuestionViewBox
+{
+	position:absolute;
+	top:30px;
+	left:55px;
+	right:19%;
+	margin-right:55px;
+	bottom:53px;
+	border:1px solid #c0c0c0;
+	background-color:#FFFFFF;
+}
+#Main.ExpandedMain #BranchingQuestionViewBox
+{
+	right:1%;
+	margin-right:63px;
+}
+#Main.ExpandedMain .Branching-playerNavigation #BranchingQuestionViewBox
+{
+	right:30px;
+	left:30px;
+	margin-right:0px;
+}
+#ContentsPopupBranching #BranchingQuestionViewBox
+{
+	left:35px;
+	right:35px;
+	margin-right:0px;
+}
+.BranchingQuestionTitleBar {
+	font-weight:bold;
+	font-size:18px;
+	background-color:#c0c0c0;
+	text-transform:uppercase;
+	position:relative;
+	height:54px;
+	padding:0px 15px;
+}
+.light_theme .BranchingQuestionTitleBar { color:white; }
+.BranchingTitleBarText{color:#414141;display:inline-block;padding:16px 0px;}
+#BranchingQuestionContent {
+    background-color:#FFFFFF;
+    background-color:rgba(255,255,255,0.75);
+    color:#414141;
+    font-size:17px;
+    position:absolute;
+    width:100%;
+    top:54px;
+    bottom:0px;
+}
+#BranchingQuestionContentScroll 
+{
+	position:relative;
+	padding:40px 45px;
+	height:100%;
+	overflow:auto;
+}
+.BranchingQuestionViewImage  {
+	margin-bottom:20px;
+}
+#BranchingQuestionViewPrompt {
+	font-size:22px;
+}
+#BranchingQuestionViewChoices {
+	padding:25px 60px 45px 15px;
+}
+#BranchingQuestionViewChoices input  
+{
+	position:absolute;
+	left:0px;
+	padding:4px 3px;
+}
+#BranchingQuestionViewChoices label 
+{
+	clear:both;
+	position:relative;
+	display: block;
+	padding-left:52px;
+	padding-right:18px;
+	text-indent:-21px;
+	padding-bottom:12px;
+	min-height:33px;
+}
+#BranchingQuestionViewChoices label span{
+	display: block;
+}
+#BranchingQuestionViewButtons
+{
+	position:relative;
+	float:right;
+	text-align:right;
+	height:54px;
+	padding:8px 0px;
+}
+#BranchingQuestionViewButtons button[type="button"]
+{
+	font-size:16px;
+	line-height:1;
+	font-family:Segoe UI Semibold, Segoe WP Semibold;
+	color:White;
+	padding:10px 15px !important;
+	border-width:1px;
+	border-style:solid;
+	outline:none !important;
+	margin-left:10px;
+}
+#BranchingQuestionViewButtons button[type="button"]:focus
+{
+	border:1px dotted white !important;
+}
+#BranchingQuestionViewButtons button[type="button"]:hover
+{
+	border:1px solid white !important;
+}
+#BranchingQuestionViewButtons button[type="button"]:disabled
+{
+	opacity:0.4;
+	filter:alpha(opacity=40);
+	background:#666666 !important;
+	color:White;
+	border:1px solid white !important;
+}
+#BranchingQRetryButton { display:none; }
+.BranchingQuestionView-canRetry #BranchingQRetryButton { display:inline-block; }
+
+#BranchingFeedbackView 
+{
+	position:relative;
+	padding:30px 30px 53px 30px;
+	width:125%;
+	height:100%;
+}
+#Main.ExpandedMain #BranchingFeedbackView
+{
+	width:100%;
+}
+#ContentsPopupBranching #BranchingFeedbackView
+{
+	width:100%;
+}
+#BranchingFeedbackView .scroll-padding-bottom-mask 
+{
+	display:none;
+}
+#BranchingFeedbackViewBox
+{
+	position:absolute;
+	top:30px;
+	left:55px;
+	right:19%;
+	margin-right:55px;
+	bottom:53px;
+	border:1px solid #c0c0c0;
+	background-color:#FFFFFF;
+}
+#Main.ExpandedMain #BranchingFeedbackViewBox
+{
+	right:1%;
+	margin-right:63px;
+}
+#Main.ExpandedMain .Branching-playerNavigation #BranchingFeedbackViewBox
+{
+	right:30px;
+	left:30px;
+	margin-right:0px;
+}
+#ContentsPopupBranching #BranchingFeedbackViewBox
+{
+	left:35px;
+	right:35px;
+	margin-right:0px;
+}
+.BranchingFeedbackTitleBar {
+	font-weight:bold;
+	font-size:18px;
+	background-color:#c0c0c0;
+	text-transform:uppercase;
+	position:relative;
+	height:54px;
+	padding:0px 15px;
+}
+.BranchingFeedbackActionBar 
+{
+	height:54px;
+	padding:0px 15px;
+	position:absolute;
+	top:0px;
+	right:0px;
+	max-width:100%;
+}
+.light_theme .BranchingFeedbackTitleBar { color:white; }
+#BranchingFeedbackContent {
+    background-color:#FFFFFF;
+    background-color:rgba(255,255,255,0.75);
+    color:#414141;
+    font-size:17px;
+    position:absolute;
+    width:100%;
+    top:54px;
+    bottom:0px;
+}
+#BranchingFeedbackContentScroll 
+{
+	position:relative;
+	padding:40px 45px;
+	height:100%;
+	overflow:auto;
+}
+#BranchingFeedbackViewText {
+	padding-bottom:45px;
+}
+#BranchingFeedbackIncompleteMessage 
+{
+	padding-bottom:20px;
+	margin-top:-10px;
+	display:none;
+}
+.BranchingFeedbackView-feedbackIncomplete #BranchingFeedbackIncompleteMessage{display:block;}
+#BranchingFeedbackViewButtons
+{
+	position:relative;
+	float:right;
+	text-align:right;
+	height:54px;
+	padding:8px 0px;
+}
+#BranchingFeedbackViewButtons button[type="button"]
+{
+	font-size:16px;
+	line-height:1;
+	font-family:Segoe UI Semibold, Segoe WP Semibold;
+	color:White;
+	padding:10px 15px !important;
+	border-width:1px;
+	border-style:solid;
+	outline:none !important;
+	margin-left:10px;
+}
+#BranchingFeedbackViewButtons button[type="button"]:focus
+{
+	border:1px dotted white !important;
+}
+#BranchingFeedbackViewButtons button[type="button"]:hover
+{
+	border:1px solid white !important;
+}
+#BranchingFeedbackViewButtons button[type="button"]:disabled
+{
+	opacity:0.4;
+	filter:alpha(opacity=40);
+	background:#666666 !important;
+	color:White;
+	border:1px solid white !important;
+}
+#BranchingFShowFeedbackButton 
+{
+	font-size:16px;
+	line-height:1;
+	font-family:Segoe UI Semibold, Segoe WP Semibold;
+	color:White;
+	padding:10px 15px !important;
+	border-width:1px;
+	border-style:solid;
+	outline:none !important;
+	margin-bottom:20px;
+	top:-20px;
+	display:none;
+}
+.BranchingFeedbackView-hasOutcome #BranchingFShowFeedbackButton {display:inline-block;}
+#BranchingFRetryButton { display:none; }
+.BranchingFeedbackView-canRetry #BranchingFRetryButton {display:inline-block;}
+
+#BranchingRelatedOutcomesSelector{display:none;float:right;position:relative;padding:9px 0px 8px 0px;margin-right:2px;}
+.BranchingFeedbackView-canViewAlternatives #BranchingRelatedOutcomesSelector{display:inline-block;}
+#BranchingRelatedOutcomesSelector > a
+{
+	position:relative;
+	display:inline-block;
+	font:normal 15px/1 Segoe UI Semibold, Segoe WP Semibold;
+	padding:11px 28px 11px 11px;
+	color:#414141;
+}
+#BranchingRelatedOutcomesSelector > a:focus{outline:#414141 dotted 1px !important;}
+#BranchingRelatedOutcomesSelector > a > .expandVisual
+{
+	position:absolute;
+	right:11px;
+	width:0px;
+	height:0px;
+	top:15px;
+	border-right:10px solid #414141;
+	border-top:10px dashed transparent;
+}
+#BranchingRelatedOutcomesMenu
+{
+	position:absolute;top:100%;margin:0px;width:100%;height:0px;overflow:hidden;
+}
+#BranchingRelatedOutcomesSelector.expanded #BranchingRelatedOutcomesMenu{height:auto;}
+#BranchingRelatedOutcomesMenu > ul
+{
+	position:relative;
+	bottom:0px;
+	margin:0px;
+	width:100%;
+	padding:0px 10px;
+	background:#414141;
+}
+#BranchingRelatedOutcomesMenu > ul > li
+{
+	padding:10px 0px;
+	color:White;
+	font-size:15px;
+	font-family:Segoe UI Semibold, Segoe WP Semibold;
+	list-style-type:none;
+	text-transform:none;
+	overflow:hidden;
+	white-space:nowrap;
+	text-overflow:ellipsis;
+}
+.BranchingFeedbackView-feedbackAlternativesView #BranchingRelatedOutcomesSelector{display:none;}
+.BranchingFeedbackView-feedbackAlternativesView #BranchingFeedbackViewText{display:none;}
+.BranchingFeedbackView-feedbackAlternativesView #BranchingFeedbackIncompleteMessage{display:none;}
+#BranchingRelatedOutcomes{display:none;margin-bottom:30px;margin-right:-5px;}
+.BranchingFeedbackView-canViewAlternatives #BranchingRelatedOutcomes{display:block;}
+#BranchingRelatedOutcomes a{display:block;position:relative;float:left;width:200px;height:100px;margin:0px 5px 5px 0px;padding:13px 15px 43px 15px;overflow:hidden;}
+#BranchingRelatedOutcomes a:hover{outline:#787878 solid 1px;}
+#BranchingRelatedOutcomes a > .outcome_name{line-height:1.1;font-size:16px;max-height:56px;padding-bottom:3px;overflow:hidden;}
+#BranchingRelatedOutcomes a > .outcome_number{position:absolute;bottom:0px;right:0px;width:100%;height:26px;line-height:0.7;font-size:30px;background:rgba(255,255,255,0.3);color:rgba(255,255,255,0.5);text-align:right;}
+
+#BranchingFeedbackContentView  {
+	position:absolute;
+	width:125%;
+	height:100%;
+	top:0px;
+	left:0px;
+	padding:30px 19% 53px 30px;
+}
+#Main.ExpandedMain #BranchingFeedbackContentView{padding-right:1%;width:100%;}
+#ContentsPopupBranching #BranchingFeedbackContentView{padding-right:0px;width:100%;}
+#Main .BranchingView-popupOpen #BranchingFeedbackContentView{z-index:2;}
+#BranchingFeedbackContentViewBackground
+{
+	position:absolute;
+	right:0px;
+	bottom:0px;
+	top:0px;
+	left:0px;
+	background:black;
+	opacity:0.65;
+	filter:alpha(opacity=65);
+}
+#ContentsPopupBranching #BranchingFeedbackContentViewBackground
+{
+	bottom:-25px;
+}
+.light_theme #BranchingFeedbackContentViewBackground{background:white;}
+.BranchingFeedbackContent-linearMode #BranchingFeedbackContentViewBackground{display:none;}
+#BranchingFeedbackContentViewForeground
+{
+	position:absolute;
+	top:86px;
+	left:30px;
+	right:19%;
+	margin-right:30px;
+	bottom:53px;
+	background:black;
+	border:1px solid #333333;
+	border-top-width:0px;
+}
+.light_theme #BranchingFeedbackContentViewForeground{background:white;border-color:#c0c0c0;}
+#Main.ExpandedMain #BranchingFeedbackContentViewForeground
+{
+	right:1%;
+	margin-right:38px;
+}
+#Main.ExpandedMain .Branching-playerNavigation #BranchingFeedbackContentViewForeground
+{
+	right:30px;
+	margin-right:0px;
+}
+#ContentsPopupBranching #BranchingFeedbackContentViewForeground
+{
+	right:30px;
+	margin-right:0px;
+	bottom:40px;
+}
+.BranchingFeedbackContent-linearMode #BranchingFeedbackContentViewForeground
+{
+	left:55px;
+	margin-right:55px;
+	top:30px;
+	background:transparent !important;
+	border-width:0px;
+}
+#Main.ExpandedMain .BranchingFeedbackContent-linearMode #BranchingFeedbackContentViewForeground
+{
+	margin-right:63px;
+}
+#ContentsPopupBranching .BranchingFeedbackContent-linearMode #BranchingFeedbackContentViewForeground
+{
+	left:35px;
+	right:35px;
+	margin-right:0px;
+	bottom:45px;
+}
+#BranchingFeedbackContentIframe
+{
+	position:absolute;
+	top:0px;
+	left:0px;
+	width:100%;
+	height:100%;
+	display:none;
+	padding:10px;
+}
+.BranchingDialogTitlebar{position:absolute;height:56px;background:#333333;color:#ffffff;margin-right:30px;right:19%;left:30px;top:30px;}
+.light_theme .BranchingDialogTitlebar{background-color:#c0c0c0;}
+#Main.ExpandedMain .BranchingDialogTitlebar{margin-right:38px;right:1%;}
+#Main.ExpandedMain .Branching-playerNavigation .BranchingDialogTitlebar{right:30px;margin-right:0px;}
+#ContentsPopupBranching .BranchingDialogTitlebar{right:30px;margin-right:0px;}
+.BranchingFeedbackContent-linearMode .BranchingDialogTitlebar{display:none;}
+.BranchingDialogClose{position:absolute;display:block;right:20px;top:19px;padding-right:22px;background:url(../../Player/theme/dark/images/close.png) no-repeat right center;color:#cccccc;font-size:20px;line-height:18px;font-weight:bold;}
+.light_theme .BranchingDialogClose{background-image:url(../../Player/theme/light/images/close.png);}
+.BranchingQALabel{position:absolute;bottom:-79px;left:-3px;font:100 140px/1 Segoe UI Light, Segoe WP Light;height:153px;}
+#ContentsPopupBranching .BranchingQALabel{overflow:hidden;}
+#BranchingRestartButton
+{
+	font-size:16px;
+	line-height:1;
+	font-family:Segoe UI Semibold, Segoe WP Semibold;
+	color:White;
+	padding:10px 15px !important;
+	border-width:1px;
+	border-style:solid;
+	outline:none !important;
+	position:absolute;
+	bottom:7px;
+	right:-1.25%;
+	margin-right:55px;
+	display:none;
+}
+#Main.ExpandedMain #BranchingRestartButton
+{
+	right:1%;
+	margin-right:63px;
+}
+#ContentsPopupBranching #BranchingRestartButton
+{
+	bottom:0px;
+	right:30px;
+	margin-right:0px;
+}
+#BranchingRestartButton:focus
+{
+	border:1px dotted white !important;
+}
+#BranchingRestartButton:hover
+{
+	border:1px solid white !important;
+}
+#BranchingRestartButton:disabled
+{
+	opacity:0.4;
+	filter:alpha(opacity=40);
+	background:#666666 !important;
+	color:White;
+	border:1px solid white !important;
+}
+.Branching-canRestart #BranchingRestartButton{display:inline-block;}
+
+/* ASSESSMENT CONTAINER */
+#Assessment, #ContentsPopupAssessment{
+	position:absolute;
+	display:none;
+	top:0px;
+	right:0px;
+	left:0px;
+	font-size:1.2em;
+}
+#Assessment
+{
+	bottom:20px;
+}
+#ContentsPopupAssessment
+{
+	bottom:70px;
+}
+.AssessmentPopupDialog .ui-widget-header .ui-icon-closethick, .light_theme .AssessmentPopupDialog .ui-widget-header .ui-icon-closethick{background-image:none !important;padding-right:0px;}
+#Main #Assessment
+{
+	top:-12px;
+	right:0px;
+	left:-30px;
+	bottom:-16px;
+}
+#Main.ExpandedMain #Assessment
+{
+	right:-30px;
+}
+#AssessmentNavBar 
+{
+	position:absolute;
+	height:40px;
+	top:0px;
+}
+#ContentsPopupAssessment #AssessmentNavBar {
+	top:-6px;
+}
+#ContentsPopupAssessment #AssessmentNavBar ul li a{padding-top:0px;padding-bottom:0px;}
+#AssessmentNavBar ul
+{
+	padding-left:19px;
+	margin:0.6em 0em;
+}
+#AssessmentNavBar ul li {
+     list-style: none; margin: 0; padding: 0;
+    display:inline;
+    font-size:20px;
+}
+#AssessmentNavBar ul li a {
+    padding:8px;
+    margin:3px;
+    color:#878787;
+    opacity:0.8;
+    filter:alpha(opacity=80);
+}
+#AssessmentNavBar ul li a:hover
+{
+    opacity:1;
+    filter:alpha(opacity=100);
+}
+#AssessmentNavBar ul li a.active 
+{
+		color:#c0c0c0;
+    opacity:1;
+    filter:alpha(opacity=100);
+}
+#AssessmentNavBar ul li a:focus
+{
+	outline:#878787 dotted 1px;
+}
+.light_theme #AssessmentNavBar ul li a.active 
+{
+		color:#424242;
+}
+.light_theme #AssessmentNavBar ul li a:focus
+{
+	outline:#424242 dotted 1px;
+}
+.AssessmentActionButtonContainer 
+{
+	position:absolute;bottom:20px;right:30px;
+}
+#ContentsPopupDialog .AssessmentActionButtonContainer
+{
+	bottom:-55px;
+}
+.AssessmentActionButtonContainer > button
+{
+	outline:none;
+	vertical-align:top;
+	padding:10px 15px 12px 15px;
+	font-family:Segoe UI Semibold, Segoe WP Semibold;
+	color:white !important;
+	font-size:18px;
+	line-height:1;
+	border-width:1px;
+	border-style:solid;
+}
+.AssessmentActionButtonContainer > button:focus
+{
+	border:1px dotted #333333 !important;
+}
+.AssessmentActionButtonContainer > button:hover
+{
+	border:1px solid #333333 !important;
+}
+.AssessmentBackground 
+{
+	position:absolute;
+	width:100%;
+	height:100%;
+	top:0px;
+	left:0px;
+	overflow:hidden;
+}
+.AssessmentBackground > img
+{
+	position:absolute;
+	width:100%;
+	bottom:0px;
+	left:0px;
+}
+.AssessmentForeground 
+{
+	position:relative;
+	height:100%;
+	overflow:auto;
+	padding:10px 30px 0px 30px;
+}
+
+/* ASSESSMENT CONTENT */
+.AssessmentIframe
+{
+	position:absolute;
+	width:100%;
+	height:100%;
+	top:0px;
+	left:0px;
+	display:none;
+}
+.AssessmentContent
+{
+	position:relative;
+	width:100%;
+	min-height:210px;
+}
+.AssessmentContent h1
+{
+	margin:0px;
+	max-width:800px;
+  padding-bottom:10px;
+  font:100 36px/1 Segoe UI Light, Segoe WP Light;
+  color: #00bcf2;
+}
+.AssessmentContent h2
+{
+	margin:0px;
+	max-width:800px;
+  font-weight:bold;
+	font-size:18px;
+	padding-top:20px;
+	line-height:1;
+  color:#C0C0C0;
+}
+.AssessmentContent p
+{
+	max-width:800px;
+}
+.light_theme .AssessmentContent h2
+{
+  color:#414042;
+}
+
+/* ASSESSMENT INTRODUCTION */
+#IntroView  {
+	position:relative;
+	width:100%;
+	height:100%;
+	padding:47px 0px 65px 0px;
+}
+#ContentsPopupAssessment #IntroView 
+{
+	padding:25px 0px 55px 0px;
+}
+#IntroView .AssessmentContent
+{
+	padding-right:300px;
+	margin-right:-300px;
+}
+.IntroView-CustomContent .AssessmentForeground, .IntroView-CustomContent .AssessmentBackground
+{
+	display:none;
+}
+.IntroView-CustomContent .AssessmentIframe
+{
+	display:block;
+}
+#AssessmentStatusTileContainer
+{
+	position:absolute;
+	top:15px;
+	right:20px;
+	width:210px;
+}
+.AssessmentStatusTile {
+	float:left;
+	display:block;
+	width:200px;
+	height:200px;
+	background:#333333;
+	color:white;
+	text-decoration:none;
+	position:relative;
+	border: 1px solid transparent;
+}
+.AssessmentStatusTile .QuestionsCompleteCount 
+{
+	left:15px;
+	top:18px;
+	position:absolute;
+	font:100 3.75em/1 Segoe UI Light, Segoe WP Light;
+}
+.AssessmentStatusTile .QuestionsCompleteWord
+{
+	left:15px;
+	top:84px;
+	position:absolute;
+	font-weight:bold;
+	font-size:15px;
+	line-height:1;
+	text-transform:uppercase;
+	max-width:60%;
+}
+.AssessmentStatusTile .tile_footer  {
+	position:absolute;
+	bottom:12px;
+	font-size:18px;
+	left:15px;
+	top:auto;
+	width:auto;
+	text-align:left;
+}
+#AssessmentIntroductionInstructions {
+	background: rgba(0, 0, 0, 0.85);
+	padding:1em 1em 60px 1em;
+	position:absolute;bottom:0px;right:0px;left:0px;
+	display:none;
+}
+.light_theme #AssessmentIntroductionInstructions { background: rgba(48, 48, 48, 0.85); }
+#AssessmentIntroductionTitle {
+	position:absolute;bottom:10px;left:10px;display:none;
+}
+
+/* ASSESSMENT REVIEW */
+#ResultsView {
+	position:relative;
+	width:100%;
+	height:100%;
+	padding:47px 0px 65px 0px;
+}
+#ContentsPopupAssessment #ResultsView 
+{
+	padding:25px 0px 55px 0px;
+}
+#ResultsView .AssessmentContent 
+{
+	margin-left:270px;
+	width:auto;
+}
+.ResultsLeftContainer 
+{
+	position:relative;
+	float:left;
+	margin-top:5px;
+	width:210px;
+	margin-right:30px;
+}
+.ResultsViewStatusTile, .light_theme .ResultsViewStatusTile 
+{
+	position:relative;
+	display:block;
+	width:200px;
+	height:200px;
+	background:#333333;
+	color:white;
+	text-decoration:none;
+	padding:20px;
+	margin-bottom:10px;
+	overflow:hidden;
+}
+.ResultsViewStatusTile.actionable
+{
+	cursor:pointer;
+	border:1px solid #333333;
+}
+.ResultsViewStatusTile.actionable:focus
+{
+	border:1px dotted #ffffff;
+}
+.ResultsViewStatusTile.actionable:hover
+{
+	border:1px solid #ffffff;
+}
+.light_theme .ResultsViewStatusTile.actionable:focus, .light_theme .ResultsViewStatusTile.actionable:hover
+{
+	border-color:#000000;
+}
+.ResultsViewStatusTile .QuestionsCompleteCount 
+{
+	left:15px;
+	top:18px;
+	position:absolute;
+	font:100 3.75em/1 Segoe UI Light, Segoe WP Light;
+}
+.ResultsViewStatusTile .QuestionsCompleteWord
+{
+	left:15px;
+	top:85px;
+	position:absolute;
+	font-weight:bold;
+	font-size:15px;
+	line-height:1;
+	text-transform:uppercase;
+	max-width:60%;
+}
+.ResultsViewScore
+{
+	font-weight:bold;
+	position:absolute;
+	display:block;
+	text-transform:uppercase;
+	left:15px;
+	top:85px;
+	max-width:60%;
+	font-size:15px;
+	line-height:1;
+	display:none;
+}
+.ResultsViewStatusTile .tile_footer  {
+	position:absolute;
+	bottom:12px;
+	font-size:18px;
+	left:15px;
+	top:auto;
+	width:auto;
+	text-align:left;
+}
+.AssesssmentResultPass {
+	color:#7FB100;
+}
+.AssesssmentResultFail {
+	color:#DF1123;
+}
+.AssesssmentResultIncomplete {
+	color:orange;
+}
+.ResultsViewLine1 {
+	left:15px;
+	top:18px;
+	position:absolute;
+	font:100 3.75em/1 Segoe UI Light, Segoe WP Light;
+	display:none;
+}
+.ResultsViewLine2 {
+	font-size:150%;
+	display:none;
+}
+.ResultsViewLine3 {
+	font-size:150%;
+	margin-bottom:2em;
+	display:none;
+}
+.ResultsAction {
+	font-size:150%;
+	height:26px;
+	display:none;
+}
+a.ResultsActionReturn {
+	background-image: url(../theme/dark/images/arrow24.left.normal.png);
+	background-repeat:no-repeat;
+	background-position: 165px 0px;
+}
+a.ResultsActionRestart {
+	background-image: url(../theme/dark/images/refresh24.normal.png);
+	background-repeat:no-repeat;
+	background-position: 165px 0px;
+}
+a.ResultsActionGradeTest {
+	background-image: url(../theme/dark/images/arrow24.right.normal.png);
+	background-repeat:no-repeat;
+	background-position: 165px 0px;
+}
+
+.ResultsViewStatusTile.AssessmentPassResult .ResultsViewLine1
+{
+	display:block;
+	color:#7FB100;
+}
+.ResultsViewStatusTile.AssessmentFailResult .ResultsViewLine1
+{
+	display:block;
+	color:#DF1123;
+}
+.ResultsViewStatusTile.AssessmentPassResult .ResultsViewScore, .ResultsViewStatusTile.AssessmentFailResult .ResultsViewScore
+{
+	display:block;
+}
+.ResultsViewStatusTile.AssessmentPassResult .QuestionsCompleteCount, .ResultsViewStatusTile.AssessmentFailResult .QuestionsCompleteCount,
+.ResultsViewStatusTile.AssessmentPassResult .QuestionsCompleteWord, .ResultsViewStatusTile.AssessmentFailResult .QuestionsCompleteWord
+{
+	display:none;
+}
+
+#ResultsView .AssessmentActionButtonContainer > button
+{
+	display:none;
+}
+#ResultsView .AssessmentActionButtonContainer > button.ResultsActionReturn, #ResultsView .AssessmentActionButtonContainer > button.ResultsActionRestart, #ResultsView .AssessmentActionButtonContainer > button.ResultsActionGradeTest
+{
+	display:inline-block;
+} 
+
+.ResultsViewReportTile 
+{
+	position:relative;
+	display:none;
+	width:200px;
+	height:90px;
+	background:#333333 url(../theme/dark/images/read.normal.png) no-repeat 152px 10px;
+	background-size:36px;
+	border:1px solid #333333;
+	color:white;
+	text-decoration:none;
+	padding:20px;
+	clear:both;
+	overflow:hidden;
+	outline:none;
+}
+.AllowReport .ResultsViewReportTile
+{
+	display:block;
+}
+.light_theme .ResultsViewReportTile, .light_theme .ResultsViewReportTile:visited
+{
+	color:white;
+}
+.ResultsViewReportTile:focus 
+{
+	border: 1px dotted #FFFFFF;
+}
+.ResultsViewReportTile:hover {
+	border: 1px solid #FFFFFF;
+}
+.light_theme .ResultsViewReportTile:focus, .light_theme .ResultsViewReportTile:hover 
+{
+	border-color:#000000;
+}
+.ResultsViewReportLine1 {
+	margin-top:20px;
+	font-size:200%;
+	margin-bottom:10px;
+	display:none;
+}
+.ResultsViewReportTile .tile_footer {
+	position:absolute;
+	bottom:12px;
+	font-size:18px;
+	left:15px;
+	top:auto;
+	width:auto;
+	text-align:left;
+}
+.QuestionMenuContainer 
+{
+	float:left;
+	width:210px;
+	padding-bottom:3px;
+}
+.QuestionTile
+{
+	position:relative;
+	float:left;
+	display:block;
+	width:62px;
+	height:62px;
+	padding:3px;
+	margin-right:7px;
+	margin-bottom:7px;
+	background:#CCCCCC;
+	border: 1px #CCCCCC solid;
+	font-size:24px;
+	color:White;
+	outline:none;
+}
+.light_theme .QuestionTile, .light_theme .QuestionTile:visited
+{
+	color:White;
+}
+.QuestionTile:focus
+{
+	border:1px dotted white !important;
+}
+.QuestionTile:hover, .QuestionTile:active
+{
+	border: 1px solid white !important;
+}
+.light_theme .QuestionTile:focus, .light_theme .QuestionTile:hover, .light_theme .QuestionTile:active
+{
+	border-color:#333333 !important;
+}
+.QuestionTileStatus 
+{
+	position:absolute;
+	top:1px;
+	left:1px;
+	width:22px;
+	height:22px;
+	background-repeat:no-repeat;
+	background-position:left top;
+	background-size:100% 100%;
+}
+.QuestionTile-Pass .QuestionTileStatus
+{
+	background-image: url(../theme/dark/images/checkmark16.png);
+}
+.QuestionTile-Fail .QuestionTileStatus
+{
+	background-image: url(../theme/dark/images/cancel.png);
+}
+.QuestionTile-Answered .QuestionTileStatus
+{
+	background-image: url(../theme/dark/images/fav.png);
+}
+.QuestionTileNumber 
+{
+	position:absolute;
+	bottom:3px;
+	right:3px;
+	text-align:right;
+}
+.ResultsRightContainer
+{
+	position: absolute;
+	left: 260px;
+	right:0px;
+	top: 0px;
+	height: 100%;
+	padding: 75px 20px 65px 20px;
+}
+#ContentsPopupAssessment .ResultsRightContainer
+{
+	padding:40px 20px 10px 280px;
+}
+.ResultsRightContainer .scroll-padding-bottom-mask 
+{
+	position:absolute;
+	bottom:0px;
+	height:15px;
+	width:100%;
+	background:transparent;
+	padding-right:17px;
+}
+.ResultsRightContainer .scroll-padding-bottom-mask > div
+{
+	position:relative;
+	height:100%;
+	width:100%;
+}
+#ReviewContainer {
+	position:relative;
+	float:left;
+	width:57%;
+	height:100%;
+	padding-right:10px;
+}
+#ReviewTile 
+{
+	position:relative;
+	height:100%;
+}
+#ReviewTileTitle {
+	font-weight:bold;
+	font-size:18px;
+	background-color:#424242;
+	text-transform:uppercase;
+	position:relative;
+	height:54px;
+	padding:16px 15px;
+}
+.light_theme #ReviewTileTitle { color:white;background-color: #424242; }
+#ReviewTileContent {
+    background-color:#E9E9E9;
+    color:#333333;
+    font-size:15px;
+    position:absolute;
+    width:100%;
+    top:54px;
+    bottom:0px;
+}
+#ReviewTileContentScroll 
+{
+	position:relative;
+	padding:0px 15px;
+	height:100%;
+	overflow:auto;
+}
+.ResultsRightContainer #ReviewContainer .scroll-padding-bottom-mask > div
+{
+	background:#E9E9E9;
+}
+#ReviewPrompt {
+	padding-top:15px;
+}
+#ReviewChoicesContainer {
+	padding:15px;
+}
+.ResultsCheckOn  {
+	background-image: url(../theme/dark/images/checkbox_on.png);
+	background-repeat:no-repeat;
+	background-position: left top;
+	padding-left:48px;
+	padding-right:18px;
+	text-indent:-18px;
+	padding-bottom:5px;
+	font-size:15px;
+	min-height:19px;
+}
+.ResultsCheckOff  {
+	background-image: url(../theme/dark/images/checkbox_off.png);
+	background-repeat:no-repeat;
+	background-position: left top;
+	padding-left:48px;
+	padding-right:18px;
+	text-indent:-18px;
+	padding-bottom:5px;
+	font-size:15px;
+	min-height:19px;
+}
+.ResultsRadioOn  {
+	background-image: url(../theme/dark/images/radiobutton_on.png);
+	background-repeat:no-repeat;
+	background-position: left top;
+	padding-left:48px;
+	padding-right:18px;
+	text-indent:-18px;
+	padding-bottom:5px;
+	font-size:15px;
+	min-height:19px;
+}
+.ResultsRadioOff  {
+	background-image: url(../theme/dark/images/radiobutton_off.png);
+	background-repeat:no-repeat;
+	background-position: left top;
+	padding-left:48px;
+	padding-right:18px;
+	text-indent:-18px;
+	padding-bottom:5px;
+	font-size:15px;
+	min-height:19px;
+}
+
+#ReviewFeedbackContainer {
+	position:relative;
+	float:left;
+	width:43%;
+	height:100%;
+	padding-right:10px;
+}
+#ReviewFeedbackTile 
+{
+	position:relative;
+	height:100%;
+}
+#ReviewFeedbackTileTitle {
+	font-weight:bold;
+	font-size:18px;
+	background-color:#1A1A1A;
+	text-transform:uppercase;
+	position:relative;
+	height:54px;
+	padding:16px 15px;
+}
+.light_theme #ReviewFeedbackTileTitle { color:white; }
+#ReviewFeedbackTileButtons
+{
+	position:absolute;
+	top:0px;
+	right:10px;
+	z-index:3;
+	text-align:right;
+	height:54px;
+	padding:8px;
+}
+#ReviewFeedbackTileButtons button[type="button"]
+{
+	font-size:16px;
+	line-height:1;
+	font-family:Segoe UI Semibold, Segoe WP Semibold;
+	color:White;
+	padding:10px 15px !important;
+	border:1px solid white;
+	background:transparent;
+	outline:none !important;
+}
+#ReviewFeedbackTileButtons button[type="button"]:focus
+{
+	border:1px dotted white;
+}
+#ReviewFeedbackTileButtons button[type="button"]:hover
+{
+	border:1px solid white;
+}
+#ReviewFeedbackTileButtons button[type="button"]:disabled
+{
+	opacity:0.4;
+	filter:alpha(opacity=40);
+	background:#666666;
+	color:White;
+	border:1px solid white;
+}
+#ReviewFeedbackTileContent {
+    background-color:#333333;
+    font-size:15px;
+    position:absolute;
+    width:100%;
+    top:54px;
+    bottom:0px;
+}
+.light_theme #ReviewFeedbackTileContent { color:white; }
+#ReviewFeedbackTileContentScroll 
+{
+	position:relative;
+	padding:0px 15px;
+	height:100%;
+	overflow:auto;
+}
+.ResultsRightContainer #ReviewFeedbackContainer .scroll-padding-bottom-mask > div
+{
+	background:#333333;
+}
+#ReviewCorrect {
+	padding-top:15px;
+}
+#ReviewFeedback {
+	padding:15px;
+}
+
+.light_theme .ResultsAction, .light_theme .ResultsAction:visited { color:#ffffff; }
+
+.ReviewReportContainer {
+	padding:1em;
+	font-size:1.2em;
+}
+.ReviewReportCourseName {
+	font-size:2em;
+	margin-bottom:0.5em;
+}
+.ReviewReportPageName {
+	font-size:1.5em;
+	margin-bottom:0.5em;
+}
+
+.ReviewReportQuestionLabel {
+	font-size:200%;
+}
+.ReviewReportSpacer {
+	height:20px;
+}
+
+/* ASSESSMENT QUESTIONS */
+#AssessmentQuestionView {
+	position:relative;
+	padding:47px 30px 15px 30px;
+	height:100%;
+	width:100%;
+	max-height:700px;
+	max-width:1200px;
+}
+#ContentsPopupAssessment #AssessmentQuestionView
+{
+	padding:40px 30px 10px 30px;
+}
+#AssessmentQuestionView .scroll-padding-bottom-mask 
+{
+	position:absolute;
+	bottom:0px;
+	height:15px;
+	width:100%;
+	background:transparent;
+	padding-right:17px;
+}
+#AssessmentQuestionView .scroll-padding-bottom-mask > div
+{
+	position:relative;
+	height:100%;
+	width:100%;
+}
+#QuestionView {
+	position:relative;
+	float:left;
+	width:57%;
+	height:100%;
+}
+#QuestionViewBox 
+{
+	position:relative;
+	height:100%;
+}
+.QuestionNavBarTitle {
+	font-weight:bold;
+	font-size:18px;
+	background-color:#424242;
+	text-transform:uppercase;
+	position:relative;
+	height:54px;
+	padding:16px 15px;
+}
+.light_theme .QuestionNavBarTitle { color:white;background-color: #424242; }
+.nav-off .QuestionNavBarTitle{text-indent:-99999px;}
+
+#QuestionContent {
+    background-color:#E9E9E9;
+    color:#333333;
+    font-size:15px;
+    position:absolute;
+    width:100%;
+    top:54px;
+    bottom:0px;
+}
+#QuestionContentScroll 
+{
+	position:relative;
+	padding:0px 15px;
+	height:100%;
+	overflow:auto;
+}
+#AssessmentQuestionView #QuestionView .scroll-padding-bottom-mask > div
+{
+	background:#E9E9E9;
+}
+.QuestionViewImage  {
+	float:left;
+	margin-right:1em;
+}
+#QuestionViewPrompt {
+	padding-top:15px;
+}
+#QuestionViewChoices {
+	padding:15px;
+}
+#QuestionViewChoices input  
+{
+	position:absolute;
+	left:0px;
+}
+#QuestionViewChoices label 
+{
+	clear:both;
+	position:relative;
+	display: block;
+	padding-left:48px;
+	padding-right:18px;
+	text-indent:-18px;
+	padding-bottom:5px;
+	font-size:15px;
+	min-height:19px;
+}
+#QuestionViewChoices label span{
+	display: block;
+}
+#QuestionViewButtons
+{
+	position:absolute;
+	top:0px;
+	right:108px;
+	text-align:right;
+	height:54px;
+	padding:8px;
+}
+.nav-off #QuestionViewButtons{right:0px;}
+#Main #QuestionViewButtons{right:0px;}
+#ContentsPopupAssessment #QuestionViewButtons{right:0px;}
+#QuestionViewButtons button[type="button"]
+{
+	font-size:16px;
+	line-height:1;
+	font-family:Segoe UI Semibold, Segoe WP Semibold;
+	color:White;
+	padding:10px 15px !important;
+	border-width:1px;
+	border-style:solid;
+	outline:none !important;
+	margin-left:10px;
+}
+#QuestionViewButtons button[type="button"]:focus
+{
+	border:1px dotted white !important;
+}
+#QuestionViewButtons button[type="button"]:hover
+{
+	border:1px solid white !important;
+}
+#QuestionViewButtons button[type="button"]:disabled
+{
+	opacity:0.4;
+	filter:alpha(opacity=40);
+	background:#666666 !important;
+	color:White;
+	border:1px solid white !important;
+}
+.QuestionView-Scored #QCheckAnswerButton { display:none; }
+.QuestionView-Blocked #QCheckAnswerButton { display:inline-block; }
+.QuestionView-DelayedFeedback #QCheckAnswerButton { display:none; }
+#QRetryButton { display:none; }
+.QuestionView-Scored #QRetryButton { display:inline-block; }
+.QuestionView-Blocked #QRetryButton { display:none; }
+.QuestionView-DelayedFeedback #QRetryButton { display:none; }
+.QuestionNavBar 
+{
+	position:absolute;
+	top:0px;
+	right:0px;
+	height:54px;
+	text-align: right;
+	padding:10px;
+	width:108px;
+}
+.nav-off .QuestionNavBar {display:none;}
+#Main .QuestionNavBar{display:none;}
+#ContentsPopupAssessment .QuestionNavBar{top:100%;right:-30px;margin-right:-75.4%;margin-top:12px;height:68px;width:136px;}
+#ContentsPopupAssessment .QuestionView-HasScenario .QuestionNavBar{margin-right:0;}
+.QuestionNavBar button:disabled{opacity:0.3;}
+.AssessmentPreviousButton 
+{
+	display: inline-block;
+	vertical-align:middle;
+	width:34px;
+	height:34px;
+  min-width: 34px;
+  min-height: 34px;
+  border-width:0px;
+  padding:0px;
+  margin:0px 5px;
+  background-repeat: no-repeat !important;
+  background-size:100% !important;
+  background-image: url(../theme/dark/images/arrow34.left.normal.png) !important;
+  background-color:transparent;
+}
+#ContentsPopupAssessment .AssessmentPreviousButton{width:48px;height:48px;min-width:48px;min-height:48px;background-image: url(../theme/dark/images/arrow.left.normal.png) !important;}
+.light_theme #ContentsPopupAssessment .AssessmentPreviousButton{background-image: url(../theme/light/images/arrow.left.normal.png) !important;}
+.AssessmentNextButton 
+{
+	display: inline-block;
+	vertical-align:middle;
+	width:34px;
+	height:34px;
+  min-width: 34px;
+  min-height: 34px;
+  border-width:0px;
+  padding:0px;
+  margin:0px 5px;
+  background-repeat: no-repeat !important;
+  background-size:100% !important;
+  background-image: url(../theme/dark/images/arrow34.right.normal.png) !important;
+  background-color:transparent;
+  overflow: hidden;
+}
+#ContentsPopupAssessment .AssessmentNextButton{width:48px;height:48px;min-width:48px;min-height:48px;background-image: url(../theme/dark/images/arrow.right.normal.png) !important;}
+.light_theme #ContentsPopupAssessment .AssessmentNextButton{background-image: url(../theme/light/images/arrow.right.normal.png) !important;}
+#ScenarioView {
+	position:relative;
+	float:left;
+	width:43%;
+	height:100%;
+	display:none;
+	padding-right:10px;
+}
+#AssessmentQuestionView.QuestionView-HasScenario #ScenarioView 
+{
+	display:block;
+}
+#ScenarioViewBox 
+{
+	position:relative;
+	height:100%;
+}
+.ScenarioViewTitle {
+	font-weight:bold;
+	font-size:18px;
+	text-transform:uppercase;
+	position:relative;
+	height:54px;
+	padding:16px 15px;
+}
+
+#ScenarioViewContent {
+    background-color:#E9E9E9;
+    color:#333333;
+    font-size:15px;
+    position:absolute;
+    width:100%;
+    top:54px;
+    bottom:0px;
+}
+#ScenarioViewContentScroll 
+{
+	position:relative;
+	padding:0px 15px;
+	height:100%;
+	overflow:auto;
+}
+#AssessmentQuestionView #ScenarioView .scroll-padding-bottom-mask > div {
+	background:#E9E9E9;
+}
+#ScenarioViewText {
+	padding:15px 0px;
+}
+#FeedbackView {
+	position:relative;
+	float:left;
+	width:43%;
+	height:100%;
+	display:none;
+}
+#AssessmentQuestionView.QuestionView-ShowFeedback #FeedbackView {
+	display:block;
+	padding-left:15px;
+}
+#AssessmentQuestionView.QuestionView-HideNavBar {
+	padding-top:15px;
+}
+#FeedbackViewBox {
+	position:relative;
+	height:100%;
+}
+.FeedbackViewTitle {
+	font-weight:bold;
+	font-size:18px;
+	background-color:#1A1A1A;
+	text-transform:uppercase;
+	position:relative;
+	height:54px;
+	padding:16px 15px;
+}
+.light_theme .FeedbackViewTitle { color:white; }
+#FeedbackViewButtons
+{
+	white-space:nowrap;
+	position:absolute;
+	top:-54px;
+	right:10px;
+	text-align:right;
+	height:54px;
+	padding:8px;
+}
+#FeedbackViewButtons button[type="button"]
+{
+	font-size:16px;
+	line-height:1;
+	font-family:Segoe UI Semibold, Segoe WP Semibold;
+	color:White;
+	padding:10px 15px !important;
+	border:1px solid white;
+	background:transparent;
+	outline:none !important;
+}
+#FeedbackViewButtons button[type="button"]:focus
+{
+	border:1px dotted white;
+}
+#FeedbackViewButtons button[type="button"]:hover
+{
+	border:1px solid white;
+}
+#FeedbackViewButtons button[type="button"]:disabled
+{
+	opacity:0.4;
+	filter:alpha(opacity=40);
+	background:#666666;
+	color:White;
+	border:1px solid white;
+}
+.FeedbackViewAttemptCount
+{
+	display:inline-block;
+	font-weight:bold;
+	padding-top:10px;
+	font-style:italic;
+}
+#FeedbackViewContent {
+    background-color:#333333;
+    font-size:15px;
+    position:absolute;
+    width:100%;
+    top:54px;
+    bottom:0px;
+}
+.light_theme #FeedbackViewContent { color:white; }
+#FeedbackViewContentScroll 
+{
+	position:relative;
+	padding:0px 15px;
+	height:100%;
+	overflow:auto;
+}
+#AssessmentQuestionView #FeedbackView .scroll-padding-bottom-mask > div
+{
+	background:#333333;
+}
+#FeedbackViewText
+{
+	padding:15px 0px;
+}
+.FeedbackTitleCorrect {
+	color:#7FB100 !important;
+}
+.FeedbackTitleIncorrect {
+	color:#DF1123 !important;
+}
+
+#AssessmentQuestionView.QuestionView-HasScenario #FeedbackView {
+	width:57%;
+	margin-left:-57%;
+	margin-top:54px;
+	padding-bottom:54px;
+	padding-left:0px;
+	opacity:0.95;
+	filter:alpha(opacity=95);
+}
+#AssessmentQuestionView.QuestionView-HasScenario .FeedbackViewTitle {
+	height:74px;
+	padding:35px 35px 21px 35px;
+}
+#AssessmentQuestionView.QuestionView-HasScenario #FeedbackViewButtons
+{
+	top:0px;
+	padding-right:20px;
+	padding-top:16px;
+	height:68px;
+}
+#AssessmentQuestionView.QuestionView-HasScenario #FeedbackViewContent {
+    background-color:#1A1A1A;
+    padding-top:68px;
+    height:100%;
+    max-height:100%;
+    position:absolute;
+    width:100%;
+    height:100%;
+    top:0px;
+}
+#AssessmentQuestionView.QuestionView-HasScenario #FeedbackViewContentScroll 
+{
+	padding:0px 35px;
+	padding-bottom:25px;
+}
+#AssessmentQuestionView.QuestionView-HasScenario #FeedbackView .scroll-padding-bottom-mask
+{
+	height:35px;
+}
+#AssessmentQuestionView.QuestionView-HasScenario #FeedbackView .scroll-padding-bottom-mask > div
+{
+	background:#1A1A1A;
+}
+#AssessmentQuestionView.QuestionView-HasScenario #FeedbackViewText
+{
+	padding-top:0px;
+	padding-bottom:35px;
+}
+
+#AssessmentFeedbackDialog #FeedbackView {
+	display:block;
+	float:none;
+	height:100%;
+	width:auto;
+	padding:0.5em 0em;
+}
+
+
+#ContentsPopupAssessment #AssessmentPopupExitButton
+{
+	display:none;
+	position:absolute;
+	right:0px;
+	top:100%;
+	margin-top:12px;
+	width:48px;
+	height:48px;
+	min-width:48px;
+	min-height:48px;
+  border-width:0px;
+  padding:0px;
+  margin-right:15px;
+	background-image: url(../theme/dark/images/arrow.right.normal.png) !important;
+	background-color:transparent;
+	background-repeat: no-repeat !important;
+	background-size:100% !important;
+}
+.light_theme #ContentsPopupAssessment #AssessmentPopupExitButton {background-image: url(../theme/light/images/arrow.right.normal.png) !important;}
+#ContentsPopupAssessment.Assessment-interactionComplete #AssessmentPopupExitButton{display: inline-block;}
+
+
+.MarginaliaHelp .MarginaliaTitle {
+	font-size: 14pt; 
+	font-weight: bold;
+	text-align:center;
+}
+.MarginaliaHelp .Marginalia p {
+}
+.MarginaliaHelp .MarginaliaContent {
+	padding:1em;
+}
+
+/*** POPUPS ***/
+.PopupMenu table td {
+	font-size: 40px; 
+}
+.PopupMenu table td a {
+	font-size: 20px; 
+}
+.PopupContent a {
+	text-decoration:underline !important;
+}
+
+#HelpDialog{padding:0px;}
+#ContentsPopupDialog{padding:0px;}
+.ContentsPopupIframeContainer{position:absolute;top:0px;left:0px;right:0px;bottom:65px;}
+#ContentsPopupIframe{position:absolute;height:100%;width:100%;}
+#ContentsPopupCaptionsContainer{position:absolute;bottom:10px;left:0px;max-width:100%;max-height:40px;padding-left:10px;padding-right:10px;display:none;}
+.AssessmentPopupDialog #ContentsPopupCaptionsContainer, .BranchingPopupDialog #ContentsPopupCaptionsContainer{padding-right:150px;}
+
+#HelpNavBar {position:absolute;height:40px;top:6px;}
+#HelpNavBar ul{padding-left:19px;margin:0.6em 0em;}
+#HelpNavBar ul li {list-style:none;margin:0;padding:0;display:inline-block;font-size:20px;}
+#HelpNavBar ul li a {padding:8px;margin:3px;color:#878787;opacity:0.8;filter:alpha(opacity=80);visibility:hidden;}
+#HelpNavBar ul li a:focus{outline:#878787 dotted 1px;}
+#HelpNavBar ul li a:hover{opacity:1;filter:alpha(opacity=100);}
+#HelpNavBar ul li a.active{color:#e8e8e8;opacity:1;filter:alpha(opacity=100);}
+#HelpNavBar ul li a.active:focus{outline:#e8e8e8 dotted 1px;}
+.light_theme #HelpNavBar ul li a.active{color:#424242;}
+.light_theme #HelpNavBar ul li a.active:focus{outline:#424242 dotted 1px;}
+
+#HelpPopupContent{position:absolute;top:0px;right:0px;left:0px;bottom:0px;font-size:1.2em;}
+
+#FastHelpView, #SubmitRequestView
+{
+	position:relative;
+	width:100%;
+	padding:30px 30px 30px 30px;
+	font-size:15px;
+}
+#SubmitRequestView{display:none;}
+#HelpPopupContent.helpRequestMode #FastHelpView {display:none;}
+#HelpPopupContent.helpRequestMode #SubmitRequestView {display:block;}
+
+.help_categories{width:40%;float:left;position:relative;padding-right:15px;}
+.help_category{position:relative;margin-bottom:1px;color:White;background:#414141;cursor:pointer;}
+.help_category > h2{position:relative;margin:0px;padding:9px 35px 10px 15px;font:15px Segoe UI Semibold, Segoe WP Semibold;}
+.help_category > a.toggle{position:absolute;height:15px;width:15px;right:12px;top:12px;background:url(../../Player/theme/dark/images/add.nocircle.png) no-repeat left top;background-size:100%;opacity:0.8;filter:alpha(opacity=80);}
+.help_category > a.toggle:focus{outline:1px dotted white;}
+.help_category_expansion{position:relative;background:#e8e8e8;color:#333333;top:-1px;height:0px;overflow:hidden;}
+.help_category_expansion.compressed a{visibility:hidden;}
+.help_category_content{padding:15px;}
+.help_category_content > .help_topic{margin-bottom:15px;}
+.help_category_content > .help_topic:last-child{margin-bottom:0px;}
+.help_category_content > .help_topic > a{display:block;color:#414141;font-size:15px;}
+.help_category_content > .help_topic > .help_topic_content{display:none;}
+.help_content_container{width:60%;float:left;position:relative;background:#e8e8e8;padding:30px;}
+.help_content_container.noTopic{visibility:hidden;}
+.help_content_container > h2{font:22px Segoe UI Semibold, Segoe WP Semibold;color:#333333;margin:0px;}
+.help_content_container > .help_topic_content{font-size:15px;color:#333333;}
+.help_content_container > .help_content_anchor{position:absolute;top:-30px;}
+.help_content_container > .help_topic_content a{color:#333333;}
+
+.ConfirmDialog, .NotifyDialog{width:100%;top:50%;overflow:visible;background:#0072ba;}
+.light_theme .ConfirmDialog, .light_theme .NotifyDialog{background:#0072ba;}
+.ConfirmDialog .ui-dialog-titlebar, .NotifyDialog .ui-dialog-titlebar{padding:45px 0px 0px 0px;height:auto;background:transparent;}
+.ConfirmDialog .ui-dialog-title, .NotifyDialog .ui-dialog-title{position:relative;display:block;float:none;max-width:800px;margin:0px auto;padding:0px 36px;color:white;font:normal 50px/40px Segoe UI Light, Segoe WP Light;text-transform:lowercase;}
+.light_theme .ConfirmDialog .ui-dialog-title, .light_theme .NotifyDialog .ui-dialog-title{color:white;}
+.ConfirmDialog .ui-dialog-titlebar-close, .NotifyDialog .ui-dialog-titlebar-close, .DefineYourRoleDialog .ui-dialog-titlebar-close{display:none;}
+.ConfirmDialog .ui-dialog-buttonpane, .NotifyDialog .ui-dialog-buttonpane{position:relative;bottom:0px;left:0px;max-width:800px;margin:0px auto;padding:10px 36px 30px 36px;background:transparent;}
+#ConfirmDialog, #NotifyDialog{max-width:800px;margin:0px auto;padding:30px 40px 20px 40px;font-size:18px;background:transparent;color:White;}
+.ConfirmDialog button, .ConfirmDialog button.ui-state-default, .ConfirmDialog button.ui-state-focus, .NotifyDialog button, .NotifyDialog button.ui-state-default, .NotifyDialog button.ui-state-focus
+{
+	font-size:18px;
+	line-height:1;
+	font-family:Segoe UI Semibold, Segoe WP Semibold;
+	color:white;
+	padding:4px 24px 6px 24px !important;
+	border-width:1px;
+	border-style:solid;
+	border-color:rgba(255,255,255,0.5);
+	outline:none;
+	margin:10px 0px 10px 10px !important;
+	background:#3D8AC6;
+}
+.light_theme .ConfirmDialog button, .light_theme .ConfirmDialog button.ui-state-default, .light_theme .ConfirmDialog button.ui-state-focus, .light_theme .NotifyDialog button, .light_theme .NotifyDialog button.ui-state-default, .light_theme .NotifyDialog button.ui-state-focus{background:#3D8AC6;color:white;}
+.ConfirmDialog button.ui-state-hover, .NotifyDialog button.ui-state-hover, .light_theme .ConfirmDialog button.ui-state-hover, .light_theme .NotifyDialog button.ui-state-hover
+{
+	background:white;
+	border-color:white;
+	color:#0072ba;
+}
+.ConfirmDialog button.ui-state-focus, .NotifyDialog button.ui-state-focus, .light_theme .ConfirmDialog button.ui-state-focus, .light_theme .NotifyDialog button.ui-state-focus
+{
+	border-color:white;
+}
+/*
+.ConfirmDialog, .NotifyDialog{width:100%;top:50%;overflow:visible;}
+.light_theme .ConfirmDialog, .light_theme .NotifyDialog{background:rgba(255,255,255,0.95);}
+.ConfirmDialog .ui-dialog-titlebar, .NotifyDialog .ui-dialog-titlebar{position:absolute;bottom:0px;padding:0px;left:0px;width:100%;height:auto;background:transparent;}
+.ConfirmDialog .ui-dialog-title, .NotifyDialog .ui-dialog-title{position:relative;display:block;float:none;max-width:800px;margin:0px auto -24px auto;padding:0px 200px 24px 36px;opacity:0.4;filter:alpha(opacity=40);font:normal 78px/66px Segoe UI Light, Segoe WP Light;color:#787878;text-transform:lowercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.light_theme .ConfirmDialog .ui-dialog-title, .light_theme .NotifyDialog .ui-dialog-title{color:#A1A1A1;}
+.ConfirmDialog .ui-dialog-titlebar-close, .NotifyDialog .ui-dialog-titlebar-close{display:none;}
+.ConfirmDialog .ui-dialog-buttonpane, .NotifyDialog .ui-dialog-buttonpane{position:relative;bottom:0px;left:0px;max-width:800px;margin:0px auto;padding:10px 36px;background:transparent;}
+#ConfirmDialog, #NotifyDialog{max-width:800px;margin:0px auto;padding:40px 40px 40px 40px;font-size:18px;background:transparent;}
+.ConfirmDialog button, .ConfirmDialog button.ui-state-default, .ConfirmDialog button.ui-state-focus, .NotifyDialog button, .NotifyDialog button.ui-state-default, .NotifyDialog button.ui-state-focus
+{
+	font-size:18px;
+	line-height:1;
+	font-family:Segoe UI Semibold, Segoe WP Semibold;
+	color:White;
+	padding:3px 18px 5px 18px !important;
+	border-width:1px;
+	border-style:solid;
+	outline:none !important;
+	margin:10px 0px 10px 10px !important;
+	border-color:transparent;
+	background:#787878;
+}
+.ConfirmDialog button.ui-state-focus, .NotifyDialog button.ui-state-focus
+{
+	border:1px dotted white !important;
+}
+*/
+

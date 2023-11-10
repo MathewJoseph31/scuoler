@@ -1,0 +1,226 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="../../Player/css/jquery-ui-1.8.17.custom.css" type="text/css" />
+<link rel="stylesheet" href="../../Player/css/pagestyles.css" type="text/css" />
+<link rel="stylesheet" href="../../Custom/css/pagestyles.css" type="text/css" />
+<script type="text/javascript" src="../../Player/js/libs/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="../../Player/js/libs/jquery-ui-1.8.17.custom.min.js"></script>
+<script type="text/javascript" src="../../Player/js/page.min.js"></script>
+<script type="text/javascript">
+	//set imagePath to location of icon images relative to the page
+	var imagePath = "../../Player/theme/";
+
+	//to override the 2:1 aspectRatio for the page, use the aspectRatioOverride variable
+	//var aspectRatioOverride = 8 / 5;
+</script>
+</head>
+<body>
+	<div class="page_container">
+		<div id="PageContent" class="content_wrapper">
+			<div id="ContainerDiv" class="content_container">
+				<div class="welcome_tabs" id="tabs">
+					<ul role="tablist">
+						<li><a id="tab1" href="#tabs-1" role="tab" aria-controls="tabs-1" ><script type="text/javascript">document.write(parent.Resources.Welcome_DESCRIPTION_Text)</script></a></li>
+						<li><a id="tab2" href="#tabs-2" role="tab" aria-controls="tabs-2"><script type="text/javascript">document.write(parent.Resources.Welcome_BENEFITS_Text)</script></a></li>
+						<li><a id="tab3" href="#tabs-3" role="tab" aria-controls="tabs-3"><script type="text/javascript">document.write(parent.Resources.Welcome_CREDITS_Text)</script></a></li>
+					</ul>
+					<div id="tabs-1" aria-labelledby="tab1" role="tabpanel" aria-live="polite">
+						<div class="tab_content"></div>
+					</div>
+					<div id="tabs-2" aria-labelledby="tab2" role="tabpanel" aria-live="assertive"><div class="tab_content"></div></div>
+					<div id="tabs-3" aria-labelledby="tab3" role="tabpanel" aria-live="polite"><div class="tab_content"></div></div>
+					<script type="text/javascript">
+						// handle the tabs functionality
+					    $(function () {
+					        if (parent.player && parent.player.courseController.course.settings.HighContrastModeActive) {
+					            $('head').append('<link type="text/css" href="../../Player/css/highcontrast.css" rel="stylesheet" />');
+					            $('head').append('<link type="text/css" href="../../Custom/css/highcontrast.css" rel="stylesheet" />');
+					        }
+					        // these vars will hold the HTML we create from the contents fo about.xml
+					        var description = "This course helps you to identify the various threats to your computer and the data stored on it. You will explore how to protect your computer from these threats by taking some preventive measures. Finally, this course explains the ethical and legal issues related to Internet usage.";
+					        var benefits = "Like any other electronic device, your computer is at risk from damages caused by accident or by intention. Some of these damages can be permanent. You can prevent your computer hardware, software, and the data stored on it from a number of damages by taking certain preventive measures.";
+					        var credits = "Microsoft Learning would like to acknowledge and thank all of the individuals for their contribution toward developing this title. Their effort at various stages in the development has ensured that you have a good learning experience.";
+
+					        $("#tabs").tabs({
+					            activate: function (event, ui) { ui.newPanel.focus(); },
+					            show: function (event, ui) {
+					                // see if we have loaded the data from about.xml
+					                if (description == "") {
+					                    // we have not, load it
+					                    // this is a synchronous call so we can get the data within this function
+					                    // load about.xml which contains the data we want to put into the tabs
+					                    jQuery.ajax({
+					                        type: "GET",
+					                        url: '../about.xml',
+					                        dataType: "XML",
+					                        success: function (aboutXml) {
+					                            // we read in the about.xml file, get the about tag
+					                            var aboutElem = $(aboutXml).find("about");
+
+					                            // get the description tag and create an HTML element from its contents
+					                            var descriptionElem = aboutElem.find("description");
+					                            description = '<div class="Description">' + descriptionElem.text() + '</div>';
+
+					                            // get the benefits tag
+					                            var benefitsElem = aboutElem.find("benefits");
+
+					                            // we will put the benefits in a <ul> tag. so create the start of it
+					                            benefits = '<ul class="Benefits">';
+
+					                            // loop through each of the <benefit> elements in the <benefits> tag
+					                            benefitsElem.children('benefit').each(function () {
+					                                var xmlBenefit = $(this);
+
+					                                // add an <li> for each benefit
+					                                benefits += '<li>' + xmlBenefit.text() + '</li>';
+					                            });
+
+					                            // add the end of the benefits list
+					                            benefits += '</ul>';
+
+					                            // get the credits tag
+					                            var creditsElem = aboutElem.find("credits");
+
+					                            // Create the start of of the credits html
+					                            credits = '<div class="Credits">';
+
+					                            // loop through the roles
+					                            creditsElem.children('role').each(function () {
+					                                var xmlRole = $(this);
+
+					                                // add a div for each role and a <ul>
+					                                credits += '<div class="CreditsRole">' + xmlRole.attr("name") + '</div><ul>';
+
+					                                // loop through the entity tags (the names of the people in this role)
+					                                xmlRole.children('entity').each(function () {
+					                                    var xmlEntity = $(this);
+
+					                                    // add an <li> for each entity
+					                                    credits += '<li>' + xmlEntity.text() + '</li>';
+					                                });
+
+					                                // add the end of the <ul>
+					                                credits += '</ul>';
+					                            });
+
+					                            // add the end of the credits HTML
+					                            credits += '</div>';
+					                        },
+					                        async: false
+					                    });
+					                }
+					                $("#tabs-1").children(".tab_content").html(description);
+					                $("#tabs-2").children(".tab_content").html(benefits);
+					                $("#tabs-3").children(".tab_content").html(credits);
+					            }
+					        });
+					    });
+					</script>
+				</div>
+
+				<div class="welcome_tiles quicklink_tiles">
+
+					<!-- use the following template for tiles: -->
+
+					<!--<div class="tile %%size%% %%type%%">
+									--size is one of: "full", "big", "medium", "small"
+									--type is one of: "changelanguages", "changetracks", "community", "contents",
+																		"downloadcourse", "downloadtranscript", "glossary", "help",
+																		"progress", "resources", "testout"
+									--**Note: the tile's action and text content (for enabled state) are automatically
+										generated from its type class; authors can override the default text content
+										by adding an extra class "custom" to the tile. The tile's action will be preserved,
+										but the default text content will be hidden, and custom content can be displayed by
+										putting it into a <div class="action"> element and inserting this as the last child
+										of the tile.
+
+									--Subelements with class "action" are displayed only when tile is enabled 
+										(ie. the tile type is available under the current context);
+										elements with class "noaction" are displayed only when tile is disabled.
+								<div class="action tile_background">
+									--put background image here if desired
+								</div>
+								<div class="noaction tile_background">
+									--put background image here if desired
+								</div>
+									--Class "tile_background" defaults to background color of #333333. Inline style
+										can be used on these divs to change background colors.
+										Use separate "tile_background" divs to make the background relative to the enabled
+										state. If the background doesn't depend on the enabled state, only include one
+										"tile_background" div, and remove the "action"/"noaction" class.
+										If no background (transparent) is desired in the disabled state, omit the
+										"tile_background" div with class "noaction".
+								<div class="noaction">
+									--If desired, put content here that will display when tile is in disabled state
+								</div>
+					</div>-->
+
+					<!-- Here is a full width tile displaying the course progress over a background image. Tile action: navigate to next page. -->
+					<!-- Note: progress tile action is always available -->
+					<div class="tile transparent full progress">
+						<div class="tile_background"><img alt="" height="100%" src="Images/Computer_Security_Privacy_top_panel.jpg" width="100%"></div>
+						<!--<div class="noaction">-->
+							<!-- if desired, author can put alternate content here that will display when the tile action is unavailable -->
+						<!--</div>-->
+					</div>
+
+					<!-- Here is a big tile on custom coloured background with text/icon content indicating course download action. Tile action: download course. -->
+					<!-- When the download action is unavailable, a background image is displayed instead. -->
+					<div class="tile transparent big downloadcourse">
+						<div class="action tile_background" style="background:#7FB900;"></div>
+						<div class="noaction tile_background"><img alt="" height="100%" src="Images/Computer_Security_Privacy_bottom_left_panel.png" width="100%"></div>
+						<!--<div class="noaction">-->
+							<!-- if desired, author can put alternate content here that will display when the tile action is unavailable -->
+						<!--</div>-->
+					</div>
+
+					<!-- Here is a medium tile on custom coloured background with text/icon content indicating transcript download action. Tile action: download transcript. -->
+					<!-- When the download transcript action is unavailable, a background image is displayed instead. -->
+					<div class="tile transparent medium downloadtranscript">
+						<div class="action tile_background" style="background:#0072C5;"></div>
+						<div class="noaction tile_background"><img alt="" height="100%" src="Images/Computer_Security_Privacy_bottom_right_panel.png" width="100%"></div>
+						<!--<div class="noaction">-->
+							<!-- if desired, author can put alternate content here that will display when the tile action is unavailable -->
+						<!--</div>-->
+					</div>
+
+					<!-- Here is a small tile on with gradient overlayed on default background and text content indicating test out action. Tile action: course test out. -->
+					<!-- When the test out action is unavailable, the gradient overlay disappears. -->
+					<div class="tile small Study_Sheet">
+						<div class="tile_background"></div>
+						<div class="action tile_background_overlay"></div>
+						<a class="custom_popup" data-required="true" href="../../Media/Study_Sheet.docx">
+							<div class="tile_title">Study Sheet</div>
+						</a>
+						<!--<div class="noaction">-->
+							<!-- if desired, author can put alternate content here that will display when the tile action is unavailable -->
+						<!--</div>-->
+					</div>
+					
+					<!-- Here is a small tile on with gradient overlayed on default background. Tile action: show help dialog. -->
+					<div class="tile small help">
+						<div class="tile_background"></div>
+						<div class="action tile_background_overlay"></div>
+						<!--<div class="noaction">-->
+							<!-- if desired, author can put alternate content here that will display when the tile action is unavailable -->
+						<!--</div>-->
+					</div>
+
+					<!-- Here is a small tile on with gradient overlayed on default background and text content indicating resources action. Tile action: show resources dialog. -->
+					<!-- When the resources action is unavailable, the gradient overlay disappears. -->
+					<div class="tile small resources">
+						<div class="tile_background"></div>
+						<div class="action tile_background_overlay"></div>
+						<!--<div class="noaction">-->
+							<!-- if desired, author can put alternate content here that will display when the tile action is unavailable -->
+						<!--</div>-->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

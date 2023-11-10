@@ -1,4 +1,6 @@
 const pg = require("pg");
+const fs = require("fs");
+const path = require("path");
 
 /*Cloudinary cloud image server initialization*/
 const cloudinary = require("cloudinary").v2;
@@ -148,7 +150,6 @@ exports.getConfiguration = function (account_id, configuration) {
   });
 };
 
-
 const padL = (nr, len = 2, chr = `0`) => `${nr}`.padStart(2, chr);
 
 exports.convertDateToString = (dt) => {
@@ -156,7 +157,6 @@ exports.convertDateToString = (dt) => {
     dt.getDate()
   )}T${padL(dt.getHours())}:${padL(dt.getMinutes())}:${padL(dt.getSeconds())}`;
 };
-
 
 /*
 offsets the input date object with the input hours and minutes,
@@ -187,3 +187,57 @@ exports.dateAddMinutes = (d, minutes) => {
   return new Date(dateTimeMillis);
 };
 
+/*not used*/
+const readdirSync = (p, a = []) => {
+  if (fs.statSync(p).isDirectory())
+    fs.readdirSync(p).map((f) =>
+      readdirSync(a[a.push(path.join(p, f)) - 1], a)
+    );
+  return a;
+};
+
+const readdirRecursiveSync = (p, a = [], depth, maxDepth) => {
+  if (fs.statSync(p).isDirectory() && depth < maxDepth)
+    fs.readdirSync(p).map((f) =>
+      readdirRecursiveSync(
+        a[a.push(path.join(p, f)) - 1],
+        a,
+        depth + 1,
+        maxDepth
+      )
+    );
+  return a;
+};
+
+exports.readdirRecursiveSync = readdirRecursiveSync;
+
+exports.getScormIndexFileContent = (indexFilePath, scormApiCode) => {
+  if (!scormApiCode) {
+    scormApiCode = constants.SCORM_API_CODE;
+  }
+  return `<!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Document</title>
+      <script>
+      ${scormApiCode}
+      </script>
+    </head>
+    <body>
+      <iframe
+        id="courseFrame"
+        style="
+          height: 1000px;
+          min-width: 1500px;
+          width: 100%;
+          overflow-y: scroll;
+          overflow-x: scroll;
+        "
+        src="${indexFilePath}"
+      ></iframe>
+    </body>
+  </html>
+  `;
+};

@@ -68,6 +68,7 @@ router.get("/getCategoryList", dbControllerCourse.getCategoryList);
 
 //Course
 router.post("/insertCourseAction", dbControllerCourse.insertCourseToDbJson);
+router.post("/insertScormCourse", dbControllerCourse.insertScormCourse);
 router.get("/getCourses", dbControllerCourse.getCourses);
 router.get("/getCourseName", dbControllerCourse.getCourseName);
 router.post("/searchCourses", dbControllerCourse.searchCourses);
@@ -165,6 +166,7 @@ router.post(
   "/fileUploadDeleteFromDB",
   dbControllerFiles.fileUploadDeleteFromDB
 );
+router.post("/courseScormFileUpload", dbControllerFiles.courseScormFileUpload);
 //MAILER
 router.post("/sendMail", contactMailer.sendMail);
 router.post("/sendReply", contactMailer.sendReply);

@@ -10,6 +10,10 @@ const url = require("url");
 
 const configuration = require("../Configuration");
 const utils = require("../utils/Utils");
+const path = require("path");
+const constants = require("../Constants");
+const fs = require("fs");
+
 let { setCorsHeaders } = utils;
 
 //----COURSE----
@@ -117,9 +121,102 @@ exports.insertCourseToDbJson = async function (req, res, next) {
   );
 };
 
+/* API version of insertCourseToDB inserts to the course table in database*/
+exports.insertScormCourse = async function (req, res, next) {
+  let courseName = req.body.courseName;
+  let courseId = req.body.courseId;
+  let launchFile = req.body.launchFile;
+  let scormApiCode = req.body.scormApiCode;
+  let ownerId = req.body.ownerId;
+  let thumbnail = req.body.thumbnail;
+  let categoriesArray = [];
+
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
+  if (req.body.categoriesArray)
+    categoriesArray = JSON.parse(req.body.categoriesArray);
+
+  let categoriesId = [];
+
+  Object.values(categoriesArray).forEach((item, i) => {
+    categoriesId.push(item.id);
+  });
+
+  let scormDirPath = path.join(
+    __basedir,
+    constants.PUBLIC_DIRECTORY,
+    constants.SCORM_COURSE_UPLOAD_FILES_DIRECTORY,
+    courseId
+  );
+
+  let startFile = path.join(
+    __basedir,
+    constants.PUBLIC_DIRECTORY,
+    constants.SCORM_COURSE_UPLOAD_FILES_DIRECTORY,
+    courseId + ".html"
+  );
+
+  launchFile = path.join(courseId, launchFile);
+
+  let startFileContents = utils.getScormIndexFileContent(
+    launchFile,
+    scormApiCode
+  );
+
+  fs.writeFile(startFile, startFileContents, (err) => {
+    if (err) next(err);
+    else {
+      console.log("Index File written successfully\n");
+
+      const sql =
+        "select course_scorm_insertdb(p_id:=$1, p_name:=$2,  p_author_id:=$3, p_thumbnail:=$4, p_scorm_launch_file:=$5, p_categories_id:=$6)";
+
+      const pool = new pg.Pool({
+        host: accountConfiguration.getHost(),
+        user: accountConfiguration.getUserId(),
+        password: accountConfiguration.getPassword(),
+        database: accountConfiguration.getDatabase(),
+        port: accountConfiguration.getPort(),
+        ssl: { rejectUnauthorized: false },
+      });
+
+      console.log(
+        courseId,
+        courseName,
+        ownerId,
+        thumbnail,
+        launchFile,
+        categoriesId
+      );
+      pool.query(
+        sql,
+        [courseId, courseName, ownerId, thumbnail, launchFile, categoriesId],
+        function (err, result) {
+          pool.end(() => {});
+          if (err) {
+            next(err);
+            //res.json({ insertstatus: "error" });
+          } else {
+            setCorsHeaders(req, res);
+            res.json({ insertstatus: "ok", courseId: courseId });
+          }
+        }
+      );
+    }
+  });
+};
+
 /*Global variable for shared select list between getQuizes and searchQuizesForPrefix*/
 const sqlSubstringForGetAndSearch =
-  " SELECT id, name, description, author_id, thumbnail ";
+  " SELECT id, name, description, author_id, thumbnail, scorm ";
 
 /* function for handling http requests to retrive the records in the
  Course table in database in json format*/
@@ -151,7 +248,7 @@ exports.getCourses = async function (req, res, next) {
 
   var sql =
     sqlSubstringForGetAndSearch +
-    " FROM Course where deleted=false order by create_timestamp DESC offset $1 limit $2 ";
+    " FROM Course where deleted=false order by scorm desc, thumbnail, create_timestamp DESC offset $1 limit $2 ";
   var resultArr = [];
 
   pool.query(sql, [offset, pageSize], function (err, result, fields) {
@@ -160,6 +257,13 @@ exports.getCourses = async function (req, res, next) {
     else {
       var i = 0;
       for (i = 0; i < result.rows.length; i++) {
+        result.rows[i].relative_url = result.rows[i].scorm
+          ? path.join(
+              constants.SCORM_COURSE_UPLOAD_FILES_DIRECTORY,
+              result.rows[i].id + ".html"
+            )
+          : "";
+
         resultArr.push(result.rows[i]);
       }
 
@@ -333,6 +437,13 @@ exports.getTheCourse = async function (req, res, next) {
       resObj.rating = result.rows[0]?.rating;
       resObj.likes = result.rows[0]?.likes;
       resObj.liked = result.rows[0]?.liked;
+      resObj.scorm = result.rows[0]?.scorm;
+      resObj.relative_url = resObj.scorm
+        ? path.join(
+            constants.SCORM_COURSE_UPLOAD_FILES_DIRECTORY,
+            courseId + ".html"
+          )
+        : "";
       resObj.quizesArray = [];
 
       pool.query(sql1, [courseId], function (err, result1, fields) {

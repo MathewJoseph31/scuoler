@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<navigation name="Course 4" buildId="" xml:lang="en-us">
+  <settings mediaLocation="Local" skipWelcomePage="false" reviewMode="false" pageFeedbackType="None" evaluationsDisabled="ShowInModal" mustAnswerAllEvalQuestions="true" contentAreaMinWidth="700" contentAreaMinHeight="466">
+    <mediaURL><![CDATA[http://smoothstreamit.gtm.corp.microsoft.com/SMSGR/]]></mediaURL>
+    <courseTranscript><![CDATA[]]></courseTranscript>
+  </settings>
+  <private />
+  <level0 name=" Understanding computer security and privacy" mustCompletePrevModules="false" modulesToComplete="" mustCompleteRequiredPages="false" expanded="false" hidden="false">
+    <level1 name="Understanding computer security and privacy" typeId="C8BD06D8-379B-4AF4-972F-DE97943C8A17" pageId="1" contribute="r" time="1" internal="true" partnerReady="false" expanded="false" hidden="false" />
+    <level1 name="What is computer security and privacy?" typeId="6DD2D124-DAC9-4608-AD93-9D4E797A72AC" pageId="2" contribute="r" time="4" internal="true" partnerReady="false" expanded="true" hidden="false">
+      <level2 name="Knowledge check" typeId="EE35ABBC-7650-410B-BB17-48A868ED09FB" pageId="3" contribute="r" time="2" internal="true" partnerReady="false" expanded="false" hidden="false" />
+    </level1>
+    <level1 name="Natural threats" typeId="53CFEC3F-8AFA-4874-9A03-706379DF9AFC" pageId="70" contribute="r" time="3" internal="true" partnerReady="false" expanded="true" hidden="false">
+      <level2 name="Knowledge check" typeId="EE35ABBC-7650-410B-BB17-48A868ED09FB" pageId="5" contribute="r" time="2" internal="true" partnerReady="false" expanded="false" hidden="false" />
+    </level1>
+    <level1 name="Measures for protection from natural threats" typeId="53CFEC3F-8AFA-4874-9A03-706379DF9AFC" pageId="61" contribute="r" time="4" internal="true" partnerReady="false" expanded="true" hidden="false">
+      <level2 name="Knowledge check" typeId="EE35ABBC-7650-410B-BB17-48A868ED09FB" pageId="56" contribute="r" time="2" internal="true" partnerReady="false" expanded="false" hidden="false" />
+    </level1>
+    <level1 name="Threats from human actions" typeId="C9204273-D1BE-4A03-9195-81917E1A44EA" pageId="60" contribute="r" time="7" internal="true" partnerReady="false" expanded="true" hidden="false">
+      <level2 name="Knowledge check" typeId="EE35ABBC-7650-410B-BB17-48A868ED09FB" pageId="57" contribute="r" time="2" internal="true" partnerReady="false" expanded="false" hidden="false" />
+    </level1>
+    <level1 name="Measures for protection against threats from human actions" typeId="53CFEC3F-8AFA-4874-9A03-706379DF9AFC" pageId="62" contribute="r" time="6" internal="true" partnerReady="false" expanded="true" hidden="false">
+      <level2 name="Knowledge check" typeId="EE35ABBC-7650-410B-BB17-48A868ED09FB" pageId="58" contribute="r" time="2" internal="true" partnerReady="false" expanded="false" hidden="false" />
+    </level1>
+    <level1 name="Congratulations" typeId="C8BD06D8-379B-4AF4-972F-DE97943C8A17" pageId="71" contribute="r" time="1" internal="true" partnerReady="false" expanded="false" hidden="false" />
+  </level0>
+  <level0 name=" Protecting your computer " mustCompletePrevModules="false" modulesToComplete="" mustCompleteRequiredPages="false" expanded="false" hidden="false">
+    <level1 name="Protecting your computer" typeId="C8BD06D8-379B-4AF4-972F-DE97943C8A17" pageId="7" contribute="r" time="1" internal="true" partnerReady="false" expanded="false" hidden="false" />
+    <level1 name="Guidelines for securing your computer" typeId="6DD2D124-DAC9-4608-AD93-9D4E797A72AC" pageId="8" contribute="r" time="10" internal="true" partnerReady="false" expanded="true" hidden="false">
+      <level2 name="Knowledge check" typeId="EE35ABBC-7650-410B-BB17-48A868ED09FB" pageId="10" contribute="r" time="2" internal="true" partnerReady="false" expanded="false" hidden="false" />
+    </level1>
+    <level1 name="Best practices for securing online and network transactions" typeId="53CFEC3F-8AFA-4874-9A03-706379DF9AFC" pageId="66" contribute="r" time="5" internal="true" partnerReady="false" expanded="true" hidden="false">
+      <level2 name="Knowledge check" typeId="EE35ABBC-7650-410B-BB17-48A868ED09FB" pageId="17" contribute="r" time="2" internal="true" partnerReady="false" expanded="false" hidden="false" />
+    </level1>
+    <level1 name="Measures for securing email and instant messaging" typeId="6DD2D124-DAC9-4608-AD93-9D4E797A72AC" pageId="11" contribute="r" time="1" internal="true" partnerReady="false" expanded="true" hidden="false">
+      <level2 name="Email attachments video" typeId="3512FF56-8814-4D3B-B207-5675092FB0BF" pageId="76" contribute="r" time="0.5" internal="true" partnerReady="false" expanded="false" hidden="false">
+        <video fileName="4_2_3_3.mp4" videoClickToPlay="true" videoAutoNavigate="false" videoPreventSkipAhead="false" videoStretchToFit="true" videoMustPlayAll="false" />
+        <video fileName="4_2_3_3_High.mp4" videoClickToPlay="true" videoAutoNavigate="false" videoPreventSkipAhead="false" videoStretchToFit="true" videoMustPlayAll="false" />
+        <video fileName="4_2_3_3_Low.mp4" videoClickToPlay="true" videoAutoNavigate="false" videoPreventSkipAhead="false" videoStretchToFit="true" videoMustPlayAll="false" />
+      </level2>
+      <level2 name="Spam and junkmail video" typeId="3512FF56-8814-4D3B-B207-5675092FB0BF" pageId="77" contribute="r" time="1.5" internal="true" partnerReady="false" expanded="false" hidden="false">
+        <video fileName="4_2_3_4.mp4" videoClickToPlay="true" videoAutoNavigate="false" videoPreventSkipAhead="false" videoStretchToFit="true" videoMustPlayAll="false" />
+        <video fileName="4_2_3_4_High.mp4" videoClickToPlay="true" videoAutoNavigate="false" videoPreventSkipAhead="false" videoStretchToFit="true" videoMustPlayAll="false" />
+        <video fileName="4_2_3_4_Low.mp4" videoClickToPlay="true" videoAutoNavigate="false" videoPreventSkipAhead="false" videoStretchToFit="true" videoMustPlayAll="false" />
+      </level2>
+      <level2 name="Phishing video" typeId="3512FF56-8814-4D3B-B207-5675092FB0BF" pageId="64" contribute="r" time="1.5" internal="true" partnerReady="false" expanded="false" hidden="false">
+        <video fileName="4_2_3_1.mp4" videoClickToPlay="true" videoAutoNavigate="false" videoPreventSkipAhead="false" videoStretchToFit="true" videoMustPlayAll="false" />
+        <video fileName="4_2_3_1_High.mp4" videoClickToPlay="true" videoAutoNavigate="false" videoPreventSkipAhead="false" videoStretchToFit="true" videoMustPlayAll="false" />
+        <video fileName="4_2_3_1_Low.mp4" videoClickToPlay="true" videoAutoNavigate="false" videoPreventSkipAhead="false" videoStretchToFit="true" videoMustPlayAll="false" />
+      </level2>
+      <level2 name="Online communication video" typeId="3512FF56-8814-4D3B-B207-5675092FB0BF" pageId="78" contribute="r" time="0.5" internal="true" partnerReady="false" expanded="false" hidden="false">
+        <video fileName="4_2_3_5.mp4" videoClickToPlay="true" videoAutoNavigate="false" videoPreventSkipAhead="false" videoStretchToFit="true" videoMustPlayAll="false" />
+        <video fileName="4_2_3_5_High.mp4" videoClickToPlay="true" videoAutoNavigate="false" videoPreventSkipAhead="false" videoStretchToFit="true" videoMustPlayAll="false" />
+        <video fileName="4_2_3_5_Low.mp4" videoClickToPlay="true" videoAutoNavigate="false" videoPreventSkipAhead="false" videoStretchToFit="true" videoMustPlayAll="false" />
+      </level2>
+      <level2 name="Instant messaging attachments video" typeId="3512FF56-8814-4D3B-B207-5675092FB0BF" pageId="65" contribute="r" time="0.5" internal="true" partnerReady="false" expanded="false" hidden="false">
+        <video fileName="4_2_3_2.mp4" videoClickToPlay="true" videoAutoNavigate="false" videoPreventSkipAhead="false" videoStretchToFit="true" videoMustPlayAll="false" />
+        <video fileName="4_2_3_2_High.mp4" videoClickToPlay="true" videoAutoNavigate="false" videoPreventSkipAhead="false" videoStretchToFit="true" videoMustPlayAll="false" />
+        <video fileName="4_2_3_2_Low.mp4" videoClickToPlay="true" videoAutoNavigate="false" videoPreventSkipAhead="false" videoStretchToFit="true" videoMustPlayAll="false" />
+      </level2>
+      <level2 name="Knowledge check" typeId="EE35ABBC-7650-410B-BB17-48A868ED09FB" pageId="18" contribute="r" time="2" internal="true" partnerReady="false" expanded="false" hidden="false" />
+    </level1>
+    <level1 name="Congratulations" typeId="C8BD06D8-379B-4AF4-972F-DE97943C8A17" pageId="72" contribute="r" time="1" internal="true" partnerReady="false" expanded="false" hidden="false" />
+  </level0>
+  <level0 name=" Protecting your family from security threats" mustCompletePrevModules="false" modulesToComplete="" mustCompleteRequiredPages="false" expanded="false" hidden="false">
+    <level1 name="Protecting your family from security threats" typeId="C8BD06D8-379B-4AF4-972F-DE97943C8A17" pageId="25" contribute="r" time="1" internal="true" partnerReady="false" expanded="false" hidden="false" />
+    <level1 name="Measures to protect your privacy" typeId="6DD2D124-DAC9-4608-AD93-9D4E797A72AC" pageId="26" contribute="r" time="10" internal="true" partnerReady="false" expanded="true" hidden="false">
+      <level2 name="Knowledge check" typeId="EE35ABBC-7650-410B-BB17-48A868ED09FB" pageId="29" contribute="r" time="2" internal="true" partnerReady="false" expanded="false" hidden="false" />
+    </level1>
+    <level1 name="Online predators" typeId="6DD2D124-DAC9-4608-AD93-9D4E797A72AC" pageId="27" contribute="r" time="6" internal="true" partnerReady="false" expanded="false" hidden="false">
+      <level2 name="Knowledge check" typeId="EE35ABBC-7650-410B-BB17-48A868ED09FB" pageId="30" contribute="r" time="2" internal="true" partnerReady="false" expanded="false" hidden="false" />
+    </level1>
+    <level1 name="Guidelines for protection from online predators" typeId="53CFEC3F-8AFA-4874-9A03-706379DF9AFC" pageId="67" contribute="r" time="4.5" internal="true" partnerReady="false" expanded="false" hidden="false">
+      <level2 name="Knowledge check" typeId="EE35ABBC-7650-410B-BB17-48A868ED09FB" pageId="31" contribute="r" time="2" internal="true" partnerReady="false" expanded="false" hidden="false" />
+    </level1>
+    <level1 name="Congratulations" typeId="C8BD06D8-379B-4AF4-972F-DE97943C8A17" pageId="73" contribute="r" time="1" internal="true" partnerReady="false" expanded="false" hidden="false" />
+  </level0>
+  <level0 name=" Keeping your computer secure and updated" mustCompletePrevModules="false" modulesToComplete="" mustCompleteRequiredPages="false" expanded="false" hidden="false">
+    <level1 name="Keeping your computer secure and updated" typeId="C8BD06D8-379B-4AF4-972F-DE97943C8A17" pageId="33" contribute="r" time="1" internal="true" partnerReady="false" expanded="false" hidden="false" />
+    <level1 name="Securing a computer" typeId="6DD2D124-DAC9-4608-AD93-9D4E797A72AC" pageId="34" contribute="r" time="2" internal="true" partnerReady="false" expanded="false" hidden="false">
+      <level2 name="Knowledge check" typeId="EE35ABBC-7650-410B-BB17-48A868ED09FB" pageId="37" contribute="r" time="2" internal="true" partnerReady="false" expanded="false" hidden="false" />
+    </level1>
+    <level1 name="Keeping your computer up to date" typeId="6DD2D124-DAC9-4608-AD93-9D4E797A72AC" pageId="36" contribute="r" time="3" internal="true" partnerReady="false" expanded="false" hidden="false">
+      <level2 name="Knowledge check" typeId="EE35ABBC-7650-410B-BB17-48A868ED09FB" pageId="39" contribute="r" time="2" internal="true" partnerReady="false" expanded="false" hidden="false" />
+    </level1>
+    <level1 name="Congratulations" typeId="C8BD06D8-379B-4AF4-972F-DE97943C8A17" pageId="74" contribute="r" time="1" internal="true" partnerReady="false" expanded="false" hidden="false" />
+  </level0>
+  <level0 name=" Practicing computer ethics" mustCompletePrevModules="false" modulesToComplete="" mustCompleteRequiredPages="false" expanded="false" hidden="false">
+    <level1 name="Practicing computer ethics" typeId="C8BD06D8-379B-4AF4-972F-DE97943C8A17" pageId="41" contribute="r" time="1" internal="true" partnerReady="false" expanded="false" hidden="false" />
+    <level1 name="What is intellectual property?" typeId="6DD2D124-DAC9-4608-AD93-9D4E797A72AC" pageId="42" contribute="r" time="5" internal="true" partnerReady="false" expanded="true" hidden="false">
+      <level2 name="Knowledge check" typeId="EE35ABBC-7650-410B-BB17-48A868ED09FB" pageId="46" contribute="r" time="2" internal="true" partnerReady="false" expanded="false" hidden="false" />
+    </level1>
+    <level1 name="Copyright violation and prevention" typeId="6DD2D124-DAC9-4608-AD93-9D4E797A72AC" pageId="43" contribute="r" time="10" internal="true" partnerReady="false" expanded="true" hidden="false">
+      <level2 name="Knowledge check" typeId="EE35ABBC-7650-410B-BB17-48A868ED09FB" pageId="48" contribute="r" time="2" internal="true" partnerReady="false" expanded="false" hidden="false" />
+    </level1>
+    <level1 name="Legal concerns with information exchange" typeId="21C8F9AF-98DB-40EF-ABB8-26D176019635" pageId="63" contribute="r" time="4" internal="true" partnerReady="false" expanded="true" hidden="false">
+      <level2 name="Knowledge check" typeId="EE35ABBC-7650-410B-BB17-48A868ED09FB" pageId="49" contribute="r" time="2" internal="true" partnerReady="false" expanded="false" hidden="false" />
+    </level1>
+    <level1 name="Congratulations" typeId="C8BD06D8-379B-4AF4-972F-DE97943C8A17" pageId="75" contribute="r" time="1" internal="true" partnerReady="false" expanded="false" hidden="false" />
+  </level0>
+  <level0 name=" Module completions" mustCompletePrevModules="false" modulesToComplete="" mustCompleteRequiredPages="false" expanded="true" hidden="false">
+    <level1 name="Modules" typeId="556CE6AE-2DB9-4ED3-8DFB-39830BD95FC8" pageId="51" contribute="n" time="1" internal="true" partnerReady="false" expanded="false" hidden="false" />
+    <level1 name="Congratulations" typeId="54434C22-4760-41D7-9D0E-92821CCF0258" pageId="69" contribute="r" time="1" internal="true" partnerReady="false" expanded="false" hidden="false" />
+  </level0>
+</navigation>

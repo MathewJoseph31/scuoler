@@ -1,0 +1,360 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+<title></title>
+<link rel="stylesheet" href="../../../Player/css/pagestyles.css" type="text/css" />
+<link rel="stylesheet" href="../../../Custom/css/pagestyles.css" type="text/css" />
+<script type="text/javascript" src="../../../Player/js/libs/jquery-1.7.1.min.js" ></script>
+<script type="text/javascript" src="../../../Player/js/page.min.js"></script>
+<script type="text/javascript">
+	//set imagePath to location of icon images relative to the page
+	//var imagePath = "../../../Player/theme/";
+
+	//to override the 2:1 aspectRatio for the page, use the aspectRatioOverride variable
+	//var aspectRatioOverride = 4 / 3;
+</script>
+<style>
+	.page_container a:focus {
+	    outline: 0 none !important;
+	}
+</style>
+</head>
+<!-- Use data-completionType attribute on body element to control when the page is completed: 
+			- Set attribute value to "immediate" to complete page as soon as it loads; set to "auto" to complete page as soon as the required components are complete 
+			- If the attribute is omitted or the value is not "auto" or "immediate", custom script code is required to control page completion -->
+<body onkeydown="return parent.doKeyDown(event);" data-completionType="auto">
+	<div class="page_container">
+		<!-- optional instruction_overlay, used to display modal instructional content over main tab content. -->
+		<div class="content_wrapper">
+			<div class="content_container">
+
+				<!-- If desired, content to appear above tiles can be placed here -->
+				<!--<div>Challenges to giving your best at work require actions that result in courageous
+									contribution.Challenges to giving your best at work require actions that result
+									in courageous contribution.</div><br />-->
+
+				<!-- tile_container is the container for all tiles in the tile framework; it should be a child of content_container (there can be more than one of these, if desired)-->
+				<!-- DO NOT use inline styles to change dimensions of this container; to modify tile sizing, use inline styles on the tab_container or tile_block elements -->
+				<div class="tile_container">
+
+					<!-- square content tile -->
+					<!-- to put this on the right instead of the left of the tabbed tiles, include the style="float:right;" attribute in this div tag-->
+					<div class="square tile">
+
+						<div class="tile_title accent3_text accessiblecontent">
+						<!-- Page Title -->
+							Measures for protection against threats from human actions
+						<!-- end Page Title-->
+						</div>
+
+						<div class="tile_content scrolling_box">
+							<div class="scroll_content">
+
+								<div class="tile_detail page_description accessiblecontent">
+								<!-- Page Description -->
+								You can take some simple measures to minimize the risks associated with malicious human threats
+								and human errors. Click each strategy to the right to learn about how to protect your data and computer.								
+								<!-- end Page Description -->
+								</div>
+
+							</div>
+						</div>
+					</div>
+
+					<!-- accordion wrapper defines a click and reveal ui-->
+					<!-- Three types of navigation are possible with accordion:
+								1. Default navigation: user-activated accordion expansion; any strip can be expanded at any time (default navigation)
+								2. Linear navigation (include attribute data-navigation="linear" on accordion_wrapper): user-activated expansion, but strips cannot be expanded until preceeding ones are completed
+								3. Synched navigation (include attribute data-navigation="synched" on accordion_wrapper): no user expansion of strips; expansion is synchronized with page media 
+								When using synched navigation, data-startTime and data-endTime attributes should be included on the strips -->
+					<!-- Accordion ui supports 2 modes for strip expansion, determined by the value of the data-expansionMode attribute. Default is data-expansionMode="single", allowing only one
+								strip to be expanded at a time. Set data-expansionMode="multiple" to allow multiple strips to be open at the same time. -->
+					<div class="right_column accordion_wrapper">
+
+						<!-- Expandable accordion elements go here. Each element should have class names accordion_strip and tile; classname accent is optional and produces strip with accent coloured background -->
+						<!-- To mark a strip as required, set the data-required attribute to "true" -->
+						<!-- By default, accordion strips are set to complete as soon as they are expanded. 
+									Override this behaviour on a strip by including the attribute data-autocomplete="false" (if, for example, a video or other interaction in the expansion will be used to determine completion) --> 
+						<!-- Include data-startTime="hh:mm:ss" and data-endTime="hh:mm:ss" attributes on strips when using synched navigation; 
+									include data-mediaId attribute to synch to media defined by a specific media_bar element as opposed to the page audio 
+									(the value of this attribute should match the id of the corresponding media_bar element):
+								<a class="accordion_strip accent tile" data-mediaId="mediaId" data-startTime="00:00:00" data-endTime="00:00:30">...</a> -->
+						<!-- accordion strip 1 -->
+						<div class="accordion_strip accent3 tile" data-required="true">
+							<!-- title to appear on the accordion strip -->
+							<div class="accordion_strip_title accessiblecontent">Store data safely</div>
+
+							<!-- accordion expansion that is visible when accordion strip is opened; actual content should be nested within two divs with classnames accordion_expansion and accordion_content, respectively -->
+							<div class="accordion_expansion">
+
+								<div class="accordion_content accessiblecontent">
+									<div class="accordion_content_title">
+									<!-- Page Title -->
+										Store data safely
+									<!-- end Page Title-->
+									</div>
+
+									<div class="accordion_detail">
+										<!-- Page Description -->
+										To minimize the possibility that your data will be stolen or tampered with, keep it in a safe and secure
+										location that people have limited access to. An example of a safe and secure location could be your
+										private home office or a place where people cannot easily access your files. If you do not have a safe
+										place to store your data, use a strong password on your user account. A strong password is not simple. A
+										simple password might be the name of your pet or your birthday. A strong password is longer than eight
+										characters, has numbers and special characters, and has both upper and lowercase letters. 										
+										<img alt="" height="100%" src="GuidelinesforProtectingYourComputer_PCLock.png" width="100%">										
+										<!-- end Page Description -->
+									</div>
+
+									<!-- include an attribute "data-audio" on the media_bar with the audio filename to play when strip is opened -->
+									<!-- include an attribute "data-video" on the media_bar with the audio filename to play when strip is opened; video files must be configured for the page using Access Point Studio
+												 By default, video embeds into the media_bar itself; to embed elsewhere, include an attribute "data-mediaContainer" with the id of the element into which the video should embed -->
+									<!--<div class="media_bar" data-audio="sample.mp3"></div>-->
+									<!--<div class="media_bar" data-video="sample.mp4"></div>-->
+								</div>
+							</div>
+						</div>
+
+						<!-- accordion strip 2 -->
+						<div class="accordion_strip accent3 tile" data-required="true">
+							<!-- title to appear on the accordion strip -->
+							<div class="accordion_strip_title accessiblecontent">Encrypt data</div>
+
+							<!-- accordion expansion that is visible when accordion strip is opened; actual content should be nested within two divs with classnames accordion_expansion and accordion_content, respectively -->
+							<div class="accordion_expansion">
+
+								<div class="accordion_content accessiblecontent">
+									<div class="accordion_content_title">
+									<!-- Page Title -->
+										Encrypt data
+									<!-- end Page Title-->
+									</div>
+
+									<div class="accordion_detail">
+										<!-- Page Description -->
+										<p>Encryption is a way to improve the security of a message or file by scrambling its contents. Only 
+										someone who has the correct encryption key can unscramble and read the contents of those messages
+										and files. To prevent lost, stolen, or hacked documents and files from being readable, you can encrypt 
+										data by using encryption software such as Microsoft BitLocker (for your hard drive) and BitLocker To Go 
+										(for removable drives such as your USB drive).</p>
+										
+										<p>Bitlocker is compatible with Vista Enterprise, Vista Ultimate, Windows 7, and Windows Server 2008 and 
+										Windows Server R2. BitLocker does not encrypt hard drives that have Windows XP, Windows 2000, or
+										Windows 2003 installed.</p>
+										
+										<p>BitLocker helps protect you from both online and offline attacks. In an offline attack, a malicious user 
+										takes the hard drive from your computer and connects it to another computer for the purpose of 
+										extracting your data.</p>
+										<img alt="" height="100%" src="ModuleSummary_PCLockandDocuments.png" width="100%">										
+										<!-- end Page Description -->
+									</div>
+
+									<!-- include an attribute "data-audio" on the media_bar with the audio filename to play when strip is opened -->
+									<!-- include an attribute "data-video" on the media_bar with the audio filename to play when strip is opened; video files must be configured for the page using Access Point Studio
+												 By default, video embeds into the media_bar itself; to embed elsewhere, include an attribute "data-mediaContainer" with the id of the element into which the video should embed -->
+									<!--<div class="media_bar" data-audio="sample.mp3"></div>-->
+									<!--<div class="media_bar" data-video="sample.mp4"></div>-->
+								</div>
+							</div>
+						</div>
+
+						<!-- accordion strip 3 -->
+						<div class="accordion_strip accent3 tile" data-required="true">
+							<!-- title to appear on the accordion strip -->
+							<div class="accordion_strip_title accessiblecontent">Install antivirus and antispyware programs</div>
+
+							<!-- accordion expansion that is visible when accordion strip is opened; actual content should be nested within two divs with classnames accordion_expansion and accordion_content, respectively -->
+							<div class="accordion_expansion">
+
+								<div class="accordion_content accessiblecontent">
+									<div class="accordion_content_title">
+									<!-- Page Title -->
+										Install antivirus and antispyware programs
+									<!-- end Page Title-->
+									</div>
+
+									<div class="accordion_detail">
+										<!-- Page Description -->
+										<p>When using the Internet, you might be vulnerable to spyware or viruses that can greatly damage your 
+										computer. It is important to download an antivirus and antispyware program that can prevent and 
+										remove the viruses. Antivirus and antispyware programs that are present in the computer’s memory can 
+										alert you to the presence of a virus in your system and prevent viruses from entering. You must regularly 
+										update these programs on your system, because the programs are revised when new viruses and 
+										spyware are discovered. These updates will further protect your computer. Most programs offer an 
+										automatic update feature that automatically installs the updated version of the program.</p>
+
+										<p>Because the source of many viruses, spyware, and trojan horses are email sources and email software,
+										Microsoft Outlook has features that allow you to block junk email messages; filter messages from 
+										viruses, Trojan horses, and spyware; and scan your attachments for malware.</p>
+
+										<p>Windows 8 has a free, built-in feature called Windows Defender that helps protect your computer 
+										against pop-ups, slow performance, and security threats caused by viruses, spyware, and other 
+										malicious software. Windows Defender runs in the background, meaning it is constantly working to 
+										detect and warn you of suspicious programs or activity, but you can also manually scan your computer 
+										for threats at any time.</p>
+										
+										<p>Microsoft SmartScreen Filter is another new, built-in safety feature in Windows 8 and Windows RT (the 
+										Windows 8 operating system designed for mobile devices and tablets). SmartScreen Filter helps protect 
+										your computer by warning you if a downloaded file is known to be malware or has an unknown 
+										reputation. SmartScreen Filter features antiphishing protection, download manager protection, 
+										application reputation, and antimalware protection.</p>
+										
+										<img alt="" height="100%" src="Install_antivirus_antispyware_software.png" width="100%">
+										<!-- end Page Description -->
+									</div>
+
+									<!-- include an attribute "data-audio" on the media_bar with the audio filename to play when strip is opened -->
+									<!-- include an attribute "data-video" on the media_bar with the audio filename to play when strip is opened; video files must be configured for the page using Access Point Studio
+												 By default, video embeds into the media_bar itself; to embed elsewhere, include an attribute "data-mediaContainer" with the id of the element into which the video should embed -->
+									<!--<div class="media_bar" data-audio="sample.mp3"></div>-->
+									<!--<div class="media_bar" data-video="sample.mp4"></div>-->
+								</div>
+							</div>
+						</div>
+
+						<!-- accordion strip 4 -->
+						<div class="accordion_strip accent3 tile" data-required="true">
+							<!-- title to appear on the accordion strip -->
+							<div class="accordion_strip_title accessiblecontent">Install a firewall</div>
+
+							<!-- accordion expansion that is visible when accordion strip is opened; actual content should be nested within two divs with classnames accordion_expansion and accordion_content, respectively -->
+							<div class="accordion_expansion">
+
+								<div class="accordion_content accessiblecontent">
+									<div class="accordion_content_title">
+									<!-- Page Title -->
+										Install a firewall
+									<!-- end Page Title-->
+									</div>
+
+									<div class="accordion_detail">
+										<!-- Page Description -->
+										<p>Another effective step you can take to protect against malicious threats is to install a firewall. A firewall 
+										prevents unauthorized access to a private network that is connected to the Internet. It forms a barrier 
+										between trusted and untrusted websites. You can configure your firewall in two different ways: to use a 
+										default-deny policy or to use a default-allow policy. A default-deny policy allows only the listed network 
+										services. A default-allow policy blocks only the listed network services, and accepts everything else. 
+										Windows 8 comes with Windows Firewall, which blocks unwanted access to your computer.</p>
+
+										<p>A firewall does not protect you from all viruses, so it is necessary to also install an antivirus or 
+										antimalware app. Windows Defender can help protect you against viruses that your firewall does not 
+										protect you from.</p>
+										
+										<img alt="" height="100%" src="BestPracticesforSecuringOnlineandNetworkTransactions_PCLockandWall.png" width="100%">
+										<!-- end Page Description -->
+									</div>
+
+									<!-- include an attribute "data-audio" on the media_bar with the audio filename to play when strip is opened -->
+									<!-- include an attribute "data-video" on the media_bar with the audio filename to play when strip is opened; video files must be configured for the page using Access Point Studio
+												 By default, video embeds into the media_bar itself; to embed elsewhere, include an attribute "data-mediaContainer" with the id of the element into which the video should embed -->
+									<!--<div class="media_bar" data-audio="sample.mp3"></div>-->
+									<!--<div class="media_bar" data-video="sample.mp4"></div>-->
+								</div>
+							</div>
+						</div>
+
+						<!-- accordion strip 5 -->
+						<div class="accordion_strip accent3 tile" data-required="true">
+							<!-- title to appear on the accordion strip -->
+							<div class="accordion_strip_title accessiblecontent">Back up data</div>
+
+							<!-- accordion expansion that is visible when accordion strip is opened; actual content should be nested within two divs with classnames accordion_expansion and accordion_content, respectively -->
+							<div class="accordion_expansion">
+
+								<div class="accordion_content accessiblecontent">
+									<div class="accordion_content_title">
+									<!-- Page Title -->
+										Back up data
+									<!-- end Page Title-->
+									</div>
+
+									<div class="accordion_detail">
+										<!-- Page Description -->
+										<p>You might lose your data from accidental deletion or destruction. You can back up important computer
+										data to help restore lost or deleted items. Your windows computer comes with a backup system.</p>
+										 
+										<p>To back up your data, right-click the Start button, click Control Panel, click System and Security, and then 
+										click File History. Follow the steps in the wizard to choose where you want to back up the information 
+										and what information you want to back up. If you have backed up your information before, you can wait 
+										to back up until the next scheduled maintenance time, or you can continue with the backup process.</p>
+										
+										<p>It is good idea to back up your information regularly so that you always have a current copy of your files
+										and programs in case you need to restore your data. It is best to back up your data to multiple sources,
+										such as to an external hard drive and to a CD. This ensures you have a second backup copy of your data
+										if one source is damaged or is stolen.</p>
+										
+										<img alt="" height="100%" src="GuidelinesforProtectingYourComputer_PCDocumentstoUSBandDiskandFloppy.png" width="100%">										
+										<!-- end Page Description -->
+									</div>
+
+									<!-- include an attribute "data-audio" on the media_bar with the audio filename to play when strip is opened -->
+									<!-- include an attribute "data-video" on the media_bar with the audio filename to play when strip is opened; video files must be configured for the page using Access Point Studio
+												 By default, video embeds into the media_bar itself; to embed elsewhere, include an attribute "data-mediaContainer" with the id of the element into which the video should embed -->
+									<!--<div class="media_bar" data-audio="sample.mp3"></div>-->
+									<!--<div class="media_bar" data-video="sample.mp4"></div>-->
+								</div>
+							</div>
+						</div>
+						
+						<!-- accordion strip 6 -->
+						<div class="accordion_strip accent3 tile" data-required="true">
+							<!-- title to appear on the accordion strip -->
+							<div class="accordion_strip_title accessiblecontent">Keep your computer in a safe environment</div>
+
+							<!-- accordion expansion that is visible when accordion strip is opened; actual content should be nested within two divs with classnames accordion_expansion and accordion_content, respectively -->
+							<div class="accordion_expansion">
+
+								<div class="accordion_content accessiblecontent">
+									<div class="accordion_content_title">
+									<!-- Page Title -->
+										Keep your computer in a safe environment
+									<!-- end Page Title-->
+									</div>
+
+									<div class="accordion_detail">
+										<!-- Page Description -->
+										<p>Keep the computer in an area that is a moderate temperature, free from dust and vibrations, and out of 
+										the way of possible impact.</p>
+										
+										<p>A table or shelf housing the computer should be steady and stable to keep the computer from falling, 
+										even if bumped.</p>
+										
+										<p>Recommended room temperature should range from 65 to 70° F (18° to 21° C) for optimal system 
+										reliability. A room that is too cold can create humidity levels that are too high. High humidity can cause
+										water condensation to occur, resulting in hardware corrosion and component failure. When the room is 
+										too hot, humidity levels become low. Humidity that is too low can allow electrostatic discharge, which 
+										can affect sensitive components. Hot rooms can also cause overheating, which can greatly reduce the 
+										life of electronics.</p>
+
+										<p>To keep your computer at a safe temperature, you can install a fan. Some fans can cool systems by using 
+										liquid circulation systems.</p>
+
+										<img alt="" height="100%" src="Keep_computer_in_safe_environment.png" width="100%">
+										<!-- end Page Description -->
+									</div>
+
+									<!-- include an attribute "data-audio" on the media_bar with the audio filename to play when strip is opened -->
+									<!-- include an attribute "data-video" on the media_bar with the audio filename to play when strip is opened; video files must be configured for the page using Access Point Studio
+												 By default, video embeds into the media_bar itself; to embed elsewhere, include an attribute "data-mediaContainer" with the id of the element into which the video should embed -->
+									<!--<div class="media_bar" data-audio="sample.mp3"></div>-->
+									<!--<div class="media_bar" data-video="sample.mp4"></div>-->
+								</div>
+							</div>
+						</div>
+
+
+					</div>
+
+				</div>
+				<div class="clear"></div>
+
+				<!-- If desired, content to appear below tiles can be placed here -->
+				<!--Challenges to giving your best at work require actions that result in courageous
+									contribution.Challenges to giving your best at work require actions that result
+									in courageous contribution.-->
+			</div>
+		</div>
+	</div>
+</body>
+</html>

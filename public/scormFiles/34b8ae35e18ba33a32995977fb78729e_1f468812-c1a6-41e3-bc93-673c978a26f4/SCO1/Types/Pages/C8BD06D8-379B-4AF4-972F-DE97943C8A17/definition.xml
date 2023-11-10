@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<type version="4.0" playbackSource="HTML" editorType="HTML" canSendCompletion="false">
+	<instance>
+		<languages>
+			<language name="neutral" />
+		</languages>
+	</instance>
+	<editor>
+		<languages>
+			<language name="neutral">
+				<name>Modern Module Introduction</name>
+				<description>An information page containing HTML-based content, displayed in a Modern inspired page.</description>
+			</language>
+		</languages>
+	</editor>
+</type>

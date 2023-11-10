@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<type version="4.0" playbackSource="Video" editorType="Video" canSendCompletion="true">
+  <instance>
+    <languages>
+      <language name="neutral" />
+      <language name="ja" />
+      <language name="zh-cn" />
+    </languages>
+  </instance>
+  <editor>
+    <languages>
+      <language name="neutral">
+        <name>Video</name>
+        <description>Displays Video</description>
+      </language>
+    </languages>
+  </editor>
+</type>

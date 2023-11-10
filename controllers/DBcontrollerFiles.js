@@ -3,6 +3,7 @@ const url = require("url");
 const path = require("path");
 const fs = require("fs");
 const { v4: uuidv4 } = require("uuid");
+const extract = require("extract-zip");
 
 const configuration = require("../Configuration");
 const utils = require("../utils/Utils");
@@ -87,6 +88,86 @@ exports.fileUpload = function (req, res, next) {
     setCorsHeaders(req, res);
     res.json({ relativeUrl, fileName, type });
   });
+};
+
+exports.courseScormFileUpload = function (req, res, next) {
+  let uploadFiles = Object.values(req.files);
+  //console.log(uploadFiles);
+  let fileName = uploadFiles[0].originalFilename;
+  let oldPath = uploadFiles[0].path;
+  let type = uploadFiles[0].type;
+  if (type !== "application/zip") {
+    const errObj = new Error("Invalid Zip File");
+    next(errObj);
+  } else if (!fileName.endsWith(".zip")) {
+    const errObj = new Error("File name should end with .zip");
+    next(errObj);
+  } else {
+    const dotIndex = fileName.lastIndexOf(".");
+    const uniqueId = uuidv4();
+    /* strip of the .zip to get the directory name */
+    const newDirName = fileName.substring(0, dotIndex) + "_" + uniqueId;
+
+    const newFileName =
+      fileName.substring(0, dotIndex) +
+      "_" +
+      uniqueId +
+      fileName.substring(dotIndex);
+
+    let newPath = path.join(
+      __basedir,
+      constants.PUBLIC_DIRECTORY,
+      constants.SCORM_COURSE_UPLOAD_FILES_DIRECTORY,
+      newFileName
+    );
+
+    let newUnzipDirPath = path.join(
+      __basedir,
+      constants.PUBLIC_DIRECTORY,
+      constants.SCORM_COURSE_UPLOAD_FILES_DIRECTORY,
+      newDirName
+    );
+    let relativeUrl = path.join(
+      constants.SCORM_COURSE_UPLOAD_FILES_DIRECTORY,
+      newFileName
+    );
+
+    fs.rename(oldPath, newPath, async function (err) {
+      if (err) next(err);
+      else {
+        try {
+          await extract(newPath, { dir: newUnzipDirPath });
+
+          let dirContents = [];
+          //const dirContents = fs.readdirSync(newUnzipDirPath);
+          utils.readdirRecursiveSync(newUnzipDirPath, dirContents, 0, 2);
+
+          dirContents = dirContents.filter(
+            (val) => val.endsWith(".html") || val.endsWith(".htm")
+          );
+
+          /* extract relative paths */
+          dirContents = dirContents.map((val) => {
+            return val.startsWith(newUnzipDirPath)
+              ? val.substring(newUnzipDirPath.length + 1)
+              : val;
+          });
+          setCorsHeaders(req, res);
+          res.json({
+            courseId: newDirName,
+            relativeUrl,
+            contents: dirContents,
+          });
+        } catch (ex) {
+          console.log(ex.message);
+          fs.unlink(newPath, (error) => {
+            next(new Error("Error While Extracting Zip File"));
+          });
+          // handle any errors
+        }
+      }
+    });
+  }
 };
 
 exports.fileUploadDelete = function (req, res, next) {

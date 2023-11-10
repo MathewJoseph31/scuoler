@@ -1,0 +1,255 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+<title></title>
+<link rel="stylesheet" href="../../../Player/css/pagestyles.css" type="text/css" />
+<link rel="stylesheet" href="../../../Custom/css/pagestyles.css" type="text/css" />
+<script type="text/javascript" src="../../../Player/js/libs/jquery-1.7.1.min.js" ></script>
+<script type="text/javascript" src="../../../Player/js/page.min.js"></script>
+<script type="text/javascript">
+	//set imagePath to location of icon images relative to the page
+	//var imagePath = "../../../Player/theme/";
+
+	//to override the 2:1 aspectRatio for the page, use the aspectRatioOverride variable
+	//var aspectRatioOverride = 4 / 3;
+</script>
+</head>
+<!-- Use data-completionType attribute on body element to control when the page is completed: 
+			- Set attribute value to "immediate" to complete page as soon as it loads; set to "auto" to complete page as soon as the required components are complete 
+			- If the attribute is omitted or the value is not "auto" or "immediate", custom script code is required to control page completion -->
+<body onkeydown="return parent.doKeyDown(event);" data-completionType="auto">
+	<div class="page_container">
+		<div class="content_wrapper">
+			<div class="content_container">
+				<!-- If desired, content to appear above tiles can be placed here -->
+				<!--<div>Challenges to giving your best at work require actions that result in courageous
+									contribution.Challenges to giving your best at work require actions that result
+									in courageous contribution.</div><br />-->
+
+				<!-- tile_container is the container for all tiles in the tile framework; it should be a child of content_container (there can be more than one of these, if desired)-->
+				<!-- DO NOT use inline styles to change dimensions of this container; to modify tile sizing, use inline styles on the tab_container or tile_block elements -->
+				<div class="tile_container">
+
+					<!-- square content tile -->
+					<!-- to put this on the right instead of the left of the tabbed tiles, include the style="float:right;" attribute in this div tag-->
+					<div class="square tile">
+
+						<div class="tile_title accent2_text accessiblecontent">
+						<!-- Page Title -->
+							Legal concerns with information exchange 
+						<!-- end Page Title-->
+						</div>
+
+						<div class="tile_content scrolling_box">
+							<div class="scroll_content">
+
+								<div class="tile_detail page_description accessiblecontent">
+								<!-- Page Description -->
+									By using the Internet extensively,  you have the potential to get involved in illegal and unethical 
+									activities, such as gambling or damaging somebody’s reputation. You need to be aware of and cautious 
+									of these illegal and unethical practices. Remember that the way these practices are defined varies in 
+									different countries/regions, and even within parts of a single country/region, and that the legal system is 
+									different in different states and countries/regions.<br>	
+									<img alt="" height="75%" src="images/art_Earth.png" width="75%">							
+									<!-- end Page Description -->
+								</div>
+
+							</div>
+						</div>
+					</div>
+
+
+					<!-- tab container defines a click and reveal ui-->
+					<!-- Three types of navigation are possible with click and reveal:
+								1. Default navigation: user-activated click and reveal; any tab can be revealed at any time (default navigation)
+								2. Linear navigation (include attribute data-navigation="linear" on tab_container): user-activated selection, but tabs cannot be revealed until preceeding ones are completed
+								3. Synched navigation (include attribute data-navigation="synched" on tab_container): no user revealing of tabs; tab revealing is synchronized with page media 
+								When using synched navigation, data-startTime and data-endTime attributes should be included on the tabs -->
+
+					<!-- to display 8 tabs across the full display width, get rid of the square tile above, add the extra 4 tabs to this tab_container,
+							 and append the class name "wide_container" to the tab container (so it will read class="tab_container widecontainer") -->
+
+					<!-- to adjust height of tab popup region, adjust the height of tab_container with inline style; note, however, that the default height is 1000% (NOT 100%)-->
+					<!-- to adjust height of tabs in relation to the tab_container, adjust the height of tab_block with inline style; the default height is 100%-->
+					<!-- eg. 1: <div class="tab_container" style="height:750%;"><div class="tab_block">...</div></div> will reduce height of the click and reveal popup and tabs by 25%
+							 eg. 2: <div class="tab_container"><div class="tab_block" style="height:75%;">...</div></div> will reduce height of tabs by 25% but keep popup at default height
+							 eg. 3: <div class="tab_container" style="height:1250%;"><div class="tab_block" style="height:80%;">...</div></div> will increase height of popup by 25% but keep tabs at default height  -->
+					<div class="tab_container">
+						<div class="tile_block">
+
+							<!-- To mark a tab as required, set the data-required attribute to "true" -->
+							<!-- By default, click and reveal tabs are set to complete as soon as they are opened. 
+									Override this behaviour on a tab by including the attribute data-autocomplete="false" (if, for example, a video or other interaction in the tab popup will be used to determine completion) --> 
+							<!-- Include data-startTime="hh:mm:ss" and data-endTime="hh:mm:ss" attributes on tabs when using synched navigation; 
+									 include data-mediaId attribute to synch to media defined by a specific media_bar element as opposed to the page audio 
+									 (the value of this attribute should match the id of the corresponding media_bar element):
+								<a class="tab tile" data-mediaId="mediaId" data-startTime="00:00:00" data-endTime="00:00:30">...</a> -->
+							<!-- tab 1 -->
+							<div class="tab tile accent2" data-required="true">
+								<a class="expand tileActionButton"></a>
+
+								<div class="tab_number">
+								<!-- Tab Number -->
+									01
+								<!-- end Tab Number -->
+								</div>
+
+								<div class="tab_title accessiblecontent">
+								<!-- Tab Title -->
+									Defaming someone’s reputation								
+									<!-- end Tab Title -->
+								</div>
+
+								<!-- tab popup -->
+								<div class="tab_popup">
+									<!-- include an attribute "data-audio" on the media_bar with the audio filename to play when tab is opened -->
+									<!-- include an attribute "data-video" on the media_bar with the video filename to play when tab is opened; video files must be configured for the page using Access Point Studio
+												 By default, video embeds into the media_bar itself; to embed elsewhere, include an attribute "data-mediaContainer" with the id of the element into which the video should embed -->
+									<!--<div class="media_bar" data-audio="sample.mp3"></div>-->
+									<!--<div class="media_bar" data-video="sample.mp4"></div>-->
+
+									<div class="scrolling_box">
+										<div class="scroll_content">
+
+											<div class="tab_title accessiblecontent">
+												<!-- Tab Title -->
+													<b>Defaming someone’s reputation</b>
+												<!-- end Tab Title -->
+											</div>
+
+											<div class="tab_description accessiblecontent">
+												<div class="tab_content_description">
+												<!-- Tab Content Description -->
+													<p>When you communicate with others by using email, chat rooms, or online public forums, be careful not 
+													to make any statements about anyone that may result in defamation. Defamation means making false 
+													statements about a person that can negatively affect the person’s reputation. For example, suppose you 
+													post a message on an online forum falsely stating that your neighbor is running an illegal business. This 
+													would be considered defamation, because you are spreading false information that may harm your 
+													neighbor’s credibility.</p> 
+
+													<p>Libel and slander are two forms of defamation. Libel means written defamation that has been published, 
+													whereas slander means verbal defamation. The legal system of most countries/regions considers both 
+													libel and slander as punishable offenses. You may face criminal or civil penalties according to the legal 
+													system of your country/region. The punishment may range from a monetary penalty to severe 
+													punishment such as jail terms. Sometimes, the severity of the offense depends on the situation. For 
+													example, in some countries/regions, any insult to the President is a criminal offense. Therefore, be 
+													aware of the local laws before making any defamatory statements.</p>
+
+													<b>Note:</b>                   
+													A false statement can be considered defamatory, even if it is not derogatory. Sometimes, even true statements can be considered defamatory if the statements harm someone’s reputation.													
+												<!-- end Tab Content Description -->
+												</div>
+											</div>
+
+										</div>
+									</div>
+
+									<div class="tab_number">
+									<!-- Tab Number -->
+										01
+									<!-- end Tab Number -->
+									</div>
+									<a class="close tileActionButton"></a>
+								</div>
+							</div>
+
+							<!-- tab 2 -->
+							<div class="tab tile accent2" data-required="true">
+								<a class="expand tileActionButton"></a>
+
+								<div class="tab_number">
+								<!-- Tab Number -->
+									02
+								<!-- end Tab Number -->
+								</div>
+
+								<div class="tab_title accessiblecontent">
+								<!-- Tab Title -->
+									Visiting inappropriate web sites								
+									<!-- end Tab Title -->
+								</div>
+
+								<!-- tab popup -->
+								<div class="tab_popup">
+									<!-- include an attribute "data-audio" on the media_bar with the audio filename to play when tab is opened -->
+									<!-- include an attribute "data-video" on the media_bar with the video filename to play when tab is opened; video files must be configured for the page using Access Point Studio
+												 By default, video embeds into the media_bar itself; to embed elsewhere, include an attribute "data-mediaContainer" with the id of the element into which the video should embed -->
+									<!--<div class="media_bar" data-audio="sample.mp3"></div>-->
+									<!--<div class="media_bar" data-video="sample.mp4"></div>-->
+
+									<div class="scrolling_box">
+										<div class="scroll_content">
+
+											<div class="tab_title accessiblecontent">
+												<!-- Tab Title -->
+													<b>Visiting inappropriate web sites</b>
+												<!-- end Tab Title -->
+											</div>
+
+											<div class="tab_description accessiblecontent">
+												<div class="tab_content_description">
+												<!-- Tab Content Description -->
+													<p>Some websites offer services that carry out activities that are restricted by the legal system of your state 
+													or country/region. It is possible to access these sites over the Internet, because the Internet has no 
+													boundaries or police. For example, you can access a gambling site even if the law of your country/region 
+													bans gambling, however, this may cause legal troubles for you.</p>
+
+													<p>The issue of conducting illegal activity on websites also applies to the buying and selling of products on 
+													the Internet. For example, the products that you can legally buy or sell in one country/region might be 
+													considered an illegal purchase or sale in another country/region. Although a website might not restrict 
+													you from buying an item that is illegal in your country/region, you might face legal charges for buying 
+													the item.</p>
+												<!-- end Tab Content Description -->
+												</div>
+											</div>
+
+										</div>
+									</div>
+
+									<div class="tab_number">
+									<!-- Tab Number -->
+										02
+									<!-- end Tab Number -->
+									</div>
+									<a class="close tileActionButton"></a>
+								</div>
+							</div>
+
+							<!-- tab 3 -->
+							<div class="tab tile transparent">
+
+								<div class="tile_background">
+								<!-- Tab Background Image-->
+									<img alt="" height="100%" src="images/Legal_concerns_with_information_exchange_paper.png" width="100%">								
+									<!-- end Tab Background Image-->
+								</div>
+						
+							</div>
+
+							<!-- tab 4 -->
+							<div class="tab tile transparent">
+
+								<div class="tile_background">
+								<!-- Tab Background Image-->
+									<img alt="" height="90%" src="images/Legal_concerns_with_information_exchange_stop.png" width="100%">
+								<!-- end Tab Background Image-->
+								</div>
+						
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+				<div class="clear"></div>
+
+				<!-- If desired, content to appear below tiles can be placed here -->
+				<!--Challenges to giving your best at work require actions that result in courageous
+									contribution.Challenges to giving your best at work require actions that result
+									in courageous contribution.-->
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -22,6 +22,7 @@
     "express-form-data": "^2.0.17",
     "express-session": "1.15.6",
     "express-sslify": "^1.2.0",
+    "extract-zip": "^2.0.1",
     "http-errors": "~1.6.2",
     "https": "^1.0.0",
     "jsonwebtoken": "^8.5.1",

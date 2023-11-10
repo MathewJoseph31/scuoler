@@ -1,0 +1,339 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+<title></title>
+<link rel="stylesheet" href="../../../Player/css/pagestyles.css" type="text/css" />
+<link rel="stylesheet" href="../../../Custom/css/pagestyles.css" type="text/css" />
+<script type="text/javascript" src="../../../Player/js/libs/jquery-1.7.1.min.js" ></script>
+<script type="text/javascript" src="../../../Player/js/page.min.js"></script>
+<script type="text/javascript">
+	//set imagePath to location of icon images relative to the page
+	//var imagePath = "../../../Player/theme/";
+
+	//to override the 2:1 aspectRatio for the page, use the aspectRatioOverride variable
+	//var aspectRatioOverride = 4 / 3;
+</script>
+</head>
+<!-- Use data-completionType attribute on body element to control when the page is completed: 
+			- Set attribute value to "immediate" to complete page as soon as it loads; set to "auto" to complete page as soon as the required components are complete 
+			- If the attribute is omitted or the value is not "auto" or "immediate", custom script code is required to control page completion -->
+<body onkeydown="return parent.doKeyDown(event);" data-completionType="auto">
+	<div class="page_container">
+		<!-- optional instruction_overlay, used to display modal instructional content over main tab content. -->
+		<div class="instruction_overlay">
+			<div class="instruction_overlay_content">
+				<div class="instruction_overlay_title accent2_text">
+					an introduction to accordion ui
+				</div>
+				<div class="instruction_overlay_detail">
+					Click on each accordion strip to expand.
+				</div>
+			</div>
+		</div>
+		<div class="content_wrapper">
+			<div class="content_container">
+
+				<!-- If desired, content to appear above tiles can be placed here -->
+				<!--<div>Challenges to giving your best at work require actions that result in courageous
+									contribution.Challenges to giving your best at work require actions that result
+									in courageous contribution.</div><br />-->
+
+				<!-- tile_container is the container for all tiles in the tile framework; it should be a child of content_container (there can be more than one of these, if desired)-->
+				<!-- DO NOT use inline styles to change dimensions of this container; to modify tile sizing, use inline styles on the tab_container or tile_block elements -->
+				<div class="tile_container">
+
+					<!-- square content tile -->
+					<!-- to put this on the right instead of the left of the tabbed tiles, include the style="float:right;" attribute in this div tag-->
+					<div class="square tile">
+
+						<div class="tile_title accent2_text accessiblecontent">
+						<!-- Page Title -->
+							3 types of challenges at Microsoft
+						<!-- end Page Title-->
+						</div>
+
+						<div class="tile_content scrolling_box">
+							<div class="scroll_content">
+
+								<div class="tile_detail page_description accessiblecontent">
+								<!-- Page Description -->
+									Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pulvinar erat non enim
+									fringilla elementum. Sed vel lectus eu sapien sodales pharetra. Nullam a libero
+									tortor, vitae pulvinar quam. In dapibus accumsan risus, egestas pharetra nisi ornare
+									eu. Proin eu massa et purus accumsan iaculis. Integer hendrerit mi sapien, et auctor
+									dolor. Ut feugiat, dolor quis ornare imperdiet, arcu neque imperdiet mauris, quis
+									consectetur sapien nisi luctus purus. In porttitor tempus dui, a elementum diam
+									sagittis id. Integer pretium, turpis nec laoreet viverra, tortor sem pulvinar augue,
+									at fringilla risus orci quis purus. Donec vel accumsan mauris. Aliquam mi enim,
+									sollicitudin condimentum semper nec, pharetra a nisi.<br />
+									<br />
+									Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pulvinar erat non enim
+									fringilla elementum. Sed vel lectus eu sapien sodales pharetra. Nullam a libero
+									tortor, vitae pulvinar quam. In dapibus accumsan risus, egestas pharetra nisi ornare
+									eu. Proin eu massa et purus accumsan iaculis. Integer hendrerit mi sapien, et auctor
+									dolor. Ut feugiat, dolor quis ornare imperdiet, arcu neque imperdiet mauris, quis
+									consectetur sapien nisi luctus purus. In porttitor tempus dui, a elementum diam
+									sagittis id. Integer pretium, turpis nec laoreet viverra, tortor sem pulvinar augue,
+									at fringilla risus orci quis purus. Donec vel accumsan mauris. Aliquam mi enim,
+									sollicitudin condimentum semper nec, pharetra a nisi.
+								<!-- end Page Description -->
+								</div>
+
+							</div>
+						</div>
+					</div>
+
+					<!-- accordion wrapper defines a click and reveal ui-->
+					<!-- Three types of navigation are possible with accordion:
+								1. Default navigation: user-activated accordion expansion; any strip can be expanded at any time (default navigation)
+								2. Linear navigation (include attribute data-navigation="linear" on accordion_wrapper): user-activated expansion, but strips cannot be expanded until preceeding ones are completed
+								3. Synched navigation (include attribute data-navigation="synched" on accordion_wrapper): no user expansion of strips; expansion is synchronized with page media 
+								When using synched navigation, data-startTime and data-endTime attributes should be included on the strips -->
+					<!-- Accordion ui supports 2 modes for strip expansion, determined by the value of the data-expansionMode attribute. Default is data-expansionMode="single", allowing only one
+								strip to be expanded at a time. Set data-expansionMode="multiple" to allow multiple strips to be open at the same time. -->
+					<div class="right_column accordion_wrapper">
+
+						<!-- Expandable accordion elements go here. Each element should have class names accordion_strip and tile; classname accent is optional and produces strip with accent coloured background -->
+						<!-- To mark a strip as required, set the data-required attribute to "true" -->
+						<!-- By default, accordion strips are set to complete as soon as they are expanded. 
+									Override this behaviour on a strip by including the attribute data-autocomplete="false" (if, for example, a video or other interaction in the expansion will be used to determine completion) --> 
+						<!-- Include data-startTime="hh:mm:ss" and data-endTime="hh:mm:ss" attributes on strips when using synched navigation; 
+									include data-mediaId attribute to synch to media defined by a specific media_bar element as opposed to the page audio 
+									(the value of this attribute should match the id of the corresponding media_bar element):
+								<a class="accordion_strip accent tile" data-mediaId="mediaId" data-startTime="00:00:00" data-endTime="00:00:30">...</a> -->
+						<!-- accordion strip 1 -->
+						<div class="accordion_strip accent3 tile" data-required="true">
+							<!-- title to appear on the accordion strip -->
+							<div class="accordion_strip_title accessiblecontent">Discover the Accordion</div>
+
+							<!-- accordion expansion that is visible when accordion strip is opened; actual content should be nested within two divs with classnames accordion_expansion and accordion_content, respectively -->
+							<div class="accordion_expansion">
+
+								<div class="accordion_content accessiblecontent">
+									<div class="accordion_content_title">
+									<!-- Page Title -->
+										3 types of challenges at Microsoft
+									<!-- end Page Title-->
+									</div>
+
+									<div class="accordion_detail">
+										<!-- Page Description -->
+										Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pulvinar erat non enim
+										fringilla elementum. Sed vel lectus eu sapien sodales pharetra. Nullam a libero
+										tortor, vitae pulvinar quam. In dapibus accumsan risus, egestas pharetra nisi ornare
+										eu. Proin eu massa et purus accumsan iaculis. Integer hendrerit mi sapien, et auctor
+										dolor. Ut feugiat, dolor quis ornare imperdiet, arcu neque imperdiet mauris, quis
+										consectetur sapien nisi luctus purus. In porttitor tempus dui, a elementum diam
+										sagittis id. Integer pretium, turpis nec laoreet viverra, tortor sem pulvinar augue,
+										at fringilla risus orci quis purus. Donec vel accumsan mauris. Aliquam mi enim,
+										sollicitudin condimentum semper nec, pharetra a nisi.<br />
+										<!-- end Page Description -->
+									</div>
+
+									<!-- include an attribute "data-audio" on the media_bar with the audio filename to play when strip is opened -->
+									<!-- include an attribute "data-video" on the media_bar with the audio filename to play when strip is opened; video files must be configured for the page using Access Point Studio
+												 By default, video embeds into the media_bar itself; to embed elsewhere, include an attribute "data-mediaContainer" with the id of the element into which the video should embed -->
+									<!--<div class="media_bar" data-audio="sample.mp3"></div>-->
+									<!--<div class="media_bar" data-video="sample.mp4"></div>-->
+								</div>
+							</div>
+						</div>
+
+						<!-- accordion strip 2 -->
+						<div class="accordion_strip accent3 tile" data-required="true">
+							<!-- title to appear on the accordion strip -->
+							<div class="accordion_strip_title accessiblecontent">Discover the Accordion</div>
+
+							<!-- accordion expansion that is visible when accordion strip is opened; actual content should be nested within two divs with classnames accordion_expansion and accordion_content, respectively -->
+							<div class="accordion_expansion">
+
+								<div class="accordion_content accessiblecontent">
+									<div class="accordion_content_title">
+									<!-- Page Title -->
+										3 types of challenges at Microsoft
+									<!-- end Page Title-->
+									</div>
+
+									<div class="accordion_detail">
+										<!-- Page Description -->
+										Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pulvinar erat non enim
+										fringilla elementum. Sed vel lectus eu sapien sodales pharetra. Nullam a libero
+										tortor, vitae pulvinar quam. In dapibus accumsan risus, egestas pharetra nisi ornare
+										eu. Proin eu massa et purus accumsan iaculis. Integer hendrerit mi sapien, et auctor
+										dolor. Ut feugiat, dolor quis ornare imperdiet, arcu neque imperdiet mauris, quis
+										consectetur sapien nisi luctus purus. In porttitor tempus dui, a elementum diam
+										sagittis id. Integer pretium, turpis nec laoreet viverra, tortor sem pulvinar augue,
+										at fringilla risus orci quis purus. Donec vel accumsan mauris. Aliquam mi enim,
+										sollicitudin condimentum semper nec, pharetra a nisi.<br />
+										<br />
+										Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pulvinar erat non enim
+										fringilla elementum. Sed vel lectus eu sapien sodales pharetra. Nullam a libero
+										tortor, vitae pulvinar quam. In dapibus accumsan risus, egestas pharetra nisi ornare
+										eu. Proin eu massa et purus accumsan iaculis. Integer hendrerit mi sapien, et auctor
+										dolor. Ut feugiat, dolor quis ornare imperdiet, arcu neque imperdiet mauris, quis
+										consectetur sapien nisi luctus purus. In porttitor tempus dui, a elementum diam
+										sagittis id. Integer pretium, turpis nec laoreet viverra, tortor sem pulvinar augue,
+										at fringilla risus orci quis purus. Donec vel accumsan mauris. Aliquam mi enim,
+										sollicitudin condimentum semper nec, pharetra a nisi.
+										<br />
+										<br />
+										Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pulvinar erat non enim
+										fringilla elementum. Sed vel lectus eu sapien sodales pharetra. Nullam a libero
+										tortor, vitae pulvinar quam. In dapibus accumsan risus, egestas pharetra nisi ornare
+										eu. Proin eu massa et purus accumsan iaculis. Integer hendrerit mi sapien, et auctor
+										dolor. Ut feugiat, dolor quis ornare imperdiet, arcu neque imperdiet mauris, quis
+										consectetur sapien nisi luctus purus. In porttitor tempus dui, a elementum diam
+										sagittis id. Integer pretium, turpis nec laoreet viverra, tortor sem pulvinar augue,
+										at fringilla risus orci quis purus. Donec vel accumsan mauris. Aliquam mi enim,
+										sollicitudin condimentum semper nec, pharetra a nisi.<br />
+										<br />
+										Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pulvinar erat non enim
+										fringilla elementum. Sed vel lectus eu sapien sodales pharetra. Nullam a libero
+										tortor, vitae pulvinar quam. In dapibus accumsan risus, egestas pharetra nisi ornare
+										eu. Proin eu massa et purus accumsan iaculis. Integer hendrerit mi sapien, et auctor
+										dolor. Ut feugiat, dolor quis ornare imperdiet, arcu neque imperdiet mauris, quis
+										consectetur sapien nisi luctus purus. In porttitor tempus dui, a elementum diam
+										sagittis id. Integer pretium, turpis nec laoreet viverra, tortor sem pulvinar augue,
+										at fringilla risus orci quis purus. Donec vel accumsan mauris. Aliquam mi enim,
+										sollicitudin condimentum semper nec, pharetra a nisi.
+										<!-- end Page Description -->
+									</div>
+
+									<!-- include an attribute "data-audio" on the media_bar with the audio filename to play when strip is opened -->
+									<!-- include an attribute "data-video" on the media_bar with the audio filename to play when strip is opened; video files must be configured for the page using Access Point Studio
+												 By default, video embeds into the media_bar itself; to embed elsewhere, include an attribute "data-mediaContainer" with the id of the element into which the video should embed -->
+									<!--<div class="media_bar" data-audio="sample.mp3"></div>-->
+									<!--<div class="media_bar" data-video="sample.mp4"></div>-->
+								</div>
+							</div>
+						</div>
+
+						<!-- accordion strip 3 -->
+						<div class="accordion_strip accent3 tile" data-required="true">
+							<!-- title to appear on the accordion strip -->
+							<div class="accordion_strip_title accessiblecontent">Discover the Accordion</div>
+
+							<!-- accordion expansion that is visible when accordion strip is opened; actual content should be nested within two divs with classnames accordion_expansion and accordion_content, respectively -->
+							<div class="accordion_expansion">
+
+								<div class="accordion_content accessiblecontent">
+									<div class="accordion_content_title">
+									<!-- Page Title -->
+										3 types of challenges at Microsoft
+									<!-- end Page Title-->
+									</div>
+
+									<div class="accordion_detail">
+										<!-- Page Description -->
+										Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pulvinar erat non enim
+										fringilla elementum. Sed vel lectus eu sapien sodales pharetra. Nullam a libero
+										tortor, vitae pulvinar quam. In dapibus accumsan risus, egestas pharetra nisi ornare
+										eu. Proin eu massa et purus accumsan iaculis. Integer hendrerit mi sapien, et auctor
+										dolor. Ut feugiat, dolor quis ornare imperdiet, arcu neque imperdiet mauris, quis
+										consectetur sapien nisi luctus purus. In porttitor tempus dui, a elementum diam
+										sagittis id. Integer pretium, turpis nec laoreet viverra, tortor sem pulvinar augue,
+										at fringilla risus orci quis purus. Donec vel accumsan mauris. Aliquam mi enim,
+										sollicitudin condimentum semper nec, pharetra a nisi.<br />
+										<!-- end Page Description -->
+									</div>
+
+									<!-- include an attribute "data-audio" on the media_bar with the audio filename to play when strip is opened -->
+									<!-- include an attribute "data-video" on the media_bar with the audio filename to play when strip is opened; video files must be configured for the page using Access Point Studio
+												 By default, video embeds into the media_bar itself; to embed elsewhere, include an attribute "data-mediaContainer" with the id of the element into which the video should embed -->
+									<!--<div class="media_bar" data-audio="sample.mp3"></div>-->
+									<!--<div class="media_bar" data-video="sample.mp4"></div>-->
+								</div>
+							</div>
+						</div>
+
+						<!-- accordion strip 4 -->
+						<div class="accordion_strip accent3 tile" data-required="true">
+							<!-- title to appear on the accordion strip -->
+							<div class="accordion_strip_title accessiblecontent">Discover the Accordion</div>
+
+							<!-- accordion expansion that is visible when accordion strip is opened; actual content should be nested within two divs with classnames accordion_expansion and accordion_content, respectively -->
+							<div class="accordion_expansion">
+
+								<div class="accordion_content accessiblecontent">
+									<div class="accordion_content_title">
+									<!-- Page Title -->
+										3 types of challenges at Microsoft
+									<!-- end Page Title-->
+									</div>
+
+									<div class="accordion_detail">
+										<!-- Page Description -->
+										Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pulvinar erat non enim
+										fringilla elementum. Sed vel lectus eu sapien sodales pharetra. Nullam a libero
+										tortor, vitae pulvinar quam. In dapibus accumsan risus, egestas pharetra nisi ornare
+										eu. Proin eu massa et purus accumsan iaculis. Integer hendrerit mi sapien, et auctor
+										dolor. Ut feugiat, dolor quis ornare imperdiet, arcu neque imperdiet mauris, quis
+										consectetur sapien nisi luctus purus. In porttitor tempus dui, a elementum diam
+										sagittis id. Integer pretium, turpis nec laoreet viverra, tortor sem pulvinar augue,
+										at fringilla risus orci quis purus. Donec vel accumsan mauris. Aliquam mi enim,
+										sollicitudin condimentum semper nec, pharetra a nisi.<br />
+										<!-- end Page Description -->
+									</div>
+
+									<!-- include an attribute "data-audio" on the media_bar with the audio filename to play when strip is opened -->
+									<!-- include an attribute "data-video" on the media_bar with the audio filename to play when strip is opened; video files must be configured for the page using Access Point Studio
+												 By default, video embeds into the media_bar itself; to embed elsewhere, include an attribute "data-mediaContainer" with the id of the element into which the video should embed -->
+									<!--<div class="media_bar" data-audio="sample.mp3"></div>-->
+									<!--<div class="media_bar" data-video="sample.mp4"></div>-->
+								</div>
+							</div>
+						</div>
+
+						<!-- accordion strip 5 -->
+						<div class="accordion_strip accent3 tile" data-required="true">
+							<!-- title to appear on the accordion strip -->
+							<div class="accordion_strip_title accessiblecontent">Discover the Accordion</div>
+
+							<!-- accordion expansion that is visible when accordion strip is opened; actual content should be nested within two divs with classnames accordion_expansion and accordion_content, respectively -->
+							<div class="accordion_expansion">
+
+								<div class="accordion_content accessiblecontent">
+									<div class="accordion_content_title">
+									<!-- Page Title -->
+										3 types of challenges at Microsoft
+									<!-- end Page Title-->
+									</div>
+
+									<div class="accordion_detail">
+										<!-- Page Description -->
+										Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pulvinar erat non enim
+										fringilla elementum. Sed vel lectus eu sapien sodales pharetra. Nullam a libero
+										tortor, vitae pulvinar quam. In dapibus accumsan risus, egestas pharetra nisi ornare
+										eu. Proin eu massa et purus accumsan iaculis. Integer hendrerit mi sapien, et auctor
+										dolor. Ut feugiat, dolor quis ornare imperdiet, arcu neque imperdiet mauris, quis
+										consectetur sapien nisi luctus purus. In porttitor tempus dui, a elementum diam
+										sagittis id. Integer pretium, turpis nec laoreet viverra, tortor sem pulvinar augue,
+										at fringilla risus orci quis purus. Donec vel accumsan mauris. Aliquam mi enim,
+										sollicitudin condimentum semper nec, pharetra a nisi.<br />
+										<!-- end Page Description -->
+									</div>
+
+									<!-- include an attribute "data-audio" on the media_bar with the audio filename to play when strip is opened -->
+									<!-- include an attribute "data-video" on the media_bar with the audio filename to play when strip is opened; video files must be configured for the page using Access Point Studio
+												 By default, video embeds into the media_bar itself; to embed elsewhere, include an attribute "data-mediaContainer" with the id of the element into which the video should embed -->
+									<!--<div class="media_bar" data-audio="sample.mp3"></div>-->
+									<!--<div class="media_bar" data-video="sample.mp4"></div>-->
+								</div>
+							</div>
+						</div>
+
+					</div>
+
+				</div>
+				<div class="clear"></div>
+
+				<!-- If desired, content to appear below tiles can be placed here -->
+				<!--Challenges to giving your best at work require actions that result in courageous
+									contribution.Challenges to giving your best at work require actions that result
+									in courageous contribution.-->
+			</div>
+		</div>
+	</div>
+</body>
+</html>

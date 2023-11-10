@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<type version="4.0" playbackSource="HTML" editorType="HTML" canSendCompletion="true">
+	<instance>
+		<languages>
+			<language name="neutral" />
+		</languages>
+	</instance>
+	<editor>
+		<languages>
+			<language name="neutral">
+				<name>Modern Click and Reveal (4 right)</name>
+				<description>A Modern inspired information page with 4 expandable tiles aligned to the right of a single information tile.</description>
+			</language>
+		</languages>
+	</editor>
+</type>

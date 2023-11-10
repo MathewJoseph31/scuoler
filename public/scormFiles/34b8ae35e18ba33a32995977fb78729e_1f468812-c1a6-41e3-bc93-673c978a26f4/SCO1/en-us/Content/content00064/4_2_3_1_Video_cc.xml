@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<?access-control allow="*"?>
+<tt xml:lang="en" xmlns="http://www.w3.org/ns/ttml" xmlns:ttm="http://www.w3.org/ns/ttml#metadata" xmlns:tts="http://www.w3.org/ns/ttml#styling" xmlns:ttp="http://www.w3.org/ns/ttml#parameter">
+  <head>
+    <ttm:title>Captions</ttm:title>
+    <metadata>
+      <ttm:copyright>
+        (c) Microsoft 2012, all rights reserved.
+      </ttm:copyright>
+    </metadata>
+    <styling>
+      <!-- s1 specifies default color, font, and text alignment -->
+      <style xml:id="s1" tts:color="white" tts:fontFamily="proportionalSansSerif" tts:fontSize="16px" tts:textAlign="center" />
+      <!-- alternative using yellow text but otherwise as style s1 -->
+      <style xml:id="s2" style="s1" tts:color="yellow" />
+      <!-- a style based on s1 but justified to the right -->
+      <style xml:id="s1Right" style="s1" tts:textAlign="end" />
+      <!-- a style based on s2 but justified to the left -->
+      <style xml:id="s2Left" style="s2" tts:textAlign="start" />
+    </styling>
+    <layout>
+      <region xml:id="subtitleArea" style="s1" tts:origin="0% 0%" tts:extent="100% 60px" tts:padding="3px 3px" tts:backgroundColor="black" tts:opacity="0.7" tts:displayAlign="center" tts:showBackground="whenActive" />
+    </layout>
+  </head>
+  <body>
+    <div region="subtitleArea">
+      <p xml:id="subtitle1" ttm:role="caption" begin="00:00:00:01" end="00:00:06:24">Phishing is a common activity used to extract personal information from computer users </p>
+      <p xml:id="subtitle2" ttm:role="caption" begin="00:00:07:00" end="00:00:09:24">and then use the information for malicious purposes</p>
+      <p xml:id="subtitle3" ttm:role="caption" begin="00:00:10:00" end="00:00:13:24">For example someone may send an email message to you </p>
+      <p xml:id="subtitle4" ttm:role="caption" begin="00:00:14:00" end="00:00:18:24">pretending to be from a bank or another trustworthy organization.  </p>
+      <p xml:id="subtitle5" ttm:role="caption" begin="00:00:19:00" end="00:00:25:24">The email asks you for sensitive information such as your credit card number or password.  </p>
+      <p xml:id="subtitle6" ttm:role="caption" begin="00:00:26:00" end="00:00:31:24">This information might be sold to someone else or immediately used to cause you financial loss.  </p>
+      <p xml:id="subtitle7" ttm:role="caption" begin="00:00:32:00" end="00:00:41:24">It’s important that you verify the authenticity of any email message that asks you to respond with personal information.</p>
+      <p xml:id="subtitle8" ttm:role="caption" begin="00:00:42:00" end="00:00:50:24">There are various phishing websites on the Internet that will use fake email messages to try and collect your personal information.</p>
+      <p xml:id="subtitle9" ttm:role="caption" begin="00:00:51:00" end="00:01:21:00">Internet Explorer 11 helps protect you from phishing websites with privacy settings and the SmartScreen filter. </p>
+    </div>
+  </body>
+</tt>

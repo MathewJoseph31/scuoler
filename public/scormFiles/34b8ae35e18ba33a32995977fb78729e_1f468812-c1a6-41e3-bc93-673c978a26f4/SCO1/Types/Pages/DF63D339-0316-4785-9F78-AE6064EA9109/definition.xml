@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<type version="4.0" playbackSource="HTML" editorType="HTML" canSendCompletion="true">
+  <instance>
+    <languages>
+      <language name="neutral" />
+    </languages>
+  </instance>
+  <editor>
+    <languages>
+      <language name="neutral">
+        <name>Modern Tasks with Progress</name>
+        <description>A Modern styled page with required tasks, a task progress tile, and a page completion button. Intended for use as a single page course.</description>
+      </language>
+    </languages>
+  </editor>
+</type>

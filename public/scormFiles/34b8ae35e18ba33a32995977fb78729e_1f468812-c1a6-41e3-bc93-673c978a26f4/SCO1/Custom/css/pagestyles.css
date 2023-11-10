@@ -1,0 +1,94 @@
+﻿/* CUSTOM OVERRIDE PAGE STYLES HERE */
+.tile.downloadcourse,
+
+.tile.downloadcourse img,
+
+.tile.downloadcourse .tile_background,
+
+.tile.downloadtranscript,
+
+.tile.downloadtranscript img,
+
+.tile.downloadtranscript .tile_background,
+
+.tile.full.progress .tile_background
+
+{
+
+    border-top-color: transparent !important;
+
+    border-right-color: transparent !important;
+
+    border-bottom-color: transparent !important;
+
+    border-left-color: transparent !important;
+
+    border-top-width: 0 !important;
+
+    border-right-width: 0 !important;
+
+    border-bottom-width: 0 !important;
+
+    border-left-width: 0 !important;
+
+    background-color: transparent;
+
+}
+
+.tile.full.progress .tile_title,
+
+.tile.full.progress .tile_subtitle,
+
+.tile.full.progress .tile_footer
+
+ {
+
+    color: #000;
+
+}
+
+.tile.full.progress .tileActionButton {
+
+    background-image: url("../../Player/theme/light/images/arrow.right.normal.png");
+
+    color: #000;
+
+}
+
+.truefalse_wrapper {
+    width:100%;
+    height:100% !important;
+}
+
+.wrap_rectangle {
+    width:74.2%;
+    height:100%;
+    overflow:hidden;
+}
+.full_rectangle {
+    width:74.2%;
+    height:auto;
+    overflow:hidden;
+}
+
+.lttheme_gray {
+    background:#b5b5b5;
+}
+.content_wrapper {
+    overflow:auto;
+}
+
+.idealanswerbox {
+}
+
+.tile_detail span {
+    display:inline-block;
+    margin-left:50px;
+    margin-top:5px;
+    color:#555555;
+}
+
+.tile_detail {
+    display:inline-block;
+    vertical-align: middle;
+}

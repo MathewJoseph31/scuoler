@@ -1,0 +1,654 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<objectives>
+  <objective name="Exam" id="1">
+    <scenario type="none">
+      <title><![CDATA[]]></title>
+      <text><![CDATA[]]></text>
+      <audio key="" />
+    </scenario>
+    <question id="1" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[You accidentally delete a registry file. Now you cannot start your computer.
+What kind of computer threat is this?
+]]></prompt>
+      <choice correct="true"><![CDATA[Human error]]></choice>
+      <choice correct="false"><![CDATA[Spoofing]]></choice>
+      <choice correct="false"><![CDATA[Phising]]></choice>
+      <choice correct="false"><![CDATA[Software piracy]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="2" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[Someone has tampered with your computer and deleted data.
+What kind of computer threat is this?
+]]></prompt>
+      <choice correct="true"><![CDATA[Security]]></choice>
+      <choice correct="false"><![CDATA[Physical theft]]></choice>
+      <choice correct="false"><![CDATA[Enviromental]]></choice>
+      <choice correct="false"><![CDATA[Spyware]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="3" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[How can you prevent others from accessing data on your stand-alone computer?]]></prompt>
+      <choice correct="false"><![CDATA[Use an uninterruptible power supply (UPS) and a surge protector.]]></choice>
+      <choice correct="true"><![CDATA[Use a user name and password.]]></choice>
+      <choice correct="false"><![CDATA[Back up data and save it in a different location.]]></choice>
+      <choice correct="false"><![CDATA[Install a spyware program and an antivirus program.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="4" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[Which of the following options are threats to computer privacy?]]></prompt>
+      <choice correct="false"><![CDATA[Accidental erasure of data.]]></choice>
+      <choice correct="false"><![CDATA[Hardware failure.]]></choice>
+      <choice correct="false"><![CDATA[Damage to computer because of an earthquake.]]></choice>
+      <choice correct="true"><![CDATA[Theft of confidential data.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="5" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[Your computer does not work when it heats up.
+What is affecting your computer in this case?
+]]></prompt>
+      <choice correct="false"><![CDATA[Hackers trying to access your computer.]]></choice>
+      <choice correct="false"><![CDATA[Firewall installed in your computer.]]></choice>
+      <choice correct="true"><![CDATA[Environment surrounding your computer.]]></choice>
+      <choice correct="false"><![CDATA[Many programs opened simultaneously.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="6" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[After a voltage fluctuation, your computer stops working.
+How can you prevent this problem in the future?
+]]></prompt>
+      <choice correct="true"><![CDATA[Use a surge protector.]]></choice>
+      <choice correct="false"><![CDATA[Install an antivirus program.]]></choice>
+      <choice correct="false"><![CDATA[Use spyware.]]></choice>
+      <choice correct="false"><![CDATA[Back up data.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="7" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[There is a hurricane alert in your area.
+Which action will you take to protect the data in your computer?
+
+]]></prompt>
+      <choice correct="false"><![CDATA[Install a virus protection program.]]></choice>
+      <choice correct="true"><![CDATA[Store the data in a safe location.]]></choice>
+      <choice correct="false"><![CDATA[Install spyware-fighting software.]]></choice>
+      <choice correct="false"><![CDATA[Install a firewall to prevent hacking.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="8" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[How can you protect your computer from a power outage?]]></prompt>
+      <choice correct="true"><![CDATA[Use an uninterruptible power supply (UPS).]]></choice>
+      <choice correct="false"><![CDATA[Use a firewall.]]></choice>
+      <choice correct="false"><![CDATA[Use a surge protector.]]></choice>
+      <choice correct="false"><![CDATA[Install an antivirus program.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="9" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[You spilled coffee on your computer.
+What kind of threat is this?
+]]></prompt>
+      <choice correct="true"><![CDATA[Human error.]]></choice>
+      <choice correct="false"><![CDATA[Natural disaster.]]></choice>
+      <choice correct="false"><![CDATA[Environmental threat.]]></choice>
+      <choice correct="false"><![CDATA[Hacking.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="10" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[You receive an e-mail message. The sender of the message claims to be a bank executive and wants your personal information to open an account for you.
+Which term might describe this activity?
+]]></prompt>
+      <choice correct="true"><![CDATA[Online Predating.]]></choice>
+      <choice correct="false"><![CDATA[Internet Scam.]]></choice>
+      <choice correct="false"><![CDATA[Spyware.]]></choice>
+      <choice correct="false"><![CDATA[Hacking.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="11" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[You realize that someone has changed the password to your computer without your knowledge.
+How would you describe this activity?
+]]></prompt>
+      <choice correct="false"><![CDATA[Online Predating.]]></choice>
+      <choice correct="true"><![CDATA[Theft.]]></choice>
+      <choice correct="false"><![CDATA[Internet Scam.]]></choice>
+      <choice correct="false"><![CDATA[Spyware]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="12" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[Which program does a system administrator use to discover a Trojan horse?]]></prompt>
+      <choice correct="false"><![CDATA[Microsoft Windows Firewall.]]></choice>
+      <choice correct="false"><![CDATA[Microsoft Internet Explorer.]]></choice>
+      <choice correct="true"><![CDATA[Antivirus.]]></choice>
+      <choice correct="false"><![CDATA[Uninterruptible power supply (UPS).]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="13" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[You cannot access a file in a computer that belongs to your friend.
+What prevents you from accessing the file?
+]]></prompt>
+      <choice correct="true"><![CDATA[Firewall.]]></choice>
+      <choice correct="false"><![CDATA[Spyware.]]></choice>
+      <choice correct="false"><![CDATA[Antivirus.]]></choice>
+      <choice correct="false"><![CDATA[Uninterruptible power supply (UPS).]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="14" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[What type of program can monitor your browsing activities without your knowledge?]]></prompt>
+      <choice correct="false"><![CDATA[Antivirus.]]></choice>
+      <choice correct="true"><![CDATA[Spyware.]]></choice>
+      <choice correct="false"><![CDATA[Microsoft Windows Update.]]></choice>
+      <choice correct="false"><![CDATA[Firewall.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="15" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[Which method allows you to grant network access only to specific people?]]></prompt>
+      <choice correct="true"><![CDATA[User identification.]]></choice>
+      <choice correct="false"><![CDATA[Lock combination.]]></choice>
+      <choice correct="false"><![CDATA[Data encryption.]]></choice>
+      <choice correct="false"><![CDATA[Data backup.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="16" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[How can you ensure that no one uses your computer while you are away?]]></prompt>
+      <choice correct="false"><![CDATA[Turn off the monitor.]]></choice>
+      <choice correct="true"><![CDATA[Use Lock Computer button.]]></choice>
+      <choice correct="false"><![CDATA[Use a firewall.]]></choice>
+      <choice correct="false"><![CDATA[Install updates for your computer.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="17" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[You have set a password for your computer.
+How can you prevent someone from accessing your computer without your permission?
+]]></prompt>
+      <choice correct="false"><![CDATA[Use an antispyware program.]]></choice>
+      <choice correct="false"><![CDATA[Update the operating system.]]></choice>
+      <choice correct="false"><![CDATA[Deploy a firewall.]]></choice>
+      <choice correct="true"><![CDATA[Change your password frequently.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="18" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[What is the benefit of security patches?]]></prompt>
+      <choice correct="true"><![CDATA[Protecting the computer from malicious attacks.]]></choice>
+      <choice correct="false"><![CDATA[Updating the antivirus program.]]></choice>
+      <choice correct="false"><![CDATA[Creating periodic backups.]]></choice>
+      <choice correct="false"><![CDATA[Preventing spam e-mail messages.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="19" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[Managers in your organization notice that some employees use company applications for unethical purposes.
+Which tool can managers use to check this unethical practice?
+
+]]></prompt>
+      <choice correct="false"><![CDATA[Antivirus program.]]></choice>
+      <choice correct="true"><![CDATA[Spyware.]]></choice>
+      <choice correct="false"><![CDATA[Cookies.]]></choice>
+      <choice correct="false"><![CDATA[Firewall.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="20" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[Which technology will ensure that a Web site is secure for online transactions?]]></prompt>
+      <choice correct="true"><![CDATA[Secure Sockets Layer (SSL).]]></choice>
+      <choice correct="false"><![CDATA[Microsoft Windows Firewall.]]></choice>
+      <choice correct="false"><![CDATA[Cookies.]]></choice>
+      <choice correct="false"><![CDATA[Antivirus program.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="21" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[What is Secure Sockets Layer (SSL)?]]></prompt>
+      <choice correct="true"><![CDATA[A standard for encoding information that is sent over the Web.]]></choice>
+      <choice correct="false"><![CDATA[A means of checking if a document on the Web is genuine.]]></choice>
+      <choice correct="false"><![CDATA[A standard and a secure way of presenting information.]]></choice>
+      <choice correct="false"><![CDATA[A means to validate the identity of the user who accesses a Web site.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="22" type="choice-multiple" randomize="true" distractorsCount="4" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[You use a shared computer to browse the Internet. After leaving the computer, you do not want anyone else to know which Web sites you visited.
+Which three actions should you take? Select three.
+]]></prompt>
+      <choice correct="false"><![CDATA[Reset Web settings.]]></choice>
+      <choice correct="true"><![CDATA[Clear history.]]></choice>
+      <choice correct="false"><![CDATA[Empty Recycle Bin.]]></choice>
+      <choice correct="true"><![CDATA[Clear browser cache.]]></choice>
+      <choice correct="false"><![CDATA[Disable Microsoft Windows Firewall.]]></choice>
+      <choice correct="false"><![CDATA[Enable active content.]]></choice>
+      <choice correct="true"><![CDATA[Delete cookies.]]></choice>
+      <feedbackCorrect><![CDATA[]]></feedbackCorrect>
+      <feedbackIncorrect><![CDATA[]]></feedbackIncorrect>
+    </question>
+    <question id="23" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[Which password is considered a strong password?]]></prompt>
+      <choice correct="false"><![CDATA[Password.]]></choice>
+      <choice correct="false"><![CDATA[ABC.]]></choice>
+      <choice correct="false"><![CDATA[JaneSmith.]]></choice>
+      <choice correct="true"><![CDATA[JSmith#175.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="24" type="choice-multiple" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[Which two actions will secure your online and network transactions? Select two.]]></prompt>
+      <choice correct="true"><![CDATA[Use strong passwords.]]></choice>
+      <choice correct="false"><![CDATA[Disable Automatic Updates.]]></choice>
+      <choice correct="true"><![CDATA[Enable Microsoft Windows Firewall.]]></choice>
+      <choice correct="false"><![CDATA[Check history files.]]></choice>
+      <choice correct="false"><![CDATA[Enable active content.]]></choice>
+      <feedbackCorrect><![CDATA[]]></feedbackCorrect>
+      <feedbackIncorrect><![CDATA[]]></feedbackIncorrect>
+    </question>
+    <question id="25" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[How can you protect your computer from virus attacks by e-mail?]]></prompt>
+      <choice correct="true"><![CDATA[Avoid opening e-mail attachments from unknown users.]]></choice>
+      <choice correct="false"><![CDATA[Copy attachments to your computer before you open them.]]></choice>
+      <choice correct="false"><![CDATA[Reply to spam e-mail messages.]]></choice>
+      <choice correct="false"><![CDATA[Reinstall the e-mail client periodically.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="26" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[How can you ensure that your instant messages are secure?]]></prompt>
+      <choice correct="false"><![CDATA[Chat with only one user at a time.]]></choice>
+      <choice correct="true"><![CDATA[Chat only with known users.]]></choice>
+      <choice correct="false"><![CDATA[Open attachments received over chat.]]></choice>
+      <choice correct="false"><![CDATA[Use different programs to chat with different users.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="27" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[You receive an e-mail message from an unknown user. This message includes an .exe file as an attachment.
+What will you do with this message?
+]]></prompt>
+      <choice correct="false"><![CDATA[Install the .exe file.]]></choice>
+      <choice correct="false"><![CDATA[Save the attachment on your computer.]]></choice>
+      <choice correct="true"><![CDATA[Delete the message.]]></choice>
+      <choice correct="false"><![CDATA[Move the message to another folder.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="28" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[Which is a common guideline for securing e-mail transactions?]]></prompt>
+      <choice correct="false"><![CDATA[Archive e-mail messages that include attachments.]]></choice>
+      <choice correct="false"><![CDATA[Save junk e-mail messages in a separate folder.]]></choice>
+      <choice correct="false"><![CDATA[Reply to spam e-mail messages.]]></choice>
+      <choice correct="true"><![CDATA[Delete e-mail messages that include attachments from unknown users.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="29" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[Which type of e-mail messages are considered spam messages?]]></prompt>
+      <choice correct="false"><![CDATA[Account details from your bank.]]></choice>
+      <choice correct="false"><![CDATA[E-mail account details from your ISP.]]></choice>
+      <choice correct="true"><![CDATA[Commercial information from an unknown sender.]]></choice>
+      <choice correct="false"><![CDATA[A message from a friend that includes family pictures.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="30" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[You want to ensure that your computer data is secure and can be restored in case of an environmental disaster.
+What should you do?
+]]></prompt>
+      <choice correct="true"><![CDATA[Maintain a backup in a secure location.]]></choice>
+      <choice correct="false"><![CDATA[Update the antivirus program.]]></choice>
+      <choice correct="false"><![CDATA[Use Microsoft Windows Update.]]></choice>
+      <choice correct="false"><![CDATA[Install an antispyware program.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="31" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[You receive an e-mail message from an unknown sender. The sender requests that you share your credit card details in order to receive a discount on some music CDs.
+What should you do?
+]]></prompt>
+      <choice correct="false"><![CDATA[Reply to the message to provide your credit card details.]]></choice>
+      <choice correct="false"><![CDATA[Encrypt the message.]]></choice>
+      <choice correct="false"><![CDATA[Scan the message for viruses.]]></choice>
+      <choice correct="true"><![CDATA[Delete the message.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="32" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[How can you ensure the privacy of an e-mail message?]]></prompt>
+      <choice correct="false"><![CDATA[Use an antispyware program.]]></choice>
+      <choice correct="true"><![CDATA[Encrypt the e-mail message.]]></choice>
+      <choice correct="false"><![CDATA[Use e-mail filters.]]></choice>
+      <choice correct="false"><![CDATA[Maintain a backup of the e-mail message.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="33" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[You install an antivirus program. Within a few days, you receive a virus alert.
+How can you prevent this virus from infecting your computer in the future?
+]]></prompt>
+      <choice correct="true"><![CDATA[Update and run virus scans daily.]]></choice>
+      <choice correct="false"><![CDATA[Update the Internet browser.]]></choice>
+      <choice correct="false"><![CDATA[Check Microsoft Windows Update.]]></choice>
+      <choice correct="false"><![CDATA[Use a strong password.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="34" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[Which program can you use to encrypt data?]]></prompt>
+      <choice correct="false"><![CDATA[Windows Firewall.]]></choice>
+      <choice correct="false"><![CDATA[Windows Defender.]]></choice>
+      <choice correct="true"><![CDATA[BitLocker feature.]]></choice>
+      <choice correct="false"><![CDATA[Microsoft Windows Update.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="35" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[Which program can verify that a Microsoft Windows computer has the latest security patches?]]></prompt>
+      <choice correct="true"><![CDATA[Microsoft Windows Update.]]></choice>
+      <choice correct="false"><![CDATA[Windows Defender.]]></choice>
+      <choice correct="false"><![CDATA[Microsoft Office.]]></choice>
+      <choice correct="false"><![CDATA[Windows Mail.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="36" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[Which option indicates that a Web site is secure for online transactions?]]></prompt>
+      <choice correct="true"><![CDATA[Locked padlock icon.]]></choice>
+      <choice correct="false"><![CDATA[Automatic Updates icon.]]></choice>
+      <choice correct="false"><![CDATA[Encryption tool.]]></choice>
+      <choice correct="false"><![CDATA[Internet service provider (ISP) logo.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="37" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[You cannot access the e-mail account that your Internet service provider (ISP) provides. You realize that someone has hacked into your account.
+Which action will you take to remedy this issue?
+]]></prompt>
+      <choice correct="true"><![CDATA[Report the incident to your ISP.]]></choice>
+      <choice correct="false"><![CDATA[Use Microsoft Windows Update.]]></choice>
+      <choice correct="false"><![CDATA[Install spyware.]]></choice>
+      <choice correct="false"><![CDATA[Protect your computer from surges and spikes.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="38" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[What are some actions that an online predator might take?]]></prompt>
+      <choice correct="false"><![CDATA[Sends viruses.]]></choice>
+      <choice correct="true"><![CDATA[Tries to involve you in a relationship.]]></choice>
+      <choice correct="false"><![CDATA[Steals passwords.]]></choice>
+      <choice correct="false"><![CDATA[Sends junk e-mail messages.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="39" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[Which guideline helps to ensure a child’s safety from online predators?]]></prompt>
+      <choice correct="true"><![CDATA[Chat only with people they know.]]></choice>
+      <choice correct="false"><![CDATA[Use private chat areas.]]></choice>
+      <choice correct="false"><![CDATA[Install multiple chat programs.]]></choice>
+      <choice correct="false"><![CDATA[Chat with one person at a time.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="40" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[What precaution will you take when your children access the Internet?]]></prompt>
+      <choice correct="true"><![CDATA[Regularly check the Web sites they visit.]]></choice>
+      <choice correct="false"><![CDATA[Block Web sites that offer free e-mail accounts.]]></choice>
+      <choice correct="false"><![CDATA[Block all search engines.]]></choice>
+      <choice correct="false"><![CDATA[Recommend use of chat rooms instead of e-mail.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="41" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[How will you block Web sites that are inappropriate for your children to view?]]></prompt>
+      <choice correct="false"><![CDATA[Update the antivirus program.]]></choice>
+      <choice correct="false"><![CDATA[Install spyware.]]></choice>
+      <choice correct="true"><![CDATA[Use filter programs.]]></choice>
+      <choice correct="false"><![CDATA[Check Microsoft Windows Update.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="42" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[Which guideline will help protect your children from online predators?]]></prompt>
+      <choice correct="true"><![CDATA[Set up a program that monitors online chat.]]></choice>
+      <choice correct="false"><![CDATA[Deploy a firewall.]]></choice>
+      <choice correct="false"><![CDATA[Block Web sites that offer free chat programs.]]></choice>
+      <choice correct="false"><![CDATA[Update the operating system.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="43" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[Which of the following guidelines will you recommend to ensure safety over chat?]]></prompt>
+      <choice correct="false"><![CDATA[Close the chat program.]]></choice>
+      <choice correct="false"><![CDATA[Reply to users who seek your personal information.]]></choice>
+      <choice correct="true"><![CDATA[Share personal information only with people you trust.]]></choice>
+      <choice correct="false"><![CDATA[Use private chat areas.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="44" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[You receive an e-mail message from an unknown sender. The sender wants you to share your name, age, and contact information in order to receive a discount on airline tickets.
+What should you do?
+]]></prompt>
+      <choice correct="false"><![CDATA[Send your personal information in order to receive the discount.]]></choice>
+      <choice correct="false"><![CDATA[Use an antispyware program.]]></choice>
+      <choice correct="true"><![CDATA[Delete the e-mail message.]]></choice>
+      <choice correct="false"><![CDATA[Forward the e-mail message to friends.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="45" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[Which security settings will help you to block Web sites?]]></prompt>
+      <choice correct="false"><![CDATA[Microsoft Windows Firewall.]]></choice>
+      <choice correct="true"><![CDATA[Internet Options.]]></choice>
+      <choice correct="false"><![CDATA[Automatic Updates.]]></choice>
+      <choice correct="false"><![CDATA[Antivirus Options.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="46" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[You want to block all of the pop-up messages that appear when you access any Web site.
+Which security settings should you enable
+]]></prompt>
+      <choice correct="false"><![CDATA[Automatic Updates.]]></choice>
+      <choice correct="false"><![CDATA[Microsoft Windows Firewall.]]></choice>
+      <choice correct="false"><![CDATA[Antivirus Options.]]></choice>
+      <choice correct="true"><![CDATA[Internet Options.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="47" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[You want to set Microsoft Windows to automatically check for the latest security patches released by Microsoft.
+Which tool will check for the latest security patches at periodic intervals?
+]]></prompt>
+      <choice correct="false"><![CDATA[Internet Options.]]></choice>
+      <choice correct="false"><![CDATA[Microsoft Windows Firewall.]]></choice>
+      <choice correct="true"><![CDATA[Automatic Updates.]]></choice>
+      <choice correct="false"><![CDATA[Antivirus Updates.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="48" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[What is the purpose of Microsoft Windows Firewall?]]></prompt>
+      <choice correct="false"><![CDATA[Installs security patches.]]></choice>
+      <choice correct="true"><![CDATA[Restricts unauthorized access.]]></choice>
+      <choice correct="false"><![CDATA[Blocks pop-up messages.]]></choice>
+      <choice correct="false"><![CDATA[Blocks Web sites.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="49" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[Which Internet Properties tab allows you to block a Web site?]]></prompt>
+      <choice correct="true"><![CDATA[Security]]></choice>
+      <choice correct="false"><![CDATA[Content]]></choice>
+      <choice correct="false"><![CDATA[Privacy.]]></choice>
+      <choice correct="false"><![CDATA[Connections]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="50" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[While reading a novel, you realize that the author has copied material from another author.
+What type of violation has been committed?
+]]></prompt>
+      <choice correct="false"><![CDATA[Phishing]]></choice>
+      <choice correct="true"><![CDATA[Plagiarism.]]></choice>
+      <choice correct="false"><![CDATA[Libel.]]></choice>
+      <choice correct="false"><![CDATA[Slander.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="51" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[Which action is a copyright violation?]]></prompt>
+      <choice correct="false"><![CDATA[Sharing a Web site address.]]></choice>
+      <choice correct="false"><![CDATA[Reading material from a publicly available Web site.]]></choice>
+      <choice correct="true"><![CDATA[Copying software and distributing it to your friends.]]></choice>
+      <choice correct="false"><![CDATA[Quoting a paragraph and mentioning the source.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="52" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[You download a song from a public Web site and share it with your friends.
+What type of violation have you demonstrated?
+]]></prompt>
+      <choice correct="true"><![CDATA[Breaching copyright.]]></choice>
+      <choice correct="false"><![CDATA[Breaching security.]]></choice>
+      <choice correct="false"><![CDATA[Slandering the singer.]]></choice>
+      <choice correct="false"><![CDATA[Violating privacy.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="53" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[For a project, you decide to use content from a Web site. However, you forget to state the source.
+What type of violation have you demonstrated?
+]]></prompt>
+      <choice correct="false"><![CDATA[Libel.]]></choice>
+      <choice correct="true"><![CDATA[Plagiarism]]></choice>
+      <choice correct="false"><![CDATA[Gambling.]]></choice>
+      <choice correct="false"><![CDATA[Defamation.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+    <question id="54" type="choice" randomize="true" distractorsCount="3" feedbackStyle="correct-incorrect" radioButtonStyle="standard">
+      <prompt><![CDATA[Your colleague makes false statements about you in an online public forum.
+What type of violation has your colleague demonstrated?
+]]></prompt>
+      <choice correct="false"><![CDATA[Plagiarism.]]></choice>
+      <choice correct="true"><![CDATA[Defamation.]]></choice>
+      <choice correct="false"><![CDATA[Gambling.]]></choice>
+      <choice correct="false"><![CDATA[Phishing.]]></choice>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+      <feedback><![CDATA[]]></feedback>
+    </question>
+  </objective>
+</objectives>

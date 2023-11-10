@@ -1,0 +1,132 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+<title></title>
+<link rel="stylesheet" href="../../../Player/css/pagestyles.css" type="text/css" />
+<link rel="stylesheet" href="../../../Custom/css/pagestyles.css" type="text/css" />
+<link rel="stylesheet" href="../../../Custom/css/pagestyles.css" type="text/css" />
+<script type="text/javascript" src="../../../Player/js/libs/jquery-1.7.1.min.js" ></script>
+<script type="text/javascript" src="../../../Player/js/page.min.js"></script>
+<script type="text/javascript">
+	//set imagePath to location of icon images relative to the page
+	//var imagePath = "../../../Player/theme/";
+
+	//to override the 2:1 aspectRatio for the page, use the aspectRatioOverride variable
+	//var aspectRatioOverride = 4 / 3;
+
+	//liveTileInterval is used to control timing of live tile(s) on page, with a parameter each to set the time until automatically opening the tile and automatically closing the tile 
+	//  a parameter value of -1 means the open or close action won't occur automatically (only on user click)
+	//var liveTileInterval = { 'openDelay': 10, 'closeDelay': -1 };
+</script>
+</head>
+<body onkeydown="return parent.doKeyDown(event);">
+	<div class="page_container">
+		<div class="content_wrapper">
+			<div class="content_container">
+
+				<!-- If desired, content to appear above tiles can be placed here -->
+				<!--<div>Challenges to giving your best at work require actions that result in courageous
+									contribution.Challenges to giving your best at work require actions that result
+									in courageous contribution.</div><br />-->
+
+				<!-- tile_container is the container for all tiles in the tile framework; it should be a child of content_container (there can be more than one of these, if desired)-->
+				<!-- DO NOT use inline styles to change dimensions of this container; to modify tile sizing, use inline styles on the tile_block elements -->
+				<div class="tile_container">
+
+					<div class="tile_block">
+						<!-- right side large rectangular content tile -->
+						<!-- remove the "float:right" style to put this on the left, with smaller tiles in a right side column -->
+						<div class="large_rectangle tile transparent" style="float:right;">
+
+							<div class="tile_background">
+							<!-- Tile Background Image -->
+								<img src="images/4_4_Keeping_your_computer_secure_and_updated.png" alt="" />
+							<!-- end Tile Background Image -->
+							</div>
+
+							<!-- live tile popup -->
+							<!-- include attributes "data-openDelay" and "data-closeDelay" on an individual live tile popup to override the global openDelay/closeDelay values -->
+							<!-- <div class="tile_popup accent" data-openDelay="7" data-closeDelay="14"> -->
+							<div class="tile_popup accent">
+								<div class="tile_popup_header accent">
+
+									<div class="tile_popup_header_content">
+									<!-- Tile Popup Header -->
+										Keeping your computer secure and updated
+									<!-- end Tile Popup Header -->
+									</div>
+
+									<a class="expand icon"></a><a class="close icon"></a>
+								</div>
+								<div class="tile_content scrolling_box">
+									<div class="scroll_content">
+
+										<div class="tile_detail">
+										<!-- Tile Popup Content -->
+											<p>When you connect your computer to the Internet, your computer software and data are accessible to 
+											the rest of the world. Connecting to the Internet increases the threat to your computer from viruses, 
+											spyware, and hackers. However, you can minimize these security threats by configuring the security 
+											settings on your computer and keeping security-related software current.</p>
+
+											<p>In this module, you will learn the importance of securing a computer and how to maximize computer 
+											security by configuring the security settings on your operating system. The module also explains how to 
+											configure your computer to automatically update its security software.</p>
+										<!-- end Tile Popup Content -->
+										</div>
+
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- module information tile -->
+						<!-- content on this tile is dynamically loaded via api and should not be edited here -->
+						<div class="module_info_tile small_rectangle tile accent2">
+							<div class="tile_title">
+								<!--module title will be dynamically inserted here via javascript api call-->
+								<!--COURAGEOUS CONVERSATIONS-->
+							</div>
+							<div class="tile_footer">
+							</div>
+						</div>
+
+						<!-- progress tile -->
+						<!-- content on this tile is dynamically loaded via api and should not be edited here, with the exception of tile footer -->
+						<div class="progress_tile small_rectangle tile">
+							<div class="tile_title">
+								<!--progress percentage will be dynamically inserted here via javascript api call-->
+								<!--20%-->
+							</div>
+							<div class="tile_subtitle">
+								<!--progress text will be dynamically inserted here via javascript api call-->
+								<!--2/10 MODULES COMPLETE-->
+							</div>
+							<div class="tile_footer">
+
+								<div class="tile_footer_content">
+								<!-- Tile Footer Content -->
+									My progress
+								<!-- end Tile Footer Content -->
+								</div>
+
+							</div>
+						</div>
+
+						<!-- always clear the float at end of a tile_block -->
+						<div class="clear"></div>
+
+					</div>
+
+				</div>
+				<div class="clear"></div>
+
+				<!-- If desired, content to appear below tiles can be placed here -->
+				<!--Challenges to giving your best at work require actions that result in courageous
+									contribution.Challenges to giving your best at work require actions that result
+									in courageous contribution.-->
+			</div>
+		</div>
+	</div>
+</body>
+</html>

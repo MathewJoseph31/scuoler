@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<pageLinksList>
+  <pageLinks id="course">
+    <pageLink type="URI" source="http://www.microsoft.com/youthspark/" duration="10">
+      <name><![CDATA[Microsoft YouthSpark]]></name>
+      <description><![CDATA[]]></description>
+    </pageLink>
+    <pageLink type="URI" source="http://www.microsoft.com/itacademy" duration="10">
+      <name><![CDATA[Microsoft IT Academy]]></name>
+      <description><![CDATA[]]></description>
+    </pageLink>
+    <pageLink type="URI" source="http://www.microsoft.com/learning" duration="10">
+      <name><![CDATA[Microsoft Learning]]></name>
+      <description><![CDATA[]]></description>
+    </pageLink>
+    <pageLink type="URI" source="http://office.microsoft.com/training" duration="10">
+      <name><![CDATA[Microsoft Office Training]]></name>
+      <description><![CDATA[]]></description>
+    </pageLink>
+    <pageLink type="URI" source="http://www.microsoft.com/student" duration="10">
+      <name><![CDATA[Microsoft Office Student]]></name>
+      <description><![CDATA[]]></description>
+    </pageLink>
+    <pageLink type="File" source="ThirdPartyNotices.txt" duration="5">
+      <name><![CDATA[Third Party Notices]]></name>
+      <description><![CDATA[]]></description>
+    </pageLink>
+  </pageLinks>
+</pageLinksList>
