@@ -1,5 +1,5 @@
 --install pm2
-pm2 start "npm run start" --name ischools-server
+pm2 start "npm run start" --name scuoler-server
 
 --generate openssl certificates for https
 openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365
