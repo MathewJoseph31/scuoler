@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="400"
+   height="130"
+   viewBox="0 0 400 130"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="scuoler_logo.svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.4"
+     inkscape:cx="185"
+     inkscape:cy="177.20431"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:window-width="1301"
+     inkscape:window-height="744"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     units="px">
+    <sodipodi:guide
+       position="130.30968,707.1068"
+       orientation="0,1"
+       id="guide4185" />
+    <sodipodi:guide
+       position="-154.55334,659.62963"
+       orientation="1,0"
+       id="guide4206" />
+    <sodipodi:guide
+       position="743.47228,680.84283"
+       orientation="1,0"
+       id="guide4208" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-922.36218)">
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot3336"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"><flowRegion
+         id="flowRegion3338"><rect
+           id="rect3340"
+           width="622.85712"
+           height="134.28572"
+           x="62.857143"
+           y="329.50507" /></flowRegion><flowPara
+         id="flowPara3342" /></flowRoot>    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:80px;line-height:100%;font-family:'Latin Modern Sans';-inkscape-font-specification:'Latin Modern Sans, Bold';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;"
+       x="26.839905"
+       y="1118.7246"
+       id="text3344"
+       sodipodi:linespacing="100%"
+       transform="scale(1.0730577,0.93191633)"><tspan
+         sodipodi:role="line"
+         id="tspan3346"
+         x="26.839905"
+         y="1118.7246">Scuoler</tspan></text>
+    <path
+       style="fill:#000000;fill-opacity:1"
+       d="m 55.369037,976.46292 c -0.29097,-0.0754 -9.56178,3.16838 -10.5252,3.57595 l -15.670806,6.62938 c 0,0 0.09635,-5.46559 0.09635,-10.85678 0,-3.70299 -0.646732,-13.46969 -0.430717,-13.40011 0.15117,0.0487 7.342029,2.61566 14.829853,5.25738 l 13.61423,4.80316 13.54174,-4.77932 c 7.44796,-2.62862 13.7149,-4.82988 13.92654,-4.89168 0.36061,-0.1053 0.58863,0.35843 0.61517,4.6476 0.0419,6.7634 -0.0971,5.8636 -0.19334,6.58055 0,0 0.11294,4.05815 -0.007,5.83844 -0.47128,7.00741 0.0766,6.80136 0.0766,6.80136 0,0 -15.54271,-6.49205 -29.16805,-10.02307 z m 47.577603,2.08542 c 0,-0.10816 0.89053,-3.07003 1.97898,-6.58196 1.08843,-3.51191 1.97897,-6.48286 1.97897,-6.60212 0,-0.11926 -0.14325,-0.25944 -0.31833,-0.31152 -0.39227,-0.11667 -1.01092,-1.0177 -1.24719,-1.81646 -0.37163,-1.2564 0.73094,-2.75762 2.45944,-3.34869 l 0.86517,-0.29585 0,-4.16087 c 0,-3.25997 -0.0595,-4.14263 -0.27486,-4.07668 -0.15117,0.0463 -9.773946,3.4373 -21.383943,7.53556 -11.61001,4.09825 -23.05124,8.13622 -25.42498,8.97327 l -4.31587,1.52191 -27.127889,-9.5705 c -14.920337,-5.26377 -27.1649217,-9.59658 -27.2101867,-9.62849 -0.04526,-0.0319 0.449476,-0.24293 1.099433,-0.46894 0.649956,-0.22602 12.8525267,-4.53005 27.1168347,-9.56448 16.301948,-5.75362 26.102718,-9.12474 26.386378,-9.07601 0.39431,0.0678 52.498583,18.42884 53.639543,18.90212 0.3986,0.16533 0.34629,0.21708 -0.59391,0.58742 l -1.031,0.40611 0,4.2494 0,4.2494 0.94177,0.32288 c 1.50351,0.51548 2.5764,1.77322 2.57303,3.01637 -0.002,0.5326 -1.0154,2.0884 -1.52038,2.33282 -0.25037,0.12118 -0.45522,0.39332 -0.45522,0.60475 0,0.21143 0.84106,3.16384 1.86904,6.56092 1.02797,3.39707 1.86903,6.23496 1.86903,6.30641 0,0.0714 -2.67162,0.1299 -5.93693,0.1299 -4.33936,0 -5.93693,-0.0529 -5.93693,-0.19667 z"
+       id="path4159"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="sscssscssssscssssssscscsscscssssscccscsssssss" />
+  </g>
+</svg>
