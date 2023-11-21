@@ -69,6 +69,7 @@ router.get("/getCategoryList", dbControllerCourse.getCategoryList);
 //Course
 router.post("/insertCourseAction", dbControllerCourse.insertCourseToDbJson);
 router.post("/insertScormCourse", dbControllerCourse.insertScormCourse);
+router.post("/insertExternalCourse", dbControllerCourse.insertExternalCourse);
 router.get("/getCourses", dbControllerCourse.getCourses);
 router.get("/getCourseName", dbControllerCourse.getCourseName);
 router.post("/searchCourses", dbControllerCourse.searchCourses);

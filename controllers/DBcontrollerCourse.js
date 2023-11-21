@@ -14,6 +14,8 @@ const path = require("path");
 const constants = require("../Constants");
 const fs = require("fs");
 
+const { v4: uuidv4 } = require("uuid");
+
 let { setCorsHeaders } = utils;
 
 //----COURSE----
@@ -96,7 +98,7 @@ exports.insertCourseToDbJson = async function (req, res, next) {
   var sql =
     "select course_insertDB(p_id:=$1, p_name:=$2, p_description:=$3, p_author_id:=$4, p_thumbnail:=$5, p_categories_id:=$6, p_quizes_id:=$7)";
 
-  var courseId = utils.getUniqueId(ownerId);
+  var courseId = uuidv4();
   pool.query(
     sql,
     [
@@ -177,7 +179,7 @@ exports.insertScormCourse = async function (req, res, next) {
       console.log("Index File written successfully\n");
 
       const sql =
-        "select course_scorm_insertdb(p_id:=$1, p_name:=$2, p_description:=$3,  p_author_id:=$4, p_thumbnail:=$5, p_scorm_launch_file:=$6, p_categories_id:=$7)";
+        "select course_scorm_external_insertdb(p_id:=$1, p_name:=$2, p_description:=$3,  p_author_id:=$4, p_thumbnail:=$5, p_type:=$6, p_launch_file:=$7, p_categories_id:=$8)";
 
       const pool = new pg.Pool({
         host: accountConfiguration.getHost(),
@@ -204,6 +206,7 @@ exports.insertScormCourse = async function (req, res, next) {
           courseName,
           ownerId,
           thumbnail,
+          constants.COURSE_TYPE_CODE_SCORM,
           launchFile,
           categoriesId,
         ],
@@ -222,9 +225,76 @@ exports.insertScormCourse = async function (req, res, next) {
   });
 };
 
+exports.insertExternalCourse = async function (req, res, next) {
+  let courseName = req.body.courseName;
+  let htmlUrl = req.body.htmlUrl;
+  let ownerId = req.body.ownerId;
+  let thumbnail = req.body.thumbnail;
+  let categoriesArray = [];
+
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
+  if (req.body.categoriesArray)
+    categoriesArray = JSON.parse(req.body.categoriesArray);
+
+  console.log(courseName, htmlUrl, ownerId, thumbnail);
+
+  let categoriesId = [];
+
+  Object.values(categoriesArray).forEach((item, i) => {
+    categoriesId.push(item.id);
+  });
+
+  let courseId = uuidv4();
+
+  const sql =
+    "select course_scorm_external_insertdb(p_id:=$1, p_name:=$2, p_description:=$3,  p_author_id:=$4, p_thumbnail:=$5, p_type:=$6, p_launch_file:=$7, p_categories_id:=$8)";
+
+  const pool = new pg.Pool({
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
+    ssl: { rejectUnauthorized: false },
+  });
+
+  pool.query(
+    sql,
+    [
+      courseId,
+      courseName,
+      courseName,
+      ownerId,
+      thumbnail,
+      constants.COURSE_TYPE_CODE_EXTERNAL,
+      htmlUrl,
+      categoriesId,
+    ],
+    function (err, result) {
+      pool.end(() => {});
+      if (err) {
+        next(err);
+        //res.json({ insertstatus: "error" });
+      } else {
+        setCorsHeaders(req, res);
+        res.json({ insertstatus: "ok", courseId: courseId });
+      }
+    }
+  );
+};
+
 /*Global variable for shared select list between getQuizes and searchQuizesForPrefix*/
 const sqlSubstringForGetAndSearch =
-  " SELECT id, name, description, author_id, thumbnail, scorm ";
+  " SELECT id, name, description, author_id, thumbnail, type, launch_file ";
 
 /* function for handling http requests to retrive the records in the
  Course table in database in json format*/
@@ -256,7 +326,7 @@ exports.getCourses = async function (req, res, next) {
 
   var sql =
     sqlSubstringForGetAndSearch +
-    " FROM Course where deleted=false order by scorm desc, thumbnail, create_timestamp DESC offset $1 limit $2 ";
+    " FROM Course where deleted=false order by type desc, thumbnail, create_timestamp DESC offset $1 limit $2 ";
   var resultArr = [];
 
   pool.query(sql, [offset, pageSize], function (err, result, fields) {
@@ -265,12 +335,13 @@ exports.getCourses = async function (req, res, next) {
     else {
       var i = 0;
       for (i = 0; i < result.rows.length; i++) {
-        result.rows[i].relative_url = result.rows[i].scorm
-          ? path.join(
-              constants.SCORM_COURSE_UPLOAD_FILES_DIRECTORY,
-              result.rows[i].id + ".html"
-            )
-          : "";
+        result.rows[i].relative_url =
+          result.rows[i].type === constants.COURSE_TYPE_CODE_SCORM
+            ? path.join(
+                constants.SCORM_COURSE_UPLOAD_FILES_DIRECTORY,
+                result.rows[i].id + ".html"
+              )
+            : "";
 
         resultArr.push(result.rows[i]);
       }
@@ -445,13 +516,15 @@ exports.getTheCourse = async function (req, res, next) {
       resObj.rating = result.rows[0]?.rating;
       resObj.likes = result.rows[0]?.likes;
       resObj.liked = result.rows[0]?.liked;
-      resObj.scorm = result.rows[0]?.scorm;
-      resObj.relative_url = resObj.scorm
-        ? path.join(
-            constants.SCORM_COURSE_UPLOAD_FILES_DIRECTORY,
-            courseId + ".html"
-          )
-        : "";
+      resObj.type = result.rows[0]?.type;
+      resObj.launch_file = result.rows[0]?.launch_file;
+      resObj.relative_url =
+        resObj.type === constants.COURSE_TYPE_CODE_SCORM
+          ? path.join(
+              constants.SCORM_COURSE_UPLOAD_FILES_DIRECTORY,
+              courseId + ".html"
+            )
+          : "";
       resObj.quizesArray = [];
 
       pool.query(sql1, [courseId], function (err, result1, fields) {
