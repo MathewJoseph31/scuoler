@@ -327,7 +327,7 @@ exports.getCourses = async function (req, res, next) {
 
   var sql =
     sqlSubstringForGetAndSearch +
-    " FROM Course where deleted=false order by type DESC, thumbnail, create_timestamp DESC offset $1 limit $2 ";
+    " FROM Course where deleted=false order by type, thumbnail, create_timestamp DESC offset $1 limit $2 ";
   var resultArr = [];
 
   pool.query(sql, [offset, pageSize], function (err, result, fields) {
