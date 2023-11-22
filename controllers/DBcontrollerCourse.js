@@ -96,7 +96,7 @@ exports.insertCourseToDbJson = async function (req, res, next) {
   });
 
   var sql =
-    "select course_insertDB(p_id:=$1, p_name:=$2, p_description:=$3, p_author_id:=$4, p_thumbnail:=$5, p_categories_id:=$6, p_quizes_id:=$7)";
+    "select course_insertDB(p_id:=$1, p_name:=$2, p_description:=$3, p_author_id:=$4, p_thumbnail:=$5, p_type:=$6, p_categories_id:=$7, p_quizes_id:=$8)";
 
   var courseId = uuidv4();
   pool.query(
@@ -107,6 +107,7 @@ exports.insertCourseToDbJson = async function (req, res, next) {
       courseDescription,
       ownerId,
       thumbnail,
+      constants.COURSE_TYPE_CODE_NORMAL,
       categoriesId,
       quizesId,
     ],
@@ -326,7 +327,7 @@ exports.getCourses = async function (req, res, next) {
 
   var sql =
     sqlSubstringForGetAndSearch +
-    " FROM Course where deleted=false order by type, thumbnail, create_timestamp DESC offset $1 limit $2 ";
+    " FROM Course where deleted=false order by type DESC, thumbnail, create_timestamp DESC offset $1 limit $2 ";
   var resultArr = [];
 
   pool.query(sql, [offset, pageSize], function (err, result, fields) {
