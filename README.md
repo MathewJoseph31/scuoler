@@ -83,6 +83,10 @@ https://scuoler.com/scheduler
 ![Scuoler Event Scheduler Snapshot](./img/scuoler_scheduler.png)
 ![Sample Event Notification Snapshot](./img/scuoler_notification.png)
 
+## Build and Launch
+
+Instructions on how to build and launch the App from git sources is provided at [https://scuoler.com/buildLaunch](https://scuoler.com/buildLaunch)
+
 ## MIT License
 
 &copy;2023 Mathew Joseph
