@@ -87,6 +87,16 @@ https://scuoler.com/scheduler
 
 Instructions on how to build and launch the App from git sources is provided at [https://scuoler.com/buildLaunch](https://scuoler.com/buildLaunch)
 
+## Sitemaps
+
+https://scuoler.com/coursesBrowse
+
+https://scuoler.com/problemsBrowse
+
+https://scuoler.com/mainSitemap.xml
+
+https://scuoler.com/courseSitemap.xml
+
 ## MIT License
 
 &copy;2023 Mathew Joseph
