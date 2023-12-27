@@ -69,6 +69,15 @@ exports.insertCourseToDbJson = async function (req, res, next) {
     categoriesId.push(item.id);
   });
 
+  if (req.body.languagesArray)
+    languagesArray = JSON.parse(req.body.languagesArray);
+
+  let languagesId = [];
+
+  Object.values(languagesArray).forEach((item, i) => {
+    languagesId.push(item.id);
+  });
+
   let quizesId = [];
   Object.values(quizesArray).forEach((item, i) => {
     quizesId.push(item.id);
@@ -96,7 +105,7 @@ exports.insertCourseToDbJson = async function (req, res, next) {
   });
 
   var sql =
-    "select course_insertDB(p_id:=$1, p_name:=$2, p_description:=$3, p_author_id:=$4, p_thumbnail:=$5, p_type:=$6, p_categories_id:=$7, p_quizes_id:=$8)";
+    "select course_insertDB(p_id:=$1, p_name:=$2, p_description:=$3, p_author_id:=$4, p_thumbnail:=$5, p_type:=$6, p_categories_id:=$7, p_languages_id:=$8, p_quizes_id:=$9)";
 
   var courseId = uuidv4();
   pool.query(
@@ -109,6 +118,7 @@ exports.insertCourseToDbJson = async function (req, res, next) {
       thumbnail,
       constants.COURSE_TYPE_CODE_NORMAL,
       categoriesId,
+      languagesId,
       quizesId,
     ],
     function (err, result) {
@@ -774,6 +784,41 @@ exports.getCategoryList = async function (req, res, next) {
 
   var sql =
     "SELECT id,name FROM Category where deleted = false ORDER by name asc ";
+  pool.query(sql, function (err, result, fields) {
+    pool.end(() => {});
+    if (err) reject(err);
+    else {
+      setCorsHeaders(req, res);
+      res.json(result.rows);
+    }
+  });
+};
+
+exports.getLanguageList = async function (req, res, next) {
+  var queryObject = url.parse(req.url, true).query;
+
+  let accountId = queryObject.accountId;
+
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
+  var pool = new pg.Pool({
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
+    ssl: { rejectUnauthorized: false },
+  });
+
+  var sql =
+    "SELECT id,name FROM Language where deleted = false ORDER by name asc ";
   pool.query(sql, function (err, result, fields) {
     pool.end(() => {});
     if (err) reject(err);

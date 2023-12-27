@@ -66,6 +66,9 @@ router.post("/quizGetScoresForUser", dbControllerQuiz.quizGetScoresForUser);
 //categories
 router.get("/getCategoryList", dbControllerCourse.getCategoryList);
 
+//languages
+router.get("/getLanguageList", dbControllerCourse.getLanguageList);
+
 //Course
 router.post("/insertCourseAction", dbControllerCourse.insertCourseToDbJson);
 router.post("/insertScormCourse", dbControllerCourse.insertScormCourse);
