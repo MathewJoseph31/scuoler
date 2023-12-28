@@ -142,7 +142,8 @@ exports.insertScormCourse = async function (req, res, next) {
   let scormApiCode = req.body.scormApiCode;
   let ownerId = req.body.ownerId;
   let thumbnail = req.body.thumbnail;
-  let categoriesArray = [];
+  let categoriesArray = [],
+    languagesArray = [];
 
   let accountId = req.body.accountId;
   let accountConfiguration = configuration;
@@ -161,6 +162,15 @@ exports.insertScormCourse = async function (req, res, next) {
 
   Object.values(categoriesArray).forEach((item, i) => {
     categoriesId.push(item.id);
+  });
+
+  if (req.body.languagesArray)
+    languagesArray = JSON.parse(req.body.languagesArray);
+
+  let languagesId = [];
+
+  Object.values(languagesArray).forEach((item, i) => {
+    languagesId.push(item.id);
   });
 
   let scormDirPath = path.join(
@@ -190,7 +200,7 @@ exports.insertScormCourse = async function (req, res, next) {
       console.log("Index File written successfully\n");
 
       const sql =
-        "select course_scorm_external_insertdb(p_id:=$1, p_name:=$2, p_description:=$3,  p_author_id:=$4, p_thumbnail:=$5, p_type:=$6, p_launch_file:=$7, p_categories_id:=$8)";
+        "select course_scorm_external_insertdb(p_id:=$1, p_name:=$2, p_description:=$3,  p_author_id:=$4, p_thumbnail:=$5, p_type:=$6, p_launch_file:=$7, p_categories_id:=$8, p_languages_id:=$9)";
 
       const pool = new pg.Pool({
         host: accountConfiguration.getHost(),
@@ -207,7 +217,8 @@ exports.insertScormCourse = async function (req, res, next) {
         ownerId,
         thumbnail,
         launchFile,
-        categoriesId
+        categoriesId,
+        languagesId
       );
       pool.query(
         sql,
@@ -220,6 +231,7 @@ exports.insertScormCourse = async function (req, res, next) {
           constants.COURSE_TYPE_CODE_SCORM,
           launchFile,
           categoriesId,
+          languagesId,
         ],
         function (err, result) {
           pool.end(() => {});
@@ -241,7 +253,8 @@ exports.insertExternalCourse = async function (req, res, next) {
   let htmlUrl = req.body.htmlUrl;
   let ownerId = req.body.ownerId;
   let thumbnail = req.body.thumbnail;
-  let categoriesArray = [];
+  let categoriesArray = [],
+    languagesArray = [];
 
   let accountId = req.body.accountId;
   let accountConfiguration = configuration;
@@ -256,18 +269,25 @@ exports.insertExternalCourse = async function (req, res, next) {
   if (req.body.categoriesArray)
     categoriesArray = JSON.parse(req.body.categoriesArray);
 
-  console.log(courseName, htmlUrl, ownerId, thumbnail);
-
   let categoriesId = [];
 
   Object.values(categoriesArray).forEach((item, i) => {
     categoriesId.push(item.id);
   });
 
+  if (req.body.languagesArray)
+    languagesArray = JSON.parse(req.body.languagesArray);
+
+  let languagesId = [];
+
+  Object.values(languagesArray).forEach((item, i) => {
+    languagesId.push(item.id);
+  });
+
   let courseId = uuidv4();
 
   const sql =
-    "select course_scorm_external_insertdb(p_id:=$1, p_name:=$2, p_description:=$3,  p_author_id:=$4, p_thumbnail:=$5, p_type:=$6, p_launch_file:=$7, p_categories_id:=$8)";
+    "select course_scorm_external_insertdb(p_id:=$1, p_name:=$2, p_description:=$3,  p_author_id:=$4, p_thumbnail:=$5, p_type:=$6, p_launch_file:=$7, p_categories_id:=$8, p_languages_id:=$9)";
 
   const pool = new pg.Pool({
     host: accountConfiguration.getHost(),
@@ -289,6 +309,7 @@ exports.insertExternalCourse = async function (req, res, next) {
       constants.COURSE_TYPE_CODE_EXTERNAL,
       htmlUrl,
       categoriesId,
+      languagesId,
     ],
     function (err, result) {
       pool.end(() => {});
@@ -513,6 +534,11 @@ exports.getTheCourse = async function (req, res, next) {
     " inner join category B on A.category_id=B.id and A.DELETED=false and B.deleted=false " +
     " where A.id=$1 ";
 
+  let sql3 =
+    "select B.ID, B.name  from language_association A " +
+    " inner join language B on A.language_id=B.id and A.DELETED=false and B.deleted=false " +
+    " where A.id=$1 ";
+
   pool.query(sql, [courseId, authorName], function (err, result, fields) {
     if (err) {
       pool.end(() => {});
@@ -547,12 +573,22 @@ exports.getTheCourse = async function (req, res, next) {
           resObj.categoriesArray = [];
 
           pool.query(sql2, [courseId], function (err, result2, fields) {
-            pool.end(() => {});
-            if (err) next(err);
-            else {
+            if (err) {
+              pool.end(() => {});
+              next(err);
+            } else {
               resObj.categoriesArray = result2.rows;
-              setCorsHeaders(req, res);
-              res.json(resObj);
+              resObj.languagesArray = [];
+              pool.query(sql3, [courseId], function (err, result3, fields) {
+                pool.end(() => {});
+
+                if (err) next(err);
+                else {
+                  resObj.languagesArray = result3.rows;
+                  setCorsHeaders(req, res);
+                  res.json(resObj);
+                }
+              });
             }
           });
         }
@@ -615,11 +651,15 @@ exports.editCourseInDbJson = async function (req, res, next) {
   let name = req.body.name;
   let thumbnail = req.body.thumbnail;
   let quizesArray = [],
-    categoriesArray = [];
+    categoriesArray = [],
+    languagesArray = [];
   if (req.body.quizesArray) quizesArray = JSON.parse(req.body.quizesArray);
 
   if (req.body.categoriesArray)
     categoriesArray = JSON.parse(req.body.categoriesArray);
+
+  if (req.body.languagesArray)
+    languagesArray = JSON.parse(req.body.languagesArray);
 
   let quizesId = [];
 
@@ -633,10 +673,16 @@ exports.editCourseInDbJson = async function (req, res, next) {
     categoriesId.push(item.id);
   });
 
+  let languagesId = [];
+
+  Object.values(languagesArray).forEach((item, i) => {
+    languagesId.push(item.id);
+  });
+
   /*var sql="UPDATE COURSE SET  name=$1, description=$2, p_quizes_id:=$3, modified_timestamp=now() "+
   " where id=$4 ";*/
   var sql =
-    "select course_update(p_id:=$1, p_name:=$2, p_description:=$3, p_thumbnail:=$4,p_quizes_id:=$5, p_categories_id:=$6)";
+    "select course_update(p_id:=$1, p_name:=$2, p_description:=$3, p_thumbnail:=$4,p_quizes_id:=$5, p_categories_id:=$6, p_languages_id:=$7)";
 
   let accountId = req.body.accountId;
   let accountConfiguration = configuration;
@@ -659,7 +705,15 @@ exports.editCourseInDbJson = async function (req, res, next) {
 
   pool.query(
     sql,
-    [courseId, name, description, thumbnail, quizesId, categoriesId],
+    [
+      courseId,
+      name,
+      description,
+      thumbnail,
+      quizesId,
+      categoriesId,
+      languagesId,
+    ],
     function (err, result, fields) {
       pool.end(() => {});
       if (err) {
