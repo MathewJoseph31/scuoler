@@ -334,7 +334,15 @@ exports.getCourses = async function (req, res, next) {
   var queryObject = url.parse(req.url, true).query;
   let pageSize = queryObject.pageSize || 20;
   let currentPage = queryObject.currentPage || 1;
-  //console.log(pageSize+', currPage '+currentPage);
+  let category = queryObject.category || "";
+  let language = queryObject.language || "";
+  let sort = queryObject.sort || "";
+
+  console.log(
+    "category=" + category + ", language= " + language + ", sort=" + sort,
+    typeof category
+  );
+
   const offset = pageSize * (currentPage - 1);
 
   let accountId = queryObject.accountId;
@@ -358,30 +366,35 @@ exports.getCourses = async function (req, res, next) {
 
   var sql =
     sqlSubstringForGetAndSearch +
-    " FROM Course where deleted=false order by type, thumbnail, create_timestamp DESC offset $1 limit $2 ";
+    " from course_get_all(p_category:=$1, p_language:=$2, p_offset:=$3, p_limit:=$4) ";
+  //" FROM Course where deleted=false order by type, thumbnail, create_timestamp DESC offset $1 limit $2 ";
   var resultArr = [];
 
-  pool.query(sql, [offset, pageSize], function (err, result, fields) {
-    pool.end(() => {});
-    if (err) next(err);
-    else {
-      var i = 0;
-      for (i = 0; i < result.rows.length; i++) {
-        result.rows[i].relative_url =
-          result.rows[i].type === constants.COURSE_TYPE_CODE_SCORM
-            ? path.join(
-                constants.SCORM_COURSE_UPLOAD_FILES_DIRECTORY,
-                result.rows[i].id + ".html"
-              )
-            : "";
+  pool.query(
+    sql,
+    [category, language, offset, pageSize],
+    function (err, result, fields) {
+      pool.end(() => {});
+      if (err) next(err);
+      else {
+        var i = 0;
+        for (i = 0; i < result.rows.length; i++) {
+          result.rows[i].relative_url =
+            result.rows[i].type === constants.COURSE_TYPE_CODE_SCORM
+              ? path.join(
+                  constants.SCORM_COURSE_UPLOAD_FILES_DIRECTORY,
+                  result.rows[i].id + ".html"
+                )
+              : "";
 
-        resultArr.push(result.rows[i]);
+          resultArr.push(result.rows[i]);
+        }
+
+        setCorsHeaders(req, res);
+        res.json(resultArr);
       }
-
-      setCorsHeaders(req, res);
-      res.json(resultArr);
     }
-  });
+  );
 };
 
 exports.searchCoursesForPrefix = async function (req, res, next) {
