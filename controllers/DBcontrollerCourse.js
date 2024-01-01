@@ -336,12 +336,7 @@ exports.getCourses = async function (req, res, next) {
   let currentPage = queryObject.currentPage || 1;
   let category = queryObject.category || "";
   let language = queryObject.language || "";
-  let sort = queryObject.sort || "";
-
-  console.log(
-    "category=" + category + ", language= " + language + ", sort=" + sort,
-    typeof category
-  );
+  let sort = queryObject.sort || ""; //not used at the moment
 
   const offset = pageSize * (currentPage - 1);
 
