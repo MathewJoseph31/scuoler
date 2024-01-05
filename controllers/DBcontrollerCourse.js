@@ -502,6 +502,7 @@ exports.getCourseName = async function (req, res, next) {
       pool.end(() => {});
       next(err);
     } else {
+      setCorsHeaders(req, res);
       res.json(result.rows[0]);
     }
   });
