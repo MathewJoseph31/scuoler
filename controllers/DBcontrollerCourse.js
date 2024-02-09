@@ -142,6 +142,8 @@ exports.insertScormCourse = async function (req, res, next) {
   let scormApiCode = req.body.scormApiCode;
   let ownerId = req.body.ownerId;
   let thumbnail = req.body.thumbnail;
+  let sourceUrl = req.body.sourceUrl;
+  let creativeCommonsFlag = req.body.creativeCommonsFlag;
   let categoriesArray = [],
     languagesArray = [];
 
@@ -193,14 +195,15 @@ exports.insertScormCourse = async function (req, res, next) {
     launchFile,
     scormApiCode
   );
+  console.log(creativeCommonsFlag, sourceUrl);
 
   fs.writeFile(startFile, startFileContents, (err) => {
     if (err) next(err);
     else {
       console.log("Index File written successfully\n");
 
-      const sql =
-        "select course_scorm_external_insertdb(p_id:=$1, p_name:=$2, p_description:=$3,  p_author_id:=$4, p_thumbnail:=$5, p_type:=$6, p_launch_file:=$7, p_categories_id:=$8, p_languages_id:=$9)";
+      const sql = `select course_scorm_external_insertdb(p_id:=$1, p_name:=$2, p_description:=$3,  p_author_id:=$4, p_thumbnail:=$5, p_type:=$6, p_launch_file:=$7, p_creative_commons:=$8,
+          p_source:=$9, p_categories_id:=$10, p_languages_id:=$11)`;
 
       const pool = new pg.Pool({
         host: accountConfiguration.getHost(),
@@ -211,15 +214,6 @@ exports.insertScormCourse = async function (req, res, next) {
         ssl: { rejectUnauthorized: false },
       });
 
-      console.log(
-        courseId,
-        courseName,
-        ownerId,
-        thumbnail,
-        launchFile,
-        categoriesId,
-        languagesId
-      );
       pool.query(
         sql,
         [
@@ -230,6 +224,8 @@ exports.insertScormCourse = async function (req, res, next) {
           thumbnail,
           constants.COURSE_TYPE_CODE_SCORM,
           launchFile,
+          creativeCommonsFlag,
+          sourceUrl,
           categoriesId,
           languagesId,
         ],
@@ -253,6 +249,8 @@ exports.insertExternalCourse = async function (req, res, next) {
   let htmlUrl = req.body.htmlUrl;
   let ownerId = req.body.ownerId;
   let thumbnail = req.body.thumbnail;
+  let sourceUrl = req.body.sourceUrl;
+  let creativeCommonsFlag = req.body.creativeCommonsFlag;
   let categoriesArray = [],
     languagesArray = [];
 
@@ -286,8 +284,8 @@ exports.insertExternalCourse = async function (req, res, next) {
 
   let courseId = uuidv4();
 
-  const sql =
-    "select course_scorm_external_insertdb(p_id:=$1, p_name:=$2, p_description:=$3,  p_author_id:=$4, p_thumbnail:=$5, p_type:=$6, p_launch_file:=$7, p_categories_id:=$8, p_languages_id:=$9)";
+  const sql = `select course_scorm_external_insertdb(p_id:=$1, p_name:=$2, p_description:=$3,  p_author_id:=$4, p_thumbnail:=$5, p_type:=$6, p_launch_file:=$7, p_creative_commons:=$8,
+      p_source:=$9, p_categories_id:=$10, p_languages_id:=$11)`;
 
   const pool = new pg.Pool({
     host: accountConfiguration.getHost(),
@@ -308,6 +306,8 @@ exports.insertExternalCourse = async function (req, res, next) {
       thumbnail,
       constants.COURSE_TYPE_CODE_EXTERNAL,
       htmlUrl,
+      creativeCommonsFlag,
+      sourceUrl,
       categoriesId,
       languagesId,
     ],
@@ -564,6 +564,8 @@ exports.getTheCourse = async function (req, res, next) {
       resObj.liked = result.rows[0]?.liked;
       resObj.type = result.rows[0]?.type;
       resObj.launch_file = result.rows[0]?.launch_file;
+      resObj.source = result.rows[0]?.source;
+      resObj.creative_commons = result.rows[0]?.creative_commons;
       resObj.relative_url =
         resObj.type === constants.COURSE_TYPE_CODE_SCORM
           ? path.join(
