@@ -100,7 +100,7 @@ exports.sendReply = function (req, res, next) {
     from: constants.SCUOLER_EMAIL_ID,
     to: req.body.email,
     subject: "Ref No:" + req.body.refnum,
-    text: "Thank you for contacting iSchools.com. We have recieved your query and will get back to you at the earliest. \n\nThanking you,\nTeam iSchools.com\n\n\nNote:This is an auto-generated mail.Please do not reply.",
+    text: "Thank you for contacting scuoler.com. We have recieved your query and will get back to you at the earliest. \n\nThanking you,\nTeam Scuoler\n\n\nNote:This is an auto-generated mail.Please do not reply.",
   };
 
   transporter.sendMail(mailMessage, function (error, info) {
@@ -115,15 +115,15 @@ exports.sendReply = function (req, res, next) {
 };
 exports.sendWelcome = function (req, res, next) {
   var mailMessage = {
-    from: constants.SCUOLER_EMAIL_ID,
+    from: constants.SCUOLER_ADMIN_EMAIL_ID,
     to: req.body.email,
-    subject: "Welcome to iSchools",
+    subject: "Welcome to Scuoler",
     text:
       "Dear " +
       req.body.name +
-      ",\nThank you for registering at iSchools.com. We hope you have great time learning with us. \n\nThe password for your account is: " +
+      ",\nThank you for registering at scuoler.com. We hope you have great time learning with us. \n\nThe password for your account is: " +
       req.body.password +
-      ".\nFor any help/support please feel free to reach out to us through our contact us page.\n\nThanking you,\nTeam iSchools.com\n\n\nNote:This is an auto-generated mail.Please do not reply.",
+      ".\nFor any help/support please feel free to reach out to us through our contact us page.\n\nThanking you,\nTeam Scuoler\n\n\nNote:This is an auto-generated mail.Please do not reply.",
   };
 
   transporter.sendMail(mailMessage, function (error, info) {

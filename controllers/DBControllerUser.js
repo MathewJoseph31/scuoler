@@ -357,13 +357,19 @@ exports.getTheUser = async function (req, res, next) {
     ssl: { rejectUnauthorized: false },
   });
 
-  var sql =
-    "select first_name, last_name, address1, address2, city, zip, phone, mobile, email, sex_male, profile_image_url from customer where id = $1";
+  let sql =
+    "select first_name, last_name, address1, address2, city, zip, phone, mobile, email, sex_male, profile_image_url, instructor, educational_qualifications, professional_experiences from customer where id = $1";
+
+  let sql1 =
+    "select B.ID, B.name  from category_association A " +
+    " inner join category B on A.category_id=B.id and A.DELETED=false and B.deleted=false " +
+    " where A.id=$1 ";
 
   pool.query(sql, [userId], function (err, result, fields) {
-    pool.end(() => {});
-    if (err) next(err);
-    else {
+    if (err) {
+      pool.end(() => {});
+      next(err);
+    } else {
       console.log(JSON.stringify(result.rows));
       let resObj = {};
 
@@ -379,9 +385,23 @@ exports.getTheUser = async function (req, res, next) {
         resObj.email = result.rows[0].email;
         resObj.sex_male = result.rows[0].sex_male;
         resObj.profile_image_url = result.rows[0].profile_image_url;
+        resObj.instructorFlag = result.rows[0].instructor;
+        resObj.educational_qualifications =
+          result.rows[0].educational_qualifications;
+        resObj.professional_experiences =
+          result.rows[0].professional_experiences;
+        resObj.categoriesArray = [];
+        pool.query(sql1, [userId], function (err, result1, fields) {
+          pool.end(() => {});
+          if (err) {
+            next(err);
+          } else {
+            resObj.categoriesArray = result1.rows;
+            setCorsHeaders(req, res);
+            res.json(resObj);
+          }
+        });
       }
-      setCorsHeaders(req, res);
-      res.json(resObj);
     }
   });
 };
@@ -414,6 +434,121 @@ exports.profileImageUpload = function (req, res, next) {
         .catch((err) => res.status(400).json(err));*/
 };
 
+/* Api verison of InsertUserToDB in database*/
+exports.insertUserToDbJson = async function (req, res, next) {
+  let userId = req.body.userId;
+  let password = req.body.password;
+  let passwordHash = await bcrypt.hash(password, constants.BCRYPT_SALT_ROUNDS);
+  let firstName = req.body.firstName;
+  let lastName = req.body.lastName;
+  let address1 = req.body.address1;
+  let address2 = req.body.address2;
+  let city = req.body.city;
+  let zip = req.body.zip;
+  let phone = req.body.phone;
+  let cell = req.body.cell;
+  let email = req.body.email;
+  let sex_male = req.body.sex_male;
+  let instructorFlag = req.body.instructorFlag;
+
+  let categoriesArray = [];
+  if (req.body.categoriesArray)
+    categoriesArray = JSON.parse(req.body.categoriesArray);
+
+  let categoriesId = [];
+
+  Object.values(categoriesArray).forEach((item, i) => {
+    categoriesId.push(item.id);
+  });
+
+  console.log(categoriesArray, categoriesId);
+
+  let educationalQualifications = req.body.educationalQualifications;
+  let professionalExperiences = req.body.professionalExperiences;
+
+  let profile_image_url = req.body.profile_image_url;
+  if (profile_image_url === "null") {
+    profile_image_url = null;
+  }
+  let image_urls_for_delete = JSON.parse(req.body.image_urls_for_delete);
+
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
+  var pool = new pg.Pool({
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
+    ssl: { rejectUnauthorized: false },
+  });
+
+  let sql = "select count(*) as count from Customer where id=$1";
+
+  pool.query(sql, [userId], (err, result) => {
+    if (err) {
+      pool.end(() => {});
+      next(err);
+    }
+    if (result.rows[0].count !== "0") {
+      err = new Error("Duplicate User Id");
+      pool.end(() => {});
+      next(err);
+    } else {
+      let sql1 = ` select customer_insertdb(p_id:=$1, p_password:=$2, p_first_name:=$3, p_last_name:=$4,
+          p_address1:=$5, p_address2:=$6, p_city:=$7, p_zip:=$8, p_phone:=$9, p_mobile:=$10,
+          p_email:=$11, p_sex_male:=$12, p_profile_image_url:=$13, p_instructor:=$14, p_educational_qualifications:=$15, 
+          p_professional_experiences:=$16, p_categories_id:=$17)
+         `;
+      pool.query(
+        sql1,
+        [
+          userId,
+          passwordHash,
+          firstName,
+          lastName,
+          address1,
+          address2,
+          city,
+          zip,
+          phone,
+          cell,
+          email,
+          sex_male,
+          profile_image_url,
+          instructorFlag,
+          educationalQualifications,
+          professionalExperiences,
+          categoriesId,
+        ],
+        (err, result) => {
+          pool.end(() => {});
+          if (err) {
+            next(err);
+            //res.json({"insertstatus":"error"});
+          } else {
+            if (
+              Object.keys(image_urls_for_delete) !== undefined &&
+              Object.keys(image_urls_for_delete).length > 0
+            )
+              utils.delete_images(image_urls_for_delete);
+            setCorsHeaders(req, res);
+            res.json({ insertstatus: "ok" });
+          }
+        }
+      );
+    }
+  });
+};
+
 /*api method for updating a course*/
 exports.editUserInDbJson = async function (req, res, next) {
   //var q = url.parse(req.url, true).query;
@@ -428,15 +563,29 @@ exports.editUserInDbJson = async function (req, res, next) {
   let mobile = req.body.mobile;
   let email = req.body.email;
   let sex_male = req.body.sex_male;
+  let instructorFlag = req.body.instructorFlag;
+  let educationalQualifications = req.body.educationalQualifications;
+  let professionalExperiences = req.body.professionalExperiences;
+
+  let categoriesArray = [];
+  if (req.body.categoriesArray)
+    categoriesArray = JSON.parse(req.body.categoriesArray);
+
+  let categoriesId = [];
+
+  Object.values(categoriesArray).forEach((item, i) => {
+    categoriesId.push(item.id);
+  });
+
   let profile_image_url = req.body.profile_image_url;
   let image_urls_for_delete = {};
   if (req.body.image_urls_for_delete != undefined)
     image_urls_for_delete = JSON.parse(req.body.image_urls_for_delete);
 
-  var sql =
-    "UPDATE CUSTOMER SET  first_name=$1, last_name=$2, address1=$3, address2=$4, city=$5, " +
-    " zip=$6, phone=$7, mobile=$8, email=$9, sex_male=$10, modified_timestamp=now(), " +
-    " profile_image_url=$11 where id=$12 ";
+  var sql = ` SELECT customer_update(p_id:=$1, p_first_name:=$2, p_last_name:=$3, p_address1:=$4, 
+    p_address2:=$5, p_city:=$6, p_zip:=$7, p_phone:=$8, p_mobile:=$9, p_email:=$10, 
+    p_sex_male:=$11, p_profile_image_url:=$12, p_instructor:=$13, p_educational_qualifications:=$14, 
+    p_professional_experiences:=$15,  p_categories_id:=$16)  `;
 
   let accountId = req.body.accountId;
   let accountConfiguration = configuration;
@@ -460,6 +609,7 @@ exports.editUserInDbJson = async function (req, res, next) {
   pool.query(
     sql,
     [
+      id,
       firstName,
       lastName,
       address1,
@@ -471,7 +621,10 @@ exports.editUserInDbJson = async function (req, res, next) {
       email,
       sex_male,
       profile_image_url,
-      id,
+      instructorFlag,
+      educationalQualifications,
+      professionalExperiences,
+      categoriesId,
     ],
     function (err, result, fields) {
       pool.end(() => {});
@@ -552,98 +705,6 @@ exports.changeUserPassword = async function (req, res, next) {
         err = new Error("User Id, Old Password combination is wrong");
         next(err);
       }
-    }
-  });
-};
-
-/* Api verison of InsertUserToDB in database*/
-exports.insertUserToDbJson = async function (req, res, next) {
-  let userId = req.body.userId;
-  let password = req.body.password;
-  let passwordHash = await bcrypt.hash(password, constants.BCRYPT_SALT_ROUNDS);
-  let firstName = req.body.firstName;
-  let lastName = req.body.lastName;
-  let address1 = req.body.address1;
-  let address2 = req.body.address2;
-  let city = req.body.city;
-  let zip = req.body.zip;
-  let phone = req.body.phone;
-  let cell = req.body.cell;
-  let email = req.body.email;
-  let sex_male = req.body.sex_male;
-  let profile_image_url = req.body.profile_image_url;
-  if (profile_image_url === "null") {
-    profile_image_url = null;
-  }
-  let image_urls_for_delete = JSON.parse(req.body.image_urls_for_delete);
-
-  let accountId = req.body.accountId;
-  let accountConfiguration = configuration;
-
-  if (accountId) {
-    accountConfiguration = await utils.getConfiguration(
-      accountId,
-      configuration
-    );
-  }
-
-  var pool = new pg.Pool({
-    host: accountConfiguration.getHost(),
-    user: accountConfiguration.getUserId(),
-    password: accountConfiguration.getPassword(),
-    database: accountConfiguration.getDatabase(),
-    port: accountConfiguration.getPort(),
-    ssl: { rejectUnauthorized: false },
-  });
-
-  let sql = "select count(*) as count from Customer where id=$1";
-
-  pool.query(sql, [userId], (err, result) => {
-    if (err) {
-      pool.end(() => {});
-      next(err);
-    }
-    if (result.rows[0].count !== "0") {
-      err = new Error("Duplicate User Id");
-      pool.end(() => {});
-      next(err);
-    } else {
-      let sql1 =
-        "insert into Customer(id,password,first_name,last_name,address1,address2,city,zip,phone,mobile,email, sex_male, profile_image_url) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11, $12, $13)";
-
-      pool.query(
-        sql1,
-        [
-          userId,
-          passwordHash,
-          firstName,
-          lastName,
-          address1,
-          address2,
-          city,
-          zip,
-          phone,
-          cell,
-          email,
-          sex_male,
-          profile_image_url,
-        ],
-        (err, result) => {
-          pool.end(() => {});
-          if (err) {
-            next(err);
-            //res.json({"insertstatus":"error"});
-          } else {
-            if (
-              Object.keys(image_urls_for_delete) !== undefined &&
-              Object.keys(image_urls_for_delete).length > 0
-            )
-              utils.delete_images(image_urls_for_delete);
-            setCorsHeaders(req, res);
-            res.json({ insertstatus: "ok" });
-          }
-        }
-      );
     }
   });
 };
