@@ -13,7 +13,7 @@ const dbControllerChat = require("../controllers/DBcontrollerChat");
 const dbControllerFiles = require("../controllers/DBcontrollerFiles");
 const dbControllerPage = require("../controllers/DBcontrollerPage");
 const dbControllerStripe = require("../controllers/DBcontrollerStripe");
-const contactMailer = require("../controllers/EmailController");
+const controllerEmail = require("../controllers/EmailController");
 
 const { securityController } = require("../controllers/SecurityController");
 const jwtVerifier = require("../middleware/JwtVerifier");
@@ -172,10 +172,10 @@ router.post(
 );
 router.post("/courseScormFileUpload", dbControllerFiles.courseScormFileUpload);
 //MAILER
-router.post("/sendMail", contactMailer.sendMail);
-router.post("/sendReply", contactMailer.sendReply);
-router.post("/sendWelcome", contactMailer.sendWelcome);
-router.post("/sendEmailGeneric", contactMailer.sendEmailGenericHandler);
+router.post("/sendMail", controllerEmail.recieveContactUsEmail);
+router.post("/sendReply", controllerEmail.sendContactUsEmailReply);
+router.post("/sendWelcome", controllerEmail.sendRegistrationEmail);
+router.post("/sendEmailGeneric", controllerEmail.sendEmailGenericHandler);
 
 //Stripe
 router.post("/stripeSessionCheckout", dbControllerStripe.stripeSessionCheckout);

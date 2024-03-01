@@ -41,7 +41,7 @@ const transporterAlt = nodemailer.createTransport({
   tls: tlsObj,
 });
 
-exports.sendMail = function (req, res, next) {
+exports.recieveContactUsEmail = function (req, res, next) {
   let mailBody =
     "Name: " +
     req.body.name +
@@ -78,7 +78,7 @@ exports.sendMail = function (req, res, next) {
     }
   });
 };
-exports.sendReply = function (req, res, next) {
+exports.sendContactUsEmailReply = function (req, res, next) {
   let mailBody =
     "Name: " +
     req.body.name +
@@ -113,28 +113,77 @@ exports.sendReply = function (req, res, next) {
     }
   });
 };
-exports.sendWelcome = function (req, res, next) {
-  var mailMessage = {
-    from: constants.SCUOLER_ADMIN_EMAIL_ID,
-    to: req.body.email,
-    subject: "Welcome to Scuoler",
-    text:
-      "Dear " +
-      req.body.name +
-      ",\nThank you for registering at scuoler.com. We hope you have great time learning with us. \n\nThe password for your account is: " +
-      req.body.password +
-      ".\nFor any help/support please feel free to reach out to us through our contact us page.\n\nThanking you,\nTeam Scuoler\n\n\nNote:This is an auto-generated mail.Please do not reply.",
-  };
 
-  transporter.sendMail(mailMessage, function (error, info) {
-    if (error) {
-      next(error);
-    } else {
-      console.log("Email reply sent: " + info.response);
+const makeRegistrationEmailBody = (name, password) => {
+  const html = `<html>
+  <body>
+  <section style="background-color: #edf2fb;box-shadow: 0px 10px 5px grey; border-radius: 10px;border: 1px solid rgb(196, 196, 196);padding: 10px 5px 0px 15px">
+  <h2>Dear ${name}, </h2>
+  <h2>Welcome to <a href="https://scuoler.com/">Scuoler</a>,</h2>
+  <h3>The password for your account is ${password}</h3>
+  <h3>We hope you have great time learning/educating/building with us.</h3> 
+  <h3>Kindly remember to take the following steps, immediately:</h2> 
+  <hr>
+  <br/>
+  <ol>
+  <li>
+  <p style="color:#332233;font-size: 17px;font-weight: bolder">Change Password:<p/>
+  <span style="margin-left:18px; font-size: 18px; color: #223322; ">
+  After signing in using your user id and password, you will automatically navigated to your home page.
+  From there, click on the password icon to open change-password modal.
+  </span> <br/>
+  </li>
+  <li>
+  <p style="color:#332233;font-size: 17px;font-weight: bolder">Want to be an Instructor/Mentor?<p/>
+  <span style="margin-left:18px; font-size: 18px; color: #223322; ">
+  After signing in, from the home page, click on the profile icon. 
+  Click the checkbox labelled 'Are you interested in being an Instructor/Mentor'. 
+  Provide your educational qualifications, industrial experiences, and competencies 
+  around which you want to instruct/mentor. We will match you to students/mentees. 
+  Hurray, you can start making revenue. 
+  </span> <br/>
+  </li>
+  <li>
+  <p style="color:#332233;font-size: 17px;font-weight: bolder">Want to be a Course Creator?<p/>
+  <span style="margin-left:18px; font-size: 18px; color: #223322; ">
+  If you have deep knowledge about a topic. Why not create a course on Scuoler platform on that topic.
+  We can help you publish and popularize your content on Google, Bing, and other search engines, 
+  on social networks such as Facebook and LinkedIn. This will help people in discovering your content faster
+  and establish yourself as an instructional designer. You can turn on the Ads option 
+  and make revenue based on number of views. If this interests you, then click on
+  <a href="https://scuoler.com/courseInsert">https://scuoler.com/courseInsert</a>
+  <span><br/>
+  </li>
+  </ol>
+  <br/>
+  <hr>
+  <h4>Thank You from <a href="https://scuoler.com">Scuoler</a> team<br/></h4>
+  <a href="https://scuoler.com">https://scuoler.com</a>
+  </section>
+  </body>
+  </html>
+ `;
+  return html;
+};
+
+exports.sendRegistrationEmail = function (req, res, next) {
+  let htmlBody = makeRegistrationEmailBody(req.body.name, req.body.password);
+
+  sendEmailGeneric(
+    constants.SCUOLER_ADMIN_EMAIL_ID,
+    req.body.email,
+    "Welcome to Scuoler",
+    htmlBody,
+    true,
+    false
+  )
+    .then((output) => {
       setCorsHeaders(req, res);
       res.json({ mailReplySentStatus: "ok" });
-    }
-  });
+    })
+    .catch((err1) => {
+      next(err1);
+    });
 };
 
 exports.sendEmailGenericHandler = function (req, res, next) {
