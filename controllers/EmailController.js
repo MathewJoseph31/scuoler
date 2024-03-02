@@ -135,7 +135,9 @@ const makeRegistrationEmailBody = (name, password) => {
   </li>
   <li>
   <p style="color:#332233;font-size: 17px;font-weight: bolder">Want to be an Instructor/Mentor?<p/>
-  <span style="margin-left:18px; font-size: 18px; color: #223322; ">
+  <img style="object-fit: contain; width: 300px; height:300px" 
+  src="https://res.cloudinary.com/dqsndcxbu/image/upload/v1708763447/employee/ffsamztkyo5wiwsibq47.jpg"/>
+  <span style="margin-left:8px; font-size: 18px; color: #223322; ">
   After signing in, from the home page, click on the profile icon. 
   Click the checkbox labelled 'Are you interested in being an Instructor/Mentor'. 
   Provide your educational qualifications, industrial experiences, and competencies 
@@ -145,7 +147,7 @@ const makeRegistrationEmailBody = (name, password) => {
   </li>
   <li>
   <p style="color:#332233;font-size: 17px;font-weight: bolder">Want to be a Course Creator?<p/>
-  <span style="margin-left:18px; font-size: 18px; color: #223322; ">
+  <span style="margin-left:8px; font-size: 18px; color: #223322; ">
   If you have deep knowledge about a topic. Why not create a course on Scuoler platform on that topic.
   We can help you publish and popularize your content on Google, Bing, and other search engines, 
   on social networks such as Facebook and LinkedIn. This will help people in discovering your content faster

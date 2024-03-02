@@ -24,6 +24,8 @@ const util = require("../util");
 
 const constants = require("../Constants");
 
+const { sendEmailGeneric } = require("./EmailController");
+
 //--USER/Costumer---
 
 /* function for handling  http authentication requests
@@ -232,6 +234,7 @@ exports.mergeUser = async function (req, res, next) {
         let accessToken = jwt.sign({ userId }, constants.ACCESS_TOKEN_SECRET, {
           expiresIn: "9999d",
         });
+
         setCorsHeaders(req, res);
         res.json({ mergestatus: "ok", accessToken });
       }
