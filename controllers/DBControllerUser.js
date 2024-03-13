@@ -468,6 +468,9 @@ exports.insertUserToDbJson = async function (req, res, next) {
 
   let educationalQualifications = req.body.educationalQualifications;
   let professionalExperiences = req.body.professionalExperiences;
+  let aboutDescription = req.body.aboutDescription;
+
+  console.log(aboutDescription);
 
   let profile_image_url = req.body.profile_image_url;
   if (profile_image_url === "null") {
@@ -508,8 +511,8 @@ exports.insertUserToDbJson = async function (req, res, next) {
     } else {
       let sql1 = ` select customer_insertdb(p_id:=$1, p_password:=$2, p_first_name:=$3, p_last_name:=$4,
           p_address1:=$5, p_address2:=$6, p_city:=$7, p_zip:=$8, p_phone:=$9, p_mobile:=$10,
-          p_email:=$11, p_sex_male:=$12, p_profile_image_url:=$13, p_instructor:=$14, p_educational_qualifications:=$15, 
-          p_professional_experiences:=$16, p_categories_id:=$17)
+          p_email:=$11, p_sex_male:=$12, p_profile_image_url:=$13, p_instructor:=$14, p_about_description:=$15,
+          p_educational_qualifications:=$16, p_professional_experiences:=$17, p_categories_id:=$18)
          `;
       pool.query(
         sql1,
@@ -528,6 +531,7 @@ exports.insertUserToDbJson = async function (req, res, next) {
           sex_male,
           profile_image_url,
           instructorFlag,
+          aboutDescription,
           educationalQualifications,
           professionalExperiences,
           categoriesId,
