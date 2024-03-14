@@ -68,7 +68,7 @@ exports.verifyUserJson = async function (req, res, next) {
 
   var sql = `SELECT  count(*) as count, max(case when admin=true then 1 else 0 end) as admin, trim(max(first_name)||' '||max(last_name)) as full_name,  max(password) as password,   max(id) as id  
     FROM Customer 
-    where coalesce(password,'')<>'' and email=$1 
+    where deleted=false and coalesce(password,'')<>'' and email=$1 
     `;
 
   pool.query(sql, [email], async function (err, result, fields) {
@@ -363,7 +363,7 @@ exports.getTheUser = async function (req, res, next) {
   });
 
   let sql =
-    "select first_name, last_name, address1, address2, city, zip, phone, mobile, email, sex_male, profile_image_url, instructor, about_description, educational_qualifications, professional_experiences from customer where id = $1";
+    "select first_name, last_name, address1, address2, city, zip, phone, mobile, email, sex_male, profile_image_url, instructor, outline, about_description, educational_qualifications, professional_experiences from customer where id = $1";
 
   let sql1 =
     "select B.ID, B.name  from category_association A " +
@@ -391,6 +391,7 @@ exports.getTheUser = async function (req, res, next) {
         resObj.sex_male = result.rows[0].sex_male;
         resObj.profile_image_url = result.rows[0].profile_image_url;
         resObj.instructorFlag = result.rows[0].instructor;
+        resObj.outline = result.rows[0].outline;
         resObj.about_description = result.rows[0].about_description;
         resObj.educational_qualifications =
           result.rows[0].educational_qualifications;
@@ -468,7 +469,8 @@ exports.insertUserToDbJson = async function (req, res, next) {
     categoriesId.push(item.id);
   });
 
-  console.log(categoriesArray, categoriesId);
+  let outline = req.body.outline;
+  console.log(outline);
 
   let educationalQualifications = req.body.educationalQualifications;
   let professionalExperiences = req.body.professionalExperiences;
@@ -515,8 +517,9 @@ exports.insertUserToDbJson = async function (req, res, next) {
     } else {
       let sql1 = ` select customer_insertdb(p_id:=$1, p_password:=$2, p_first_name:=$3, p_last_name:=$4,
           p_address1:=$5, p_address2:=$6, p_city:=$7, p_zip:=$8, p_phone:=$9, p_mobile:=$10,
-          p_email:=$11, p_sex_male:=$12, p_profile_image_url:=$13, p_instructor:=$14, p_about_description:=$15,
-          p_educational_qualifications:=$16, p_professional_experiences:=$17, p_categories_id:=$18)
+          p_email:=$11, p_sex_male:=$12, p_profile_image_url:=$13, p_instructor:=$14, p_outline:=$15, 
+          p_about_description:=$16, p_educational_qualifications:=$17, p_professional_experiences:=$18, 
+          p_categories_id:=$19)
          `;
       pool.query(
         sql1,
@@ -535,6 +538,7 @@ exports.insertUserToDbJson = async function (req, res, next) {
           sex_male,
           profile_image_url,
           instructorFlag,
+          outline,
           aboutDescription,
           educationalQualifications,
           professionalExperiences,
@@ -575,6 +579,7 @@ exports.editUserInDbJson = async function (req, res, next) {
   let email = req.body.email;
   let sex_male = req.body.sex_male;
   let instructorFlag = req.body.instructorFlag;
+  let outline = req.body.outline;
   let aboutDescription = req.body.aboutDescription;
   let educationalQualifications = req.body.educationalQualifications;
   let professionalExperiences = req.body.professionalExperiences;
@@ -596,8 +601,8 @@ exports.editUserInDbJson = async function (req, res, next) {
 
   var sql = ` SELECT customer_update(p_id:=$1, p_first_name:=$2, p_last_name:=$3, p_address1:=$4, 
     p_address2:=$5, p_city:=$6, p_zip:=$7, p_phone:=$8, p_mobile:=$9, p_email:=$10, 
-    p_sex_male:=$11, p_profile_image_url:=$12, p_instructor:=$13, p_about_description:=$14,
-    p_educational_qualifications:=$15, p_professional_experiences:=$16,  p_categories_id:=$17)  `;
+    p_sex_male:=$11, p_profile_image_url:=$12, p_instructor:=$13, p_outline:=$14, p_about_description:=$15,
+    p_educational_qualifications:=$16, p_professional_experiences:=$17,  p_categories_id:=$18)  `;
 
   let accountId = req.body.accountId;
   let accountConfiguration = configuration;
@@ -634,6 +639,7 @@ exports.editUserInDbJson = async function (req, res, next) {
       sex_male,
       profile_image_url,
       instructorFlag,
+      outline,
       aboutDescription,
       educationalQualifications,
       professionalExperiences,
