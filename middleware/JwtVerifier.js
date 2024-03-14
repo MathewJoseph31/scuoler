@@ -14,7 +14,7 @@ exports.verifyJwt = function (req, res, next) {
         let err = new Error("Access Token Invalid");
         next(err);
       } else {
-        req.userId = decoded.userId;
+        req.email = decoded.email;
         next();
       }
     });

@@ -8,6 +8,7 @@ const pg = require("pg");
 //mysql.connect();
 
 const fs = require("fs");
+const { v4: uuidv4 } = require("uuid");
 
 //end of session code
 
@@ -304,7 +305,7 @@ exports.editEmployeeInDbJson = async function (req, res, next) {
 /* Api verison of InsertEmployeeToDB in database*/
 exports.insertEmployeeToDbJson = async function (req, res, next) {
   //let id=req.body.id;
-  console.log("user id" + req.userId);
+  console.log("user email" + req.email);
   let firstName = req.body.firstName;
   let lastName = req.body.lastName;
   let address1 = req.body.address1;
@@ -313,7 +314,7 @@ exports.insertEmployeeToDbJson = async function (req, res, next) {
   let zip = req.body.zip;
   let phone = req.body.phone;
   let cell = req.body.cell;
-  let email = req.body.email;
+  let email = req.email;
   let birth_date = req.body.birth_date;
   let salary = req.body.salary;
   let attachments = req.body.attachments;
@@ -345,7 +346,7 @@ exports.insertEmployeeToDbJson = async function (req, res, next) {
 
   var sql =
     "insert into Employee(id, first_name,last_name,address1,address2,city,zip,phone,mobile,email, birth_date, salary, attachments, start_date, term_date) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11, $12, $13, $14, $15)";
-  let id = utils.getUniqueId(firstName + lastName);
+  let id = uuidv4();
 
   pool.query(
     sql,
