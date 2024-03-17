@@ -429,13 +429,16 @@ exports.quizGetScoresForUser = async function (req, res, next) {
 
 /*Global variable for shared select list between getQuizes and searchQuizesForPrefix*/
 const sqlSubstringForGetAndSearch =
-  " SELECT Quiz.id, Quiz.description, Quiz.name,  Quiz.author_id, Quiz.duration_minutes, Quiz.type, Quiz.thumbnail ";
+  " SELECT id, description, name,  author_id, duration_minutes, type, thumbnail ";
 
 exports.getQuizes = async function (req, res, next) {
   var queryObject = url.parse(req.url, true).query;
 
   let pageSize = queryObject.pageSize || 20;
   let currentPage = queryObject.currentPage || 1;
+  let category = queryObject.category || "";
+  let language = queryObject.language || "";
+  let author = queryObject.author || "";
   //console.log(pageSize+', currPage '+currentPage);
   const offset = pageSize * (currentPage - 1);
 
@@ -460,17 +463,21 @@ exports.getQuizes = async function (req, res, next) {
 
   var sql =
     sqlSubstringForGetAndSearch +
-    " FROM Quiz " +
-    " where Quiz.deleted=false order by ctid  offset $1 limit $2 ";
+    " from quiz_get_all(p_category:=$1, p_language:=$2, p_author:=$3, p_offset:=$4, p_limit:=$5)  ";
+  //" FROM Quiz where Quiz.deleted=false order by ctid  offset $1 limit $2 ";
 
-  pool.query(sql, [offset, pageSize], function (err, result, fields) {
-    pool.end(() => {});
-    if (err) next(err);
-    else {
-      setCorsHeaders(req, res);
-      res.json(result.rows);
+  pool.query(
+    sql,
+    [category, language, author, offset, pageSize],
+    function (err, result, fields) {
+      pool.end(() => {});
+      if (err) next(err);
+      else {
+        setCorsHeaders(req, res);
+        res.json(result.rows);
+      }
     }
-  });
+  );
 };
 
 exports.searchQuizesForPrefix = async function (req, res, next) {

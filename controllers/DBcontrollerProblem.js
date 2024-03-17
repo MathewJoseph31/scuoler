@@ -365,6 +365,9 @@ exports.getProblems = async function (req, res, next) {
   var queryObject = url.parse(req.url, true).query;
   let pageSize = queryObject.pageSize || 30;
   let currentPage = queryObject.currentPage || 1;
+  let category = queryObject.category || "";
+  let language = queryObject.language || "";
+  let author = queryObject.author || "";
   //console.log(pageSize+', currPage '+currentPage);
 
   const offset = pageSize * (currentPage - 1);
@@ -389,26 +392,31 @@ exports.getProblems = async function (req, res, next) {
   });
 
   var sql =
-    "select distinct A.id,  A.description, A.options, A.option1, A.option2, A.option3, A.option4, A.answerkey, " +
-    " A.solution, A.type, A.solution_open, A.author_id, A.source  from Problem A " +
-    " where A.deleted=false offset $1 limit $2 ";
+    "select A.id,  A.description, A.options,  A.answerkey, " +
+    " A.solution, A.type, A.solution_open, A.author_id, A.source " +
+    " from problem_get_all(p_category:=$1, p_language:=$2, p_author:=$3, p_offset:=$4, p_limit:=$5) A ";
+  //" from Problem A where A.deleted=false offset $1 limit $2 ";
 
-  pool.query(sql, [offset, pageSize], function (err, result, fields) {
-    pool.end(() => {});
-    if (err) next(err);
-    else {
-      var resultArr = [];
-      var i = 0;
-      for (i = 0; i < result.rows.length; i++) {
-        resultArr.push(result.rows[i]);
+  pool.query(
+    sql,
+    [category, language, author, offset, pageSize],
+    function (err, result, fields) {
+      pool.end(() => {});
+      if (err) next(err);
+      else {
+        var resultArr = [];
+        var i = 0;
+        for (i = 0; i < result.rows.length; i++) {
+          resultArr.push(result.rows[i]);
+        }
+        const jsonStr = JSON.stringify(resultArr);
+        const encStr = util.encrypt(jsonStr);
+        setCorsHeaders(req, res);
+        res.json(encStr);
+        //res.json(resultArr);
       }
-      const jsonStr = JSON.stringify(resultArr);
-      const encStr = util.encrypt(jsonStr);
-      setCorsHeaders(req, res);
-      res.json(encStr);
-      //res.json(resultArr);
     }
-  });
+  );
 };
 
 exports.searchProblems = async function (req, res, next) {

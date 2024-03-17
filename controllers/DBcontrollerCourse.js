@@ -336,6 +336,7 @@ exports.getCourses = async function (req, res, next) {
   let currentPage = queryObject.currentPage || 1;
   let category = queryObject.category || "";
   let language = queryObject.language || "";
+  let author = queryObject.author || "";
   let sort = queryObject.sort || ""; //not used at the moment
 
   const offset = pageSize * (currentPage - 1);
@@ -361,13 +362,13 @@ exports.getCourses = async function (req, res, next) {
 
   var sql =
     sqlSubstringForGetAndSearch +
-    " from course_get_all(p_category:=$1, p_language:=$2, p_offset:=$3, p_limit:=$4) ";
+    " from course_get_all(p_category:=$1, p_language:=$2, p_author:=$3, p_offset:=$4, p_limit:=$5) ";
   //" FROM Course where deleted=false order by type, thumbnail, create_timestamp DESC offset $1 limit $2 ";
   var resultArr = [];
 
   pool.query(
     sql,
-    [category, language, offset, pageSize],
+    [category, language, author, offset, pageSize],
     function (err, result, fields) {
       pool.end(() => {});
       if (err) next(err);
