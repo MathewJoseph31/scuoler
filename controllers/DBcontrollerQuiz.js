@@ -772,6 +772,7 @@ exports.getTheQuiz = async function (req, res, next) {
       resObj.description = result.rows[0]?.description;
       resObj.name = result.rows[0]?.name;
       resObj.author_id = result.rows[0]?.author_id;
+      resObj.author_name = result.rows[0]?.author_name;
       resObj.duration_minutes = result?.rows[0]?.duration_minutes;
       resObj.thumbnail = result?.rows[0]?.thumbnail;
       resObj.type = result?.rows[0]?.type;
