@@ -102,7 +102,6 @@ router.post("/changeUserPassword", dbControllerUser.changeUserPassword);
 router.get("/getUsers", dbControllerUser.getUsers);
 router.post("/searchUsers", dbControllerUser.searchUsers);
 router.post("/getTheUser", dbControllerUser.getTheUser);
-router.post("/getCourseListForUser", dbControllerUser.getCourseListForUserJson);
 router.post("/updateUser", dbControllerUser.editUserInDbJson);
 router.post("/profileImageUpload", dbControllerUser.profileImageUpload);
 router.post("/mergeUser", dbControllerUser.mergeUser);
