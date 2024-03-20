@@ -274,7 +274,7 @@ exports.getUsers = async function (req, res, next) {
   });
 
   var sql =
-    " SELECT id, first_name, last_name, address1, address2, city, state, zip, phone, mobile, email, sex_male, profile_image_url, outline " +
+    " SELECT id, first_name, last_name, address1, address2, city, state , zip, phone, mobile, email, sex_male, profile_image_url, outline " +
     " from customer_get_all(p_instructor:=$1, p_offset:=$2, p_limit:=$3) ";
   //" FROM Customer  where deleted=false offset $1 limit $2 ";
 
