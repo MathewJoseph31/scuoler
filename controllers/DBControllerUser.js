@@ -250,6 +250,7 @@ exports.getUsers = async function (req, res, next) {
   var queryObject = url.parse(req.url, true).query;
   let pageSize = queryObject.pageSize || 20;
   let currentPage = queryObject.currentPage || 1;
+  let instructor = queryObject.instructor == "true";
   //console.log(pageSize+', currPage '+currentPage);
   const offset = pageSize * (currentPage - 1);
 
@@ -273,24 +274,29 @@ exports.getUsers = async function (req, res, next) {
   });
 
   var sql =
-    "SELECT id, first_name, last_name, address1, address2, city, zip, phone, mobile, " +
-    " email, sex_male, profile_image_url FROM Customer  where deleted=false offset $1 limit $2 ";
+    " SELECT id, first_name, last_name, address1, address2, city, state, zip, phone, mobile, email, sex_male, profile_image_url, outline " +
+    " from customer_get_all(p_instructor:=$1, p_offset:=$2, p_limit:=$3) ";
+  //" FROM Customer  where deleted=false offset $1 limit $2 ";
 
-  pool.query(sql, [offset, pageSize], function (err, result, fields) {
-    pool.end(() => {});
-    if (err) next(err);
-    else {
-      var arrResult = [];
+  pool.query(
+    sql,
+    [instructor, offset, pageSize],
+    function (err, result, fields) {
+      pool.end(() => {});
+      if (err) next(err);
+      else {
+        var arrResult = [];
 
-      var i = 0;
-      for (i = 0; i < result.rows.length; i++) {
-        arrResult.push(result.rows[i]);
+        var i = 0;
+        for (i = 0; i < result.rows.length; i++) {
+          arrResult.push(result.rows[i]);
+        }
+
+        setCorsHeaders(req, res);
+        res.send(arrResult);
       }
-
-      setCorsHeaders(req, res);
-      res.send(arrResult);
     }
-  });
+  );
 };
 
 exports.searchUsers = async function (req, res, next) {
