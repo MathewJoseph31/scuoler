@@ -14,6 +14,7 @@ const dbControllerFiles = require("../controllers/DBcontrollerFiles");
 const dbControllerPage = require("../controllers/DBcontrollerPage");
 const dbControllerStripe = require("../controllers/DBcontrollerStripe");
 const controllerEmail = require("../controllers/EmailController");
+const lambdaController = require("../controllers/LambdaController");
 
 const { securityController } = require("../controllers/SecurityController");
 const jwtVerifier = require("../middleware/JwtVerifier");
@@ -178,6 +179,9 @@ router.post("/sendEmailGeneric", controllerEmail.sendEmailGenericHandler);
 
 //Stripe
 router.post("/stripeSessionCheckout", dbControllerStripe.stripeSessionCheckout);
+
+//Lambda
+router.post("/lambdaExecute", lambdaController.lambdaExecute);
 
 JSON.safeStringify = (obj, indent = 2) => {
   let cache = [];
