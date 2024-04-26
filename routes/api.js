@@ -12,6 +12,7 @@ const dbControllerRoom = require("../controllers/DBcontrollerRoom");
 const dbControllerChat = require("../controllers/DBcontrollerChat");
 const dbControllerFiles = require("../controllers/DBcontrollerFiles");
 const dbControllerPage = require("../controllers/DBcontrollerPage");
+const dbControllerCodeSnippet = require("../controllers/DBcontrollerCodeSnippet");
 const dbControllerStripe = require("../controllers/DBcontrollerStripe");
 const controllerEmail = require("../controllers/EmailController");
 const lambdaController = require("../controllers/LambdaController");
@@ -69,6 +70,17 @@ router.get("/getCategoryList", dbControllerCourse.getCategoryList);
 
 //languages
 router.get("/getLanguageList", dbControllerCourse.getLanguageList);
+
+//codeSnippetLanguages
+router.get(
+  "/getCodeSnippetLanguageList",
+  dbControllerCodeSnippet.getCodeSnippetLanguageList
+);
+router.post("/insertCodeSnippet", dbControllerCodeSnippet.insertCodeSnippet);
+router.post("/getTheCodeSnippet", dbControllerCodeSnippet.getTheCodeSnippet);
+router.get("/getCodeSnippets", dbControllerCodeSnippet.getCodeSnippets);
+router.post("/updateCodeSnippet", dbControllerCodeSnippet.updateCodeSnippet);
+router.post("/deleteCodeSnippet", dbControllerCodeSnippet.deleteCodeSnippet);
 
 //Course
 router.post("/insertCourseAction", dbControllerCourse.insertCourseToDbJson);

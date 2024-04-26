@@ -853,7 +853,7 @@ exports.getCategoryList = async function (req, res, next) {
     "SELECT id,name FROM Category where deleted = false ORDER by name asc ";
   pool.query(sql, function (err, result, fields) {
     pool.end(() => {});
-    if (err) reject(err);
+    if (err) next(err);
     else {
       setCorsHeaders(req, res);
       res.json(result.rows);
@@ -888,7 +888,7 @@ exports.getLanguageList = async function (req, res, next) {
     "SELECT id,name FROM Language where deleted = false ORDER by name asc ";
   pool.query(sql, function (err, result, fields) {
     pool.end(() => {});
-    if (err) reject(err);
+    if (err) next(err);
     else {
       setCorsHeaders(req, res);
       res.json(result.rows);
