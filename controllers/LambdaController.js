@@ -44,18 +44,17 @@ exports.lambdaExecute = async function (req, res, next) {
     result += data;
   });
 
+  proc.stderr.on("data", (data) => {
+    //result = data.toString();
+    result += data;
+    clearTimeout(timeout); //preventing the timeout from calling since it didn't take too long
+    //res.json({ executestatus: "error", result });
+  });
+
   proc.stdout.on("end", () => {
     result = result.toString();
     console.log(result);
     res.json({ executestatus: "ok", result });
-  });
-
-  proc.stderr.on("data", (data) => {
-    result = data.toString();
-    /*const errObject = new Error(result);
-    next(errObject);*/
-    clearTimeout(timeout); //preventing the timeout from calling since it didn't take too long
-    res.json({ executestatus: "error", result });
   });
 
   proc.on("error", (error) => {

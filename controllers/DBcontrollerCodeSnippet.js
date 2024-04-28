@@ -220,6 +220,45 @@ exports.getTheCodeSnippet = async function (req, res, next) {
   });
 };
 
+exports.searchCodeSnippets = async function (req, res, next) {
+  let searchKey = req.body.searchKey;
+
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
+  var pool = new pg.Pool({
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
+    ssl: { rejectUnauthorized: false },
+  });
+
+  var sql =
+    "select distinct A.id, ts_headline('english', A.description, query, 'HighlightAll=true') description, " +
+    " ts_headline('english', A.language_name, query, 'HighlightAll=true') language_name, " +
+    " ts_headline('english', A.payload, query, 'HighlightAll=true') as payload,  A.author_id,  ts_rank_cd(search_tsv, query, 32) rank  " +
+    " from Code_snippet A, plainto_tsquery('english', $1) query " +
+    " where A.deleted=false and search_tsv@@query  order by rank desc ";
+
+  pool.query(sql, [searchKey], function (err, result, fields) {
+    pool.end(() => {});
+    if (err) next(err);
+    else {
+      setCorsHeaders(req, res);
+      res.json(result.rows);
+    }
+  });
+};
+
 /* function for handling http requests to retrive the records in the
  Course table in database in json format*/
 exports.getCodeSnippets = async function (req, res, next) {

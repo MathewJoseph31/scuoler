@@ -71,16 +71,18 @@ router.get("/getCategoryList", dbControllerCourse.getCategoryList);
 //languages
 router.get("/getLanguageList", dbControllerCourse.getLanguageList);
 
-//codeSnippetLanguages
+//code snippet languages
 router.get(
   "/getCodeSnippetLanguageList",
   dbControllerCodeSnippet.getCodeSnippetLanguageList
 );
+//code snippets
 router.post("/insertCodeSnippet", dbControllerCodeSnippet.insertCodeSnippet);
 router.post("/getTheCodeSnippet", dbControllerCodeSnippet.getTheCodeSnippet);
 router.get("/getCodeSnippets", dbControllerCodeSnippet.getCodeSnippets);
 router.post("/updateCodeSnippet", dbControllerCodeSnippet.updateCodeSnippet);
 router.post("/deleteCodeSnippet", dbControllerCodeSnippet.deleteCodeSnippet);
+router.post("/searchCodeSnippets", dbControllerCodeSnippet.searchCodeSnippets);
 
 //Course
 router.post("/insertCourseAction", dbControllerCourse.insertCourseToDbJson);
