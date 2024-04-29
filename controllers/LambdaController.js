@@ -26,7 +26,7 @@ exports.lambdaExecute = async function (req, res, next) {
   } else {
     result =
       "Runtime/Language not supported (language should be C#, Python, or Javascript) ";
-    setCorsHeaders(req, res);
+    utils.setCorsHeadersForAllIPs(req, res);
     res.json({ executestatus: "error", result });
   }
 
@@ -37,7 +37,7 @@ exports.lambdaExecute = async function (req, res, next) {
     const errObject = new Error(result);
     next(errObject);
     */
-    setCorsHeaders(req, res);
+    utils.setCorsHeadersForAllIPs(req, res);
     res.json({ executestatus: "error", result });
   }, LAMBDA_TIMOUT_MILLISECONDS);
 
@@ -56,7 +56,7 @@ exports.lambdaExecute = async function (req, res, next) {
   proc.stdout.on("end", () => {
     result = result.toString();
     console.log(result);
-    setCorsHeaders(req, res);
+    utils.setCorsHeadersForAllIPs(req, res);
     res.json({ executestatus: "ok", result });
   });
 
@@ -65,7 +65,7 @@ exports.lambdaExecute = async function (req, res, next) {
     /*const errObject = new Error(result);
     next(errObject);*/
     clearTimeout(timeout);
-    setCorsHeaders(req, res);
+    utils.setCorsHeadersForAllIPs(req, res);
     res.json({ executestatus: "error", result });
   });
 };
