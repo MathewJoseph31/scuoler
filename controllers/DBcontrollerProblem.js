@@ -443,7 +443,7 @@ exports.searchProblems = async function (req, res, next) {
 
   var sql =
     "select distinct A.id, ts_headline('english', A.description, query, 'HighlightAll=true') description, " +
-    " ts_headline('english', A.solution, query, 'HighlightAll=true') solution, A.options, A.option1, A.option2, A.option3, A.option4, " +
+    " ts_headline('english', A.solution, query, 'HighlightAll=true') solution, A.options,  " +
     " A.answerkey, A.type, A.solution_open, A.author_id, A.source, ts_rank_cd(search_tsv, query, 32) rank  " +
     " from Problem A, plainto_tsquery('english', $1) query " +
     " where A.deleted=false and search_tsv@@query  order by rank desc ";
