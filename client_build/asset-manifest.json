@@ -1,0 +1,31 @@
+{
+  "files": {
+    "main.css": "/static/css/main.c59cb3a9.chunk.css",
+    "main.js": "/static/js/main.50a9d697.chunk.js",
+    "runtime-main.js": "/static/js/runtime-main.c564f432.js",
+    "static/css/2.274f5c1b.chunk.css": "/static/css/2.274f5c1b.chunk.css",
+    "static/js/2.09b3831f.chunk.js": "/static/js/2.09b3831f.chunk.js",
+    "index.html": "/index.html",
+    "precache-manifest.7de40ce81315bc6d7cfcb92c01be9485.js": "/precache-manifest.7de40ce81315bc6d7cfcb92c01be9485.js",
+    "service-worker.js": "/service-worker.js",
+    "static/js/2.09b3831f.chunk.js.LICENSE.txt": "/static/js/2.09b3831f.chunk.js.LICENSE.txt",
+    "static/js/main.50a9d697.chunk.js.LICENSE.txt": "/static/js/main.50a9d697.chunk.js.LICENSE.txt",
+    "static/media/Middle.css": "/static/media/how-to-study-online-featured-image.27534d6a.jpg",
+    "static/media/Corporate-Learning-management-system-benefits.jpg": "/static/media/Corporate-Learning-management-system-benefits.a374cadd.jpg",
+    "static/media/aboutus_banner.jpg": "/static/media/aboutus_banner.63f7ca4e.jpg",
+    "static/media/aboutus_phil.jpg": "/static/media/aboutus_phil.ef1ef29f.jpg",
+    "static/media/corporateLmsBenefits.png": "/static/media/corporateLmsBenefits.f20b13ee.png",
+    "static/media/create1.png": "/static/media/create1.b65dabef.png",
+    "static/media/organize.png": "/static/media/organize.ab446705.png",
+    "static/media/scuoler_logo.svg": "/static/media/scuoler_logo.3954f712.svg",
+    "static/media/scuoler_logo_white.svg": "/static/media/scuoler_logo_white.37108d91.svg",
+    "static/media/why-build-your-own-corporate-lms.jpeg": "/static/media/why-build-your-own-corporate-lms.d7125cd4.jpeg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.c564f432.js",
+    "static/css/2.274f5c1b.chunk.css",
+    "static/js/2.09b3831f.chunk.js",
+    "static/css/main.c59cb3a9.chunk.css",
+    "static/js/main.50a9d697.chunk.js"
+  ]
+}

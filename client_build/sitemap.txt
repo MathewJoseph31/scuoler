@@ -1,0 +1,12 @@
+https://scuoler.com/problemsBrowse
+https://scuoler.com/problemsSearch
+https://scuoler.com/quizesBrowse
+https://scuoler.com/quizesSearch
+https://scuoler.com/coursesBrowse
+https://scuoler.com/coursesSearch
+https://scuoler.com/userInsert
+https://scuoler.com/usersSearch
+https://scuoler.com/userTraining
+https://scuoler.com/aboutUs
+https://scuoler.com/team
+https://scuoler.com/contactUs
