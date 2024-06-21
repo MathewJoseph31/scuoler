@@ -5,6 +5,7 @@ client/build/
 logs/
 public/uploadFiles/*
 public/scormFiles/*
+public/tinymce-utils/*
 importLogs/Configuration.js
 refreshDB/remoteFromTest/Configuration.js
 refreshDB/remoteFromTest/ConfigurationTest.js
