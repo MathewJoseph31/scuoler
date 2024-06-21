@@ -1,7 +1,6 @@
 #put files to ignore
 node_modules/
 build/
-client/build/
 logs/
 public/uploadFiles/*
 public/scormFiles/*
