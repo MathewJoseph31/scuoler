@@ -10,6 +10,7 @@ const constants = require("../Constants");
 var debug = require("debug")("webapp:server");
 var http = require("http");
 const https = require("https"); //gives an error in heroku after deploying so turning it off
+const tls = require("node:tls");
 const fs = require("fs");
 
 /**
@@ -18,17 +19,50 @@ const fs = require("fs");
 
 let server;
 
+const certOptions = {
+  SNICallback: (domainName, cb) => {
+    const foundDomain = constants.LETSENCRYPT_DOMAINS.find(
+      (d) => d === domainName
+    );
+    if (foundDomain) {
+      cb(
+        null,
+        tls.createSecureContext({
+          key: fs.readFileSync(
+            `/etc/letsencrypt/live/${foundDomain}/privkey.pem`
+          ),
+          cert: fs.readFileSync(
+            `/etc/letsencrypt/live/${foundDomain}/fullchain.pem`
+          ),
+        })
+      );
+    } else {
+      cb(
+        null,
+        tls.createSecureContext({
+          key: fs.readFileSync(
+            `/etc/letsencrypt/live/${constants.LETSENCRYPT_DOMAIN_NAME}/privkey.pem`
+          ),
+          cert: fs.readFileSync(
+            `/etc/letsencrypt/live/${constants.LETSENCRYPT_DOMAIN_NAME}/fullchain.pem`
+          ),
+        })
+      );
+    }
+  },
+};
+
 if (process.env.NODE_ENV === "production") {
   server = https.createServer(
-    {
+    certOptions,
+    /*{
       key: fs.readFileSync(
         `/etc/letsencrypt/live/${constants.LETSENCRYPT_DOMAIN_NAME}/privkey.pem`
       ),
       cert: fs.readFileSync(
         `/etc/letsencrypt/live/${constants.LETSENCRYPT_DOMAIN_NAME}/fullchain.pem`
       ),
-    },
-    app
+    }*/ app
   );
 } else {
   server = http.createServer(app);
