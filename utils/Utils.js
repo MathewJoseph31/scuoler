@@ -5,6 +5,7 @@ const path = require("path");
 /*Cloudinary cloud image server initialization*/
 const cloudinary = require("cloudinary").v2;
 const cloudinaryConfiguration = require("../CloudinaryConfigurationAlt");
+const constants = require("../Constants");
 
 function pad(num) {
   num = num < 10 ? "0".concat(num) : "".concat(num);
@@ -123,6 +124,30 @@ exports.delete_images = function (image_urls_for_delete) {
 
   promises.forEach(async (promise, i) => {
     await promise;
+  });
+
+  return "ok";
+};
+
+exports.delete_images_local = function (image_urls_for_delete) {
+  const promises = Object.keys(image_urls_for_delete).map((key) => {
+    let deletePath = path.join(
+      __basedir,
+      constants.PUBLIC_DIRECTORY,
+      image_urls_for_delete[key]
+    );
+    return fs.promises.unlink(deletePath);
+  });
+
+  promises.forEach(async (promise, i) => {
+    try {
+      await promise;
+    } catch (e) {
+      console.log(e);
+      if (e.code !== "ENOENT") {
+        throw e;
+      }
+    }
   });
 
   return "ok";

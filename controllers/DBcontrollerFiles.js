@@ -59,7 +59,8 @@ exports.getUploadsForSource = async function (req, res, next) {
 
 exports.fileUpload = function (req, res, next) {
   let uploadFiles = Object.values(req.files);
-  //console.log(uploadFiles);
+  let uploadDir = req.body.uploadDir;
+  //console.log(uploadDir, uploadFiles);
   let fileName = uploadFiles[0].originalFilename;
   let oldPath = uploadFiles[0].path;
   let type = uploadFiles[0].type;
@@ -74,6 +75,7 @@ exports.fileUpload = function (req, res, next) {
   } else {
     newName = fileName + "_" + uuidv4();
   }
+
   let newPath = path.join(
     __basedir,
     constants.PUBLIC_DIRECTORY,
@@ -81,6 +83,26 @@ exports.fileUpload = function (req, res, next) {
     newName
   );
   let relativeUrl = path.join(constants.UPLOAD_FILES_DIRECTORY, newName);
+
+  if (uploadDir) {
+    let dirPath = path.join(
+      __basedir,
+      constants.PUBLIC_DIRECTORY,
+      constants.UPLOAD_FILES_DIRECTORY,
+      uploadDir
+    );
+    newPath = path.join(dirPath, newName);
+
+    if (!fs.existsSync(dirPath)) {
+      fs.mkdirSync(dirPath, { recursive: true });
+    }
+    relativeUrl = path.join(
+      constants.UPLOAD_FILES_DIRECTORY,
+      uploadDir,
+      newName
+    );
+  }
+
   fs.rename(oldPath, newPath, function (err) {
     if (err) next(err);
 

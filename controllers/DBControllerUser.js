@@ -560,7 +560,7 @@ exports.insertUserToDbJson = async function (req, res, next) {
               Object.keys(image_urls_for_delete) !== undefined &&
               Object.keys(image_urls_for_delete).length > 0
             )
-              utils.delete_images(image_urls_for_delete);
+              utils.delete_images_local(image_urls_for_delete);
             setCorsHeaders(req, res);
             res.json({ insertstatus: "ok", userId });
           }
@@ -660,8 +660,9 @@ exports.editUserInDbJson = async function (req, res, next) {
         if (
           Object.keys(image_urls_for_delete) !== undefined &&
           Object.keys(image_urls_for_delete).length > 0
-        )
-          utils.delete_images(image_urls_for_delete);
+        ) {
+          utils.delete_images_local(image_urls_for_delete);
+        }
 
         setCorsHeaders(req, res);
         res.json({ updatestatus: "ok" });
