@@ -1,3 +1,7 @@
-upload_association
+quiz_course
+quiz_instance
+quiz_instance_answers
+problem_quiz 
 user_like
 user_rating
+upload_association

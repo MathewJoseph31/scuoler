@@ -11,7 +11,7 @@ const refreshDb = async () => {
   var lines = fileStr.split(/\r\n|\r|\n/);
   //lines.forEach((va) => console.log(va));
 
-  var pool = new pg.Pool({
+  var poolDest = new pg.Pool({
     host: configuration.getHost(),
     user: configuration.getUserId(),
     password: configuration.getPassword(),
@@ -20,7 +20,7 @@ const refreshDb = async () => {
     ssl: { rejectUnauthorized: false },
   });
 
-  const client = new pg.Pool({
+  const poolSource = new pg.Pool({
     host: configurationTest.getHost(),
     port: configurationTest.getPort(),
     user: configurationTest.getUserId(),
@@ -29,26 +29,17 @@ const refreshDb = async () => {
     ssl: { rejectUnauthorized: false },
   });
 
-  connStr =
-    "'host=" +
-    configuration.getHost() +
-    " port=" +
-    configuration.getPort() +
-    " user=" +
-    configuration.getUserId() +
-    " password=" +
-    configuration.getPassword() +
-    " dbname=" +
-    configuration.getDatabase() +
-    "'";
-
   for (let k = 0; k < lines.length; k++) {
     var tableName = lines[k];
-    if (tableName == "") continue;
+    if (!tableName) continue;
 
-    let metaQuery =
-      "select column_name, udt_name, character_maximum_length, numeric_precision, numeric_scale, table_name from information_schema.columns where table_name=$1 order by ordinal_position";
-    let result = await pool.query(metaQuery, [tableName]);
+    let metaQuery = `select column_name, udt_name, 
+    character_maximum_length, 
+    numeric_precision, numeric_scale, table_name 
+    from information_schema.columns 
+    where table_name=$1 order by ordinal_position`;
+
+    let result = await poolDest.query(metaQuery, [tableName.trim()]);
     let tabName = result.rows[0].table_name; //tableName variable is not available in the scope
     let suffix = "insert into " + tabName + "(";
     let suffix1 = " values (";
@@ -70,14 +61,14 @@ const refreshDb = async () => {
 
     let insertQuery = suffix + suffix1;
 
-    client.query(prefix, function (err, result, fields) {
+    poolSource.query(prefix, function (err, result, fields) {
       if (err) return;
       let i = 0;
       for (i = 0; i < result.rows.length; i++) {
         let valArray = columnNames.map((val) => {
           return result.rows[i][val];
         });
-        pool
+        poolDest
           .query(insertQuery, valArray)
           .then()
           .catch((err) => {
