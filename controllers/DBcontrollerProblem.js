@@ -1,10 +1,10 @@
 //const mysql = require('mysql');
 const pg = require("pg");
-
 //const mysql = new pg.Client(connectionString);
 //mysql.connect();
 
 const url = require("url");
+const { v4: uuidv4 } = require("uuid");
 
 const configuration = require("../Configuration");
 const util = require("../util");
@@ -56,6 +56,55 @@ exports.addProblemToQuiz = async function (req, res, next) {
 };
 
 //----PROBLEM----
+
+/* API version of insertproblemToDB table in database*/
+exports.insertProblemBulk = async function (req, res, next) {
+  let problemsArray = JSON.parse(req.body.problemsArray);
+  let authorId = req.body.authorId;
+
+  problemsArray = problemsArray.map((problem) => {
+    return {
+      ...problem,
+      author_id: authorId,
+      id: uuidv4(),
+      answerkey: !problem.answerkey ? -1 : problem.answerkey,
+    };
+  });
+
+  console.log(problemsArray);
+
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
+  var pool = new pg.Pool({
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
+    ssl: { rejectUnauthorized: false },
+  });
+
+  let sql = "select problem_insert_bulk(p_problems :=$1::json[]);";
+
+  pool.query(sql, [problemsArray], function (err, result) {
+    pool.end(() => {});
+    if (err) {
+      next(err);
+      //res.json({ insertstatus: "error" });
+    } else {
+      setCorsHeaders(req, res);
+      res.json({ insertstatus: "ok", problemsArray });
+    }
+  });
+};
 
 /* API version of insertproblemToDB table in database*/
 exports.insertProblemToDbJson = async function (req, res, next) {

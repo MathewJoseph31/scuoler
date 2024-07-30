@@ -34,6 +34,7 @@ router.get("/getMeetingsOfUser", dbControllerMeeting.getMeetingsOfUser);
 router.post("/updateProblem", dbControllerProblem.editProblemInDB);
 router.post("/deleteProblem", dbControllerProblem.deleteProblemInDB);
 router.post("/insertProblemAction", dbControllerProblem.insertProblemToDbJson);
+router.post("/insertProblemBulk", dbControllerProblem.insertProblemBulk);
 router.post("/getTheProblem", dbControllerProblem.getTheProblem);
 router.post("/addProblemToQuiz", dbControllerProblem.addProblemToQuiz);
 router.post("/searchProblems", dbControllerProblem.searchProblems);
