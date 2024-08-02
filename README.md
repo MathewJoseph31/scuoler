@@ -92,8 +92,13 @@ Instructions on how to build and launch the App from git sources is provided at 
 https://scuoler.com/userShowSelected/edupath
 
 https://scuoler.com/mainSitemap.xml
-
+https://scuoler.com/userSitemap.xml
 https://scuoler.com/courseSitemap.xml
+https://scuoler.com/quizSitemap.xml
+https://scuoler.com/problemSitemap.xml
+https://scuoler.com/moduleSitemap.xml
+https://scuoler.com/lessonSitemap.xml
+https://scuoler.com/pageSitemap.xml
 
 ## MIT License
 

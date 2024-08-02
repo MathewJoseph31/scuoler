@@ -62,11 +62,13 @@ exports.insertProblemBulk = async function (req, res, next) {
   let problemsArray = JSON.parse(req.body.problemsArray);
   let authorId = req.body.authorId;
 
-  problemsArray = problemsArray.map((problem) => {
+  let idPrefix = utils.getUniqueId(authorId);
+  problemsArray = problemsArray.map((problem, index) => {
     return {
       ...problem,
       author_id: authorId,
-      id: uuidv4(),
+      id: idPrefix + index,
+      //id: uuidv4(),
       answerkey: !problem.answerkey ? -1 : problem.answerkey,
     };
   });
@@ -442,7 +444,7 @@ exports.getProblems = async function (req, res, next) {
 
   var sql =
     "select A.id,  A.description, A.options,  A.answerkey, " +
-    " A.solution, A.type, A.solution_open, A.author_id, A.source " +
+    " A.solution, A.type, A.solution_open, A.author_id, A.source, A.author_name " +
     " from problem_get_all(p_category:=$1, p_language:=$2, p_author:=$3, p_offset:=$4, p_limit:=$5) A ";
   //" from Problem A where A.deleted=false offset $1 limit $2 ";
 
@@ -490,12 +492,9 @@ exports.searchProblems = async function (req, res, next) {
     ssl: { rejectUnauthorized: false },
   });
 
-  var sql =
-    "select distinct A.id, ts_headline('english', A.description, query, 'HighlightAll=true') description, " +
-    " ts_headline('english', A.solution, query, 'HighlightAll=true') solution, A.options,  " +
-    " A.answerkey, A.type, A.solution_open, A.author_id, A.source, ts_rank_cd(search_tsv, query, 32) rank  " +
-    " from Problem A, plainto_tsquery('english', $1) query " +
-    " where A.deleted=false and search_tsv@@query  order by rank desc ";
+  var sql = `select id, description, solution, options,  
+     answerkey, type, solution_open, author_id, source, rank, author_name  
+     from problem_search(p_search_key:= $1) `;
 
   pool.query(sql, [searchKey], function (err, result, fields) {
     pool.end(() => {});

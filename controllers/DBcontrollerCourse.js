@@ -324,10 +324,6 @@ exports.insertExternalCourse = async function (req, res, next) {
   );
 };
 
-/*Global variable for shared select list between getQuizes and searchQuizesForPrefix*/
-const sqlSubstringForGetAndSearch =
-  " SELECT id, name, description, author_id, thumbnail, type, launch_file ";
-
 /* function for handling http requests to retrive the records in the
  Course table in database in json format*/
 exports.getCourses = async function (req, res, next) {
@@ -361,7 +357,7 @@ exports.getCourses = async function (req, res, next) {
   });
 
   var sql =
-    sqlSubstringForGetAndSearch +
+    " SELECT id, name, description, author_id, thumbnail, type, launch_file, author_name " +
     " from course_get_all(p_category:=$1, p_language:=$2, p_author:=$3, p_offset:=$4, p_limit:=$5) ";
   //" FROM Course where deleted=false order by type, thumbnail, create_timestamp DESC offset $1 limit $2 ";
   var resultArr = [];
@@ -417,7 +413,7 @@ exports.searchCoursesForPrefix = async function (req, res, next) {
   });
 
   var sql =
-    sqlSubstringForGetAndSearch +
+    " SELECT id, name, description, author_id, thumbnail, type, launch_file " +
     " from Course  " +
     " where deleted=false and trim(name) ilike  $1";
 
@@ -453,11 +449,8 @@ exports.searchCourses = async function (req, res, next) {
     ssl: { rejectUnauthorized: false },
   });
 
-  var sql =
-    "select distinct A.id, ts_headline('english', A.description, query, 'HighlightAll=true') description, " +
-    " ts_headline('english', A.name, query, 'HighlightAll=true') as name,  A.author_id,  ts_rank_cd(search_tsv, query, 32) rank  " +
-    " from Course A, plainto_tsquery('english', $1) query " +
-    " where A.deleted=false and search_tsv@@query  order by rank desc ";
+  var sql = `select id , name , description, author_id, author_name, rank 
+  from course_search(p_search_key:=$1) `;
 
   pool.query(sql, [searchKey], function (err, result, fields) {
     pool.end(() => {});

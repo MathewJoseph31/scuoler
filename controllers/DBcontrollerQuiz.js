@@ -427,10 +427,6 @@ exports.quizGetScoresForUser = async function (req, res, next) {
   });
 };
 
-/*Global variable for shared select list between getQuizes and searchQuizesForPrefix*/
-const sqlSubstringForGetAndSearch =
-  " SELECT id, description, name,  author_id, duration_minutes, type, thumbnail ";
-
 exports.getQuizes = async function (req, res, next) {
   var queryObject = url.parse(req.url, true).query;
 
@@ -462,7 +458,7 @@ exports.getQuizes = async function (req, res, next) {
   });
 
   var sql =
-    sqlSubstringForGetAndSearch +
+    " SELECT id, description, name,  author_id, duration_minutes, type, thumbnail, author_name " +
     " from quiz_get_all(p_category:=$1, p_language:=$2, p_author:=$3, p_offset:=$4, p_limit:=$5)  ";
   //" FROM Quiz where Quiz.deleted=false order by ctid  offset $1 limit $2 ";
 
@@ -504,7 +500,7 @@ exports.searchQuizesForPrefix = async function (req, res, next) {
   });
 
   var sql =
-    sqlSubstringForGetAndSearch +
+    " SELECT id, description, name,  author_id, duration_minutes, type, thumbnail " +
     " from Quiz  " +
     " where deleted=false and trim(name) ilike  $1 ";
 
@@ -540,12 +536,9 @@ exports.searchQuizes = async function (req, res, next) {
     ssl: { rejectUnauthorized: false },
   });
 
-  var sql =
-    "select distinct A.id, ts_headline('english', A.description, query, 'HighlightAll=true') description, " +
-    " ts_headline('english', A.name, query, 'HighlightAll=true') as name, " +
-    "  A.type, A.author_id, A.duration_minutes, ts_rank_cd(search_tsv, query, 32) rank  " +
-    " from Quiz A, plainto_tsquery('english', $1) query " +
-    " where A.deleted=false and search_tsv@@query  order by rank desc ";
+  var sql = `select id, name, description, type, author_id, author_name, duration_minutes, rank  
+    from quiz_search(p_search_key:=$1) 
+`;
 
   pool.query(sql, [searchKey], function (err, result, fields) {
     pool.end(() => {});

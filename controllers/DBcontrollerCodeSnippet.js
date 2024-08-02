@@ -233,7 +233,7 @@ exports.searchCodeSnippets = async function (req, res, next) {
     );
   }
 
-  var pool = new pg.Pool({
+  let pool = new pg.Pool({
     host: accountConfiguration.getHost(),
     user: accountConfiguration.getUserId(),
     password: accountConfiguration.getPassword(),
@@ -242,12 +242,8 @@ exports.searchCodeSnippets = async function (req, res, next) {
     ssl: { rejectUnauthorized: false },
   });
 
-  var sql =
-    "select distinct A.id, ts_headline('english', A.description, query, 'HighlightAll=true') description, " +
-    " ts_headline('english', A.language_name, query, 'HighlightAll=true') language_name, " +
-    " ts_headline('english', A.payload, query, 'HighlightAll=true') as payload,  A.author_id,  ts_rank_cd(search_tsv, query, 32) rank  " +
-    " from Code_snippet A, plainto_tsquery('english', $1) query " +
-    " where A.deleted=false and search_tsv@@query  order by rank desc ";
+  let sql = `select id, description, language_name, payload,  author_id,  author_name, rank  
+     from Code_snippet_search(p_search_key:=$1)  `;
 
   pool.query(sql, [searchKey], function (err, result, fields) {
     pool.end(() => {});
@@ -290,7 +286,7 @@ exports.getCodeSnippets = async function (req, res, next) {
   });
 
   var sql =
-    " select id, description, language_name, payload, author_id " +
+    " select id, description, language_name, payload, author_id, author_name " +
     " from code_snippet_get_all(p_author:=$1, p_offset:=$2, p_limit:=$3) ";
 
   var resultArr = [];
