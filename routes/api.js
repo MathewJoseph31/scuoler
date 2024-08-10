@@ -12,6 +12,8 @@ const dbControllerRoom = require("../controllers/DBcontrollerRoom");
 const dbControllerChat = require("../controllers/DBcontrollerChat");
 const dbControllerFiles = require("../controllers/DBcontrollerFiles");
 const dbControllerPage = require("../controllers/DBcontrollerPage");
+const dbControllerLog = require("../controllers/DBcontrollerLog");
+
 const dbControllerCodeSnippet = require("../controllers/DBcontrollerCodeSnippet");
 const dbControllerStripe = require("../controllers/DBcontrollerStripe");
 const controllerEmail = require("../controllers/EmailController");
@@ -159,6 +161,9 @@ router.post("/getTheModule", dbControllerPage.getTheModule);
 router.post("/moveModuleLessonPage", dbControllerPage.moveModuleLessonPage);
 router.post("/editModuleLessonPage", dbControllerPage.editModuleLessonPage);
 router.post("/deleteModuleLessonPage", dbControllerPage.deleteModuleLessonPage);
+
+//WebLogs
+router.get("/getWebLogs", dbControllerLog.getWebLogs);
 
 //ROOM
 router.get("/getRooms", dbControllerRoom.getRooms);

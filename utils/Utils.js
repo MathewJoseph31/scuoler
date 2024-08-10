@@ -279,3 +279,36 @@ exports.getScormIndexFileContent = (indexFilePath, scormApiCode) => {
   </html>
   `;
 };
+
+exports.formatLogLines = (logLines, log_file_name) => {
+  let formattedLines = logLines.map((line) => {
+    let reg =
+      /\[(\S+)\]\s+\[(\S+)\]\s+\[(\S+\s\S+)\]\s+\[(\S+\s\S+)\]\s+\[(\S+)\]\s+\[(\S+)\]\s+\[(\S+)\]\s+\[(.+)\]$/;
+    let matchResult = line.match(reg);
+    if (matchResult?.length && matchResult?.length > 0) {
+      let source_ip = matchResult[1];
+      let user_id = matchResult[2];
+      let log_timestamp = matchResult[3];
+      let request_method_url = matchResult[4].substring(0, 999);
+      let response_status = matchResult[5];
+      let response_length = matchResult[6];
+      let referrer = matchResult[7];
+      let user_agent = matchResult[8];
+      let log_filename = log_file_name;
+      return {
+        source_ip,
+        user_id,
+        log_timestamp,
+        request_method_url,
+        response_status,
+        response_length,
+        referrer,
+        user_agent,
+        log_filename,
+      };
+    } else {
+      return {};
+    }
+  });
+  return formattedLines;
+};
