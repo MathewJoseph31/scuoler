@@ -18,6 +18,7 @@ const dbControllerCodeSnippet = require("../controllers/DBcontrollerCodeSnippet"
 const dbControllerStripe = require("../controllers/DBcontrollerStripe");
 const controllerEmail = require("../controllers/EmailController");
 const lambdaController = require("../controllers/LambdaController");
+const ipController = require("../controllers/IPController");
 
 const { securityController } = require("../controllers/SecurityController");
 const jwtVerifier = require("../middleware/JwtVerifier");
@@ -164,6 +165,9 @@ router.post("/deleteModuleLessonPage", dbControllerPage.deleteModuleLessonPage);
 
 //WebLogs
 router.get("/getWebLogs", dbControllerLog.getWebLogs);
+
+//IP Address
+router.get("/getIpDetails", ipController.getIpDetails);
 
 //ROOM
 router.get("/getRooms", dbControllerRoom.getRooms);
