@@ -104,10 +104,6 @@ router.post(
   "/getQuizListForCourse",
   dbControllerCourse.getQuizListForCourseJson
 );
-router.post(
-  "/getCategoryListForCourse",
-  dbControllerCourse.getCategoryListForCourseJson
-);
 
 router.post("/updateCourse", dbControllerCourse.editCourseInDbJson);
 router.post("/deleteCourse", dbControllerCourse.deleteCourseInDB);

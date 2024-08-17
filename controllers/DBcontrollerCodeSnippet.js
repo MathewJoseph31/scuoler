@@ -242,7 +242,7 @@ exports.searchCodeSnippets = async function (req, res, next) {
     ssl: { rejectUnauthorized: false },
   });
 
-  let sql = `select id, description, language_name, payload,  author_id,  author_name, rank  
+  let sql = `select id, description, language_name, payload,  author_id,  author_name, view_count, rank  
      from Code_snippet_search(p_search_key:=$1)  `;
 
   pool.query(sql, [searchKey], function (err, result, fields) {
@@ -286,7 +286,7 @@ exports.getCodeSnippets = async function (req, res, next) {
   });
 
   var sql =
-    " select id, description, language_name, payload, author_id, author_name " +
+    " select id, description, language_name, payload, author_id, author_name, view_count " +
     " from code_snippet_get_all(p_author:=$1, p_offset:=$2, p_limit:=$3) ";
 
   var resultArr = [];

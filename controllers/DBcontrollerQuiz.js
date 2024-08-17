@@ -458,7 +458,7 @@ exports.getQuizes = async function (req, res, next) {
   });
 
   var sql =
-    " SELECT id, description, name,  author_id, duration_minutes, type, thumbnail, author_name " +
+    " SELECT id, description, name,  author_id, duration_minutes, type, thumbnail, author_name, view_count " +
     " from quiz_get_all(p_category:=$1, p_language:=$2, p_author:=$3, p_offset:=$4, p_limit:=$5)  ";
   //" FROM Quiz where Quiz.deleted=false order by ctid  offset $1 limit $2 ";
 
@@ -536,7 +536,7 @@ exports.searchQuizes = async function (req, res, next) {
     ssl: { rejectUnauthorized: false },
   });
 
-  var sql = `select id, name, description, type, author_id, author_name, duration_minutes, rank  
+  var sql = `select id, name, description, type, author_id, author_name, duration_minutes, view_count, rank  
     from quiz_search(p_search_key:=$1) 
 `;
 
@@ -776,6 +776,7 @@ exports.getTheQuiz = async function (req, res, next) {
       resObj.duration_minutes = result?.rows[0]?.duration_minutes;
       resObj.thumbnail = result?.rows[0]?.thumbnail;
       resObj.type = result?.rows[0]?.type;
+      resObj.view_count = result?.rows[0]?.view_count;
       resObj.rating = result?.rows[0]?.rating;
       resObj.likes = result?.rows[0]?.likes;
       resObj.liked = result?.rows[0]?.liked;

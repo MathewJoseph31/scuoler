@@ -185,6 +185,7 @@ exports.getThePage = async function (req, res, next) {
       resObj.pageIdPrev = result.rows[0].prev_page_id;
       resObj.pagePayload = result.rows[0].page_payload;
       resObj.pageAuthorId = result.rows[0].page_author_id;
+      resObj.view_count = result.rows[0].view_count;
       //console.log(result.rows);
       setCorsHeaders(req, res);
       res.send(resObj);
@@ -236,6 +237,7 @@ exports.getTheLesson = async function (req, res, next) {
       resObj.lessonAuthorId = result.rows[0].lesson_author_id;
       resObj.pageIdNext = result.rows[0].next_page_id;
       resObj.pageIdPrev = result.rows[0].prev_page_id;
+      resObj.view_count = result.rows[0].view_count;
       //console.log(result.rows);
       setCorsHeaders(req, res);
       res.send(resObj);
@@ -286,6 +288,7 @@ exports.getTheModule = async function (req, res, next) {
       resObj.lessonIdPrevPageCount = result.rows[0].prev_lesson_page_count;
       resObj.lessonIdNext = result.rows[0].next_lesson_id;
       resObj.pageIdPrev = result.rows[0].prev_page_id;
+      resObj.view_count = result.rows[0].view_count;
 
       //console.log(result.rows);
       setCorsHeaders(req, res);

@@ -333,7 +333,7 @@ exports.getCourses = async function (req, res, next) {
   let category = queryObject.category || "";
   let language = queryObject.language || "";
   let author = queryObject.author || "";
-  let sort = queryObject.sort || ""; //not used at the moment
+  let sort = queryObject.sort || "";
 
   const offset = pageSize * (currentPage - 1);
 
@@ -357,14 +357,14 @@ exports.getCourses = async function (req, res, next) {
   });
 
   var sql =
-    " SELECT id, name, description, author_id, thumbnail, type, launch_file, author_name " +
-    " from course_get_all(p_category:=$1, p_language:=$2, p_author:=$3, p_offset:=$4, p_limit:=$5) ";
+    " SELECT id, name, description, author_id, thumbnail, type, launch_file, author_name, view_count " +
+    " from course_get_all(p_category:=$1, p_language:=$2, p_sort:=$3, p_author:=$4, p_offset:=$5, p_limit:=$6) ";
   //" FROM Course where deleted=false order by type, thumbnail, create_timestamp DESC offset $1 limit $2 ";
   var resultArr = [];
 
   pool.query(
     sql,
-    [category, language, author, offset, pageSize],
+    [category, language, sort, author, offset, pageSize],
     function (err, result, fields) {
       pool.end(() => {});
       if (err) next(err);
@@ -449,7 +449,7 @@ exports.searchCourses = async function (req, res, next) {
     ssl: { rejectUnauthorized: false },
   });
 
-  var sql = `select id , name , description, author_id, author_name, rank 
+  var sql = `select id , name , description, author_id, author_name, view_count, rank 
   from course_search(p_search_key:=$1) `;
 
   pool.query(sql, [searchKey], function (err, result, fields) {
@@ -554,6 +554,7 @@ exports.getTheCourse = async function (req, res, next) {
       resObj.ownerId = result.rows[0]?.author_id;
       resObj.author_name = result.rows[0]?.author_name;
       resObj.thumbnail = result.rows[0]?.thumbnail;
+      resObj.view_count = result.rows[0]?.view_count;
       resObj.rating = result.rows[0]?.rating;
       resObj.likes = result.rows[0]?.likes;
       resObj.liked = result.rows[0]?.liked;
@@ -771,50 +772,6 @@ exports.deleteCourseInDB = async function (req, res, next) {
       console.log("problem deleted");
       setCorsHeaders(req, res);
       res.json({ deletestatus: "ok" });
-    }
-  });
-};
-
-/* function for returning a Promise object that retrives the 
-set of categories related to a selected course*/
-
-exports.getCategoryListForCourseJson = async function (req, res, next) {
-  let courseId = req.body.courseId;
-
-  let accountId = req.body.accountId;
-  let accountConfiguration = configuration;
-
-  if (accountId) {
-    accountConfiguration = await utils.getConfiguration(
-      accountId,
-      configuration
-    );
-  }
-
-  var pool = new pg.Pool({
-    host: accountConfiguration.getHost(),
-    user: accountConfiguration.getUserId(),
-    password: accountConfiguration.getPassword(),
-    database: accountConfiguration.getDatabase(),
-    port: accountConfiguration.getPort(),
-    ssl: { rejectUnauthorized: false },
-  });
-
-  var sql =
-    "SELECT Category.id, Category.name FROM Category " +
-    " inner join Course_Category on Category.id=Course_Category.category_id where Course_Category.course_id=$1 " +
-    " and Course_Category.deleted=false";
-  pool.query(sql, [courseId], function (err, result, fields) {
-    pool.end(() => {});
-    if (err) reject(err);
-    else {
-      let resultArr = [];
-      var i = 0;
-      for (i = 0; i < result.rows.length; i++) {
-        resultArr.push(result.rows[i]);
-      }
-      setCorsHeaders(req, res);
-      res.json(resultArr);
     }
   });
 };

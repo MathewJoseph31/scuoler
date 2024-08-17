@@ -382,6 +382,7 @@ exports.getTheProblem = async function (req, res, next) {
         resObj.author_name = result.rows[0].author_name;
         resObj.source = result.rows[0].source;
         resObj.solution_open = result.rows[0].solution_open;
+        resObj.view_count = result.rows[0].view_count;
         resObj.rating = result.rows[0].rating;
         resObj.likes = result.rows[0].likes;
         resObj.liked = result.rows[0].liked;
@@ -444,7 +445,7 @@ exports.getProblems = async function (req, res, next) {
 
   var sql =
     "select A.id,  A.description, A.options,  A.answerkey, " +
-    " A.solution, A.type, A.solution_open, A.author_id, A.source, A.author_name " +
+    " A.solution, A.type, A.solution_open, A.author_id, A.source, A.author_name, A.view_count " +
     " from problem_get_all(p_category:=$1, p_language:=$2, p_author:=$3, p_offset:=$4, p_limit:=$5) A ";
   //" from Problem A where A.deleted=false offset $1 limit $2 ";
 
@@ -493,7 +494,7 @@ exports.searchProblems = async function (req, res, next) {
   });
 
   var sql = `select id, description, solution, options,  
-     answerkey, type, solution_open, author_id, source, rank, author_name  
+     answerkey, type, solution_open, author_id, source, rank, author_name, view_count  
      from problem_search(p_search_key:= $1) `;
 
   pool.query(sql, [searchKey], function (err, result, fields) {
