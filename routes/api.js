@@ -161,6 +161,7 @@ router.post("/deleteModuleLessonPage", dbControllerPage.deleteModuleLessonPage);
 
 //WebLogs
 router.get("/getWebLogs", dbControllerLog.getWebLogs);
+router.get("/getWebLogsForObject", dbControllerLog.getWebLogsForObject);
 
 //IP Address
 router.get("/getIpDetails", ipController.getIpDetails);
