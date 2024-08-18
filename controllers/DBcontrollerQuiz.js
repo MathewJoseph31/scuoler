@@ -434,6 +434,7 @@ exports.getQuizes = async function (req, res, next) {
   let currentPage = queryObject.currentPage || 1;
   let category = queryObject.category || "";
   let language = queryObject.language || "";
+  let sort = queryObject.sort || "";
   let author = queryObject.author || "";
   //console.log(pageSize+', currPage '+currentPage);
   const offset = pageSize * (currentPage - 1);
@@ -459,12 +460,12 @@ exports.getQuizes = async function (req, res, next) {
 
   var sql =
     " SELECT id, description, name,  author_id, duration_minutes, type, thumbnail, author_name, view_count " +
-    " from quiz_get_all(p_category:=$1, p_language:=$2, p_author:=$3, p_offset:=$4, p_limit:=$5)  ";
+    " from quiz_get_all(p_category:=$1, p_language:=$2, p_sort:=$3, p_author:=$4, p_offset:=$5, p_limit:=$6)  ";
   //" FROM Quiz where Quiz.deleted=false order by ctid  offset $1 limit $2 ";
 
   pool.query(
     sql,
-    [category, language, author, offset, pageSize],
+    [category, language, sort, author, offset, pageSize],
     function (err, result, fields) {
       pool.end(() => {});
       if (err) next(err);
