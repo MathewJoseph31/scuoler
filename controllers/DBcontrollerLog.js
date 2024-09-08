@@ -130,6 +130,7 @@ exports.getWebLogsForObject = async function (req, res, next) {
   var sql = `
       select 
       source_ip,
+      user_id,
       log_timestamp,
       request_method_url, 
       response_status,
