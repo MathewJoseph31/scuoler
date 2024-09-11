@@ -81,7 +81,8 @@ exports.getWebLogs = async function (req, res, next) {
           if (logContents) {
             formattedLinesToday = formatLogLines(
               logContents.split("\n"),
-              todaysLogFileName
+              todaysLogFileName,
+              filterBots
             );
             //console.log(formattedLines);
           }
