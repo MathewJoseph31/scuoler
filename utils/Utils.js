@@ -295,7 +295,11 @@ exports.formatLogLines = (logLines, log_file_name, filterBots) => {
       let referrer = matchResult[7];
       let user_agent = matchResult[8];
       let log_filename = log_file_name;
-      if (filterBots && user_agent.toLowerCase().includes("bot")) {
+      if (
+        filterBots &&
+        (user_agent.toLowerCase().includes("bot") ||
+          user_agent.toLowerCase().includes("googleother"))
+      ) {
         return {};
       } else {
         return {
