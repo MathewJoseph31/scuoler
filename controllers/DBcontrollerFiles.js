@@ -8,6 +8,7 @@ const extract = require("extract-zip");
 const configuration = require("../Configuration");
 const utils = require("../utils/Utils");
 const constants = require("../Constants");
+const stream = require("stream");
 
 let { setCorsHeaders } = utils;
 
@@ -55,6 +56,149 @@ exports.getUploadsForSource = async function (req, res, next) {
       res.json(result.rows);
     }
   });
+};
+
+exports.fileUploadFromUrls = async function (req, res, next) {
+  let uploadDir = req.body.uploadDir;
+  let urls = req.body.urls;
+  let authorId = req.body.authorId;
+
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
+  let arrUrls = [];
+  if (urls.includes(",")) {
+    arrUrls = urls.split(",").map((url) => url.trim());
+  } else {
+    arrUrls.push(urls.trim());
+  }
+  arrUrls = arrUrls.filter((url) => url.startsWith("http"));
+
+  let sql = ` select source_object_id, file_name, relative_url, file_type from upload_association 
+    where source_object_id = ANY($1::varchar[])
+  `;
+
+  var pool = new pg.Pool({
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
+    ssl: { rejectUnauthorized: false },
+  });
+
+  let resultMap = {};
+
+  try {
+    let queryResult = await pool.query(sql, [arrUrls]);
+    resultMap = Object.fromEntries(
+      queryResult.rows.map((obj) => {
+        return [obj.source_object_id, obj.relative_url];
+      })
+    );
+  } catch (err) {
+    /* This is error is ignored since for files that exist
+    in the database (have been downloaded earlier), downloading
+    then again does not harm */
+  }
+
+  /* filter out already downloaded files */
+  arrUrls = arrUrls.filter((url) => !Object.keys(resultMap).includes(url));
+
+  let dirPathRel = constants.UPLOAD_FILES_DIRECTORY;
+  let dirPathAbs = path.join(
+    __basedir,
+    constants.PUBLIC_DIRECTORY,
+    constants.UPLOAD_FILES_DIRECTORY
+  );
+
+  if (uploadDir) {
+    dirPathRel = path.join(constants.UPLOAD_FILES_DIRECTORY, uploadDir);
+    dirPathAbs = path.join(__basedir, constants.PUBLIC_DIRECTORY, dirPathRel);
+    if (!fs.existsSync(dirPathAbs)) {
+      fs.mkdirSync(dirPathAbs, {
+        recursive: true,
+      });
+    }
+  }
+
+  let uploadRecords = [];
+
+  let arrPromises = arrUrls.map((url) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let suffixName = url.substring(url.lastIndexOf("/") + 1);
+        const newPath = path.join(dirPathAbs, suffixName);
+        const relativeUrl = path.join(dirPathRel, suffixName);
+        let resp = await fetch(url, {
+          mode: "no-cors",
+        });
+        let writer = fs.createWriteStream(newPath);
+        stream.Readable.fromWeb(resp.body).pipe(writer);
+        uploadRecords.push({
+          source_object_id: url,
+          relative_url: relativeUrl,
+          file_type: resp.headers.get("content-type"),
+          file_name: suffixName,
+          author_id: authorId,
+        });
+        resolve({
+          source_object_id: url,
+          relative_url: relativeUrl,
+          file_type: resp.headers.get("content-type"),
+          file_name: suffixName,
+          author_id: authorId,
+        });
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
+    });
+  });
+
+  Promise.allSettled(arrPromises)
+    .then((jsons) => {
+      if (uploadRecords.length > 0) {
+        uploadRecords.map((obj) => {
+          resultMap[obj.source_object_id] = obj.relative_url;
+        });
+
+        sql = `select upload_association_insert(p_uploads:=$1) `;
+        pool.query(sql, [uploadRecords], (err, result) => {
+          pool.end(() => {});
+          if (err) {
+            console.log(err);
+            /* it is ok to ignore this error since at this point
+            files have already been downloaded, not recording this
+            in DB does not harm except for speed 
+            */
+          }
+
+          setCorsHeaders(req, res);
+          res.json({
+            uploadstatus: "ok",
+            resultMap: JSON.stringify(resultMap),
+          });
+        });
+      } else {
+        setCorsHeaders(req, res);
+        res.json({
+          uploadstatus: "ok",
+          resultMap: JSON.stringify(resultMap),
+        });
+      }
+    })
+    .catch((err) => {
+      setCorsHeaders(req, res);
+      res.json({ uploadstatus: "error", message: err });
+    });
 };
 
 exports.fileUpload = function (req, res, next) {
