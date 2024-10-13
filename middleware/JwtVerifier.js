@@ -4,19 +4,20 @@ const jwt = require("jsonwebtoken");
 const constants = require("../Constants");
 /*middleware method to verify JWT token*/
 exports.verifyJwt = function (req, res, next) {
-  let authHeader = req.headers["authorization"];
+  let authHeader = req.headers["authorisation"];
   if (!authHeader) {
     let err = new Error("Access Token Invalid");
     next(err);
   } else {
-    let token = authHeader.split(" ")[3];
+    let token = authHeader.split(" ")[1];
     jwt.verify(token, constants.ACCESS_TOKEN_SECRET, (err, decoded) => {
       if (err) {
         let err = new Error("Access Token Invalid");
         next(err);
       } else {
-        console.log(decoded);
+        //console.log(decoded);
         req.email = decoded.email;
+        req.role = decoded.role;
         next();
       }
     });
@@ -29,12 +30,12 @@ exports.checkPageForPosts = function (req, res, next) {
   if (currentPage <= 3) {
     next();
   } else {
-    let authHeader = req.headers["authorization"];
+    let authHeader = req.headers["authorisation"];
     if (!authHeader) {
       let err = new Error("Access Token Invalid, (Re)Login Required");
       next(err);
     } else {
-      let token = authHeader.split(" ")[3];
+      let token = authHeader.split(" ")[1];
       jwt.verify(token, constants.ACCESS_TOKEN_SECRET, (err, decoded) => {
         if (err) {
           let err = new Error("Access Token Invalid, (Re)Login Required");
@@ -65,12 +66,13 @@ exports.checkPageForGets = function (req, res, next) {
   if (currentPage <= 3) {
     next();
   } else {
-    let authHeader = req.headers["authorization"];
+    let authHeader = req.headers["authorisation"];
+    console.log(authHeader);
     if (!authHeader) {
       let err = new Error("Access Token Invalid, (Re)Login Required");
       next(err);
     } else {
-      let token = authHeader.split(" ")[3];
+      let token = authHeader.split(" ")[1];
       jwt.verify(token, constants.ACCESS_TOKEN_SECRET, (err, decoded) => {
         if (err) {
           let err = new Error("Access Token Invalid, (Re)Login Required");
