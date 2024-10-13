@@ -474,6 +474,9 @@ exports.getProblems = async function (req, res, next) {
 
 exports.searchProblems = async function (req, res, next) {
   let searchKey = req.body.searchKey;
+  let pageSize = req.body.pageSize || 20;
+  let currentPage = req.body.currentPage || 1;
+  const offset = pageSize * (currentPage - 1);
 
   let accountId = req.body.accountId;
   let accountConfiguration = configuration;
@@ -496,19 +499,23 @@ exports.searchProblems = async function (req, res, next) {
 
   var sql = `select id, description, solution, options,  
      answerkey, type, solution_open, author_id, source, rank, author_name, view_count  
-     from problem_search(p_search_key:= $1) `;
+     from problem_search(p_search_key:= $1, p_offset:=$2, p_limit:=$3) `;
 
-  pool.query(sql, [searchKey], function (err, result, fields) {
-    pool.end(() => {});
+  pool.query(
+    sql,
+    [searchKey, offset, pageSize],
+    function (err, result, fields) {
+      pool.end(() => {});
 
-    if (err) next(err);
-    else {
-      //setCorsHeaders(req, res);
-      //res.json(result.rows);
-      const jsonStr = JSON.stringify(result.rows);
-      const encStr = util.encrypt(jsonStr);
-      setCorsHeaders(req, res);
-      res.json(encStr);
+      if (err) next(err);
+      else {
+        //setCorsHeaders(req, res);
+        //res.json(result.rows);
+        const jsonStr = JSON.stringify(result.rows);
+        const encStr = util.encrypt(jsonStr);
+        setCorsHeaders(req, res);
+        res.json(encStr);
+      }
     }
-  });
+  );
 };

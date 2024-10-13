@@ -517,6 +517,9 @@ exports.searchQuizesForPrefix = async function (req, res, next) {
 
 exports.searchQuizes = async function (req, res, next) {
   let searchKey = req.body.searchKey;
+  let pageSize = req.body.pageSize || 20;
+  let currentPage = req.body.currentPage || 1;
+  const offset = pageSize * (currentPage - 1);
 
   let accountId = req.body.accountId;
   let accountConfiguration = configuration;
@@ -538,17 +541,21 @@ exports.searchQuizes = async function (req, res, next) {
   });
 
   var sql = `select id, name, description, type, author_id, author_name, duration_minutes, view_count, rank  
-    from quiz_search(p_search_key:=$1) 
+    from quiz_search(p_search_key:=$1, p_offset:=$2, p_limit:=$3) 
 `;
 
-  pool.query(sql, [searchKey], function (err, result, fields) {
-    pool.end(() => {});
-    if (err) next(err);
-    else {
-      setCorsHeaders(req, res);
-      res.json(result.rows);
+  pool.query(
+    sql,
+    [searchKey, offset, pageSize],
+    function (err, result, fields) {
+      pool.end(() => {});
+      if (err) next(err);
+      else {
+        setCorsHeaders(req, res);
+        res.json(result.rows);
+      }
     }
-  });
+  );
 };
 
 exports.deleteQuizInDB = async function (req, res, next) {

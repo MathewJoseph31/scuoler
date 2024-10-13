@@ -222,6 +222,9 @@ exports.getTheCodeSnippet = async function (req, res, next) {
 
 exports.searchCodeSnippets = async function (req, res, next) {
   let searchKey = req.body.searchKey;
+  let pageSize = req.body.pageSize || 20;
+  let currentPage = req.body.currentPage || 1;
+  const offset = pageSize * (currentPage - 1);
 
   let accountId = req.body.accountId;
   let accountConfiguration = configuration;
@@ -243,16 +246,20 @@ exports.searchCodeSnippets = async function (req, res, next) {
   });
 
   let sql = `select id, description, language_name, payload,  author_id,  author_name, view_count, rank  
-     from Code_snippet_search(p_search_key:=$1)  `;
+     from Code_snippet_search(p_search_key:=$1, p_offset:=$2, p_limit:=$3)  `;
 
-  pool.query(sql, [searchKey], function (err, result, fields) {
-    pool.end(() => {});
-    if (err) next(err);
-    else {
-      setCorsHeaders(req, res);
-      res.json(result.rows);
+  pool.query(
+    sql,
+    [searchKey, offset, pageSize],
+    function (err, result, fields) {
+      pool.end(() => {});
+      if (err) next(err);
+      else {
+        setCorsHeaders(req, res);
+        res.json(result.rows);
+      }
     }
-  });
+  );
 };
 
 /* function for handling http requests to retrive the records in the

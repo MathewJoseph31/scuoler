@@ -311,6 +311,11 @@ exports.getUsers = async function (req, res, next) {
 exports.searchUsers = async function (req, res, next) {
   let searchKey = req.body.searchKey;
 
+  let pageSize = req.body.pageSize || 20;
+  let currentPage = req.body.currentPage || 1;
+  //console.log(pageSize+', currPage '+currentPage);
+  const offset = pageSize * (currentPage - 1);
+
   let accountId = req.body.accountId;
   let accountConfiguration = configuration;
 
@@ -343,16 +348,20 @@ exports.searchUsers = async function (req, res, next) {
     " ts_rank_cd(search_tsv, query, 32) rank,  " +
     " sex_male " +
     " from Customer A, plainto_tsquery('english', $1) query " +
-    " where A.deleted=false and search_tsv@@query  order by rank desc ";
+    " where A.deleted=false and search_tsv@@query  order by rank desc offset $2 limit $3";
 
-  pool.query(sql, [searchKey], function (err, result, fields) {
-    pool.end(() => {});
-    if (err) next(err);
-    else {
-      setCorsHeaders(req, res);
-      res.json(result.rows);
+  pool.query(
+    sql,
+    [searchKey, offset, pageSize],
+    function (err, result, fields) {
+      pool.end(() => {});
+      if (err) next(err);
+      else {
+        setCorsHeaders(req, res);
+        res.json(result.rows);
+      }
     }
-  });
+  );
 };
 
 exports.getTheUser = async function (req, res, next) {
