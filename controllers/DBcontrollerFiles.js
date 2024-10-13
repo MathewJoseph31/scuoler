@@ -112,93 +112,120 @@ exports.fileUploadFromUrls = async function (req, res, next) {
   /* filter out already downloaded files */
   arrUrls = arrUrls.filter((url) => !Object.keys(resultMap).includes(url));
 
-  let dirPathRel = constants.UPLOAD_FILES_DIRECTORY;
-  let dirPathAbs = path.join(
-    __basedir,
-    constants.PUBLIC_DIRECTORY,
-    constants.UPLOAD_FILES_DIRECTORY
-  );
+  /* 
+  if all urls where already downloaded ones then we could send the 
+  responsee right away*/
 
-  if (uploadDir) {
-    dirPathRel = path.join(constants.UPLOAD_FILES_DIRECTORY, uploadDir);
-    dirPathAbs = path.join(__basedir, constants.PUBLIC_DIRECTORY, dirPathRel);
-    if (!fs.existsSync(dirPathAbs)) {
-      fs.mkdirSync(dirPathAbs, {
-        recursive: true,
-      });
-    }
-  }
-
-  let uploadRecords = [];
-
-  let arrPromises = arrUrls.map((url) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        let suffixName = url.substring(url.lastIndexOf("/") + 1);
-        const newPath = path.join(dirPathAbs, suffixName);
-        const relativeUrl = path.join(dirPathRel, suffixName);
-        let resp = await fetch(url, {
-          mode: "no-cors",
-        });
-        let writer = fs.createWriteStream(newPath);
-        stream.Readable.fromWeb(resp.body).pipe(writer);
-        uploadRecords.push({
-          source_object_id: url,
-          relative_url: relativeUrl,
-          file_type: resp.headers.get("content-type"),
-          file_name: suffixName,
-          author_id: authorId,
-        });
-        resolve({
-          source_object_id: url,
-          relative_url: relativeUrl,
-          file_type: resp.headers.get("content-type"),
-          file_name: suffixName,
-          author_id: authorId,
-        });
-      } catch (err) {
-        console.log(err);
-        reject(err);
-      }
+  if (arrUrls.length <= 0) {
+    pool.end(() => {});
+    setCorsHeaders(req, res);
+    res.json({
+      uploadstatus: "ok",
+      resultMap: JSON.stringify(resultMap),
     });
-  });
+  } else {
+    let dirPathRel = constants.UPLOAD_FILES_DIRECTORY;
+    let dirPathAbs = path.join(
+      __basedir,
+      constants.PUBLIC_DIRECTORY,
+      constants.UPLOAD_FILES_DIRECTORY
+    );
 
-  Promise.allSettled(arrPromises)
-    .then((jsons) => {
-      if (uploadRecords.length > 0) {
-        uploadRecords.map((obj) => {
-          resultMap[obj.source_object_id] = obj.relative_url;
+    if (uploadDir) {
+      dirPathRel = path.join(constants.UPLOAD_FILES_DIRECTORY, uploadDir);
+      dirPathAbs = path.join(__basedir, constants.PUBLIC_DIRECTORY, dirPathRel);
+      if (!fs.existsSync(dirPathAbs)) {
+        fs.mkdirSync(dirPathAbs, {
+          recursive: true,
         });
+      }
+    }
 
-        sql = `select upload_association_insert(p_uploads:=$1) `;
-        pool.query(sql, [uploadRecords], (err, result) => {
-          pool.end(() => {});
-          if (err) {
-            console.log(err);
-            /* it is ok to ignore this error since at this point
-            files have already been downloaded, not recording this
-            in DB does not harm except for speed 
-            */
+    let arrPromises = arrUrls.map((url) => {
+      return new Promise(async (resolve, reject) => {
+        try {
+          let suffixName = url.substring(url.lastIndexOf("/") + 1);
+          /* grabbing first 6 digits of random, otherwise the name 
+          becomes too large */
+          if (suffixName.includes(".")) {
+            const dotIndex = suffixName.lastIndexOf(".");
+            suffixName =
+              suffixName.substring(0, dotIndex) +
+              "_" +
+              uuidv4().substring(0, 6) +
+              suffixName.substring(dotIndex);
+          } else {
+            suffixName = suffixName + "_" + uuidv4().substring(0, 6);
           }
 
+          const newPath = path.join(dirPathAbs, suffixName);
+          const relativeUrl = path.join(dirPathRel, suffixName);
+          let resp = await fetch(url, {
+            mode: "no-cors",
+          });
+          let writer = fs.createWriteStream(newPath);
+          stream.Readable.fromWeb(resp.body).pipe(writer);
+          resolve({
+            source_object_id: url,
+            relative_url: relativeUrl,
+            file_type: resp.headers.get("content-type"),
+            file_name: suffixName,
+            author_id: authorId,
+          });
+        } catch (err) {
+          console.log(`failed for ${url}, Error:${err} `);
+          reject(err);
+        }
+      });
+    });
+
+    Promise.allSettled(arrPromises)
+      .then((jsons) => {
+        // console.log(jsons);
+
+        jsons = jsons.filter((json) => json.status === "fulfilled");
+
+        let uploadRecords = jsons.map((json) => json.value);
+
+        if (uploadRecords.length > 0) {
+          uploadRecords.map((obj) => {
+            resultMap[obj.source_object_id] = obj.relative_url;
+          });
+
+          sql = `select upload_association_insert(p_uploads:=$1) `;
+          pool.query(sql, [uploadRecords], (err, result) => {
+            pool.end(() => {});
+
+            if (err) {
+              console.log(err);
+              /* it is ok to ignore this error since at this point
+              files have already been downloaded, not recording this
+              in DB does not harm except for speed 
+              */
+            }
+
+            setCorsHeaders(req, res);
+            res.json({
+              uploadstatus: "ok",
+              resultMap: JSON.stringify(resultMap),
+            });
+          });
+        } else {
+          pool.end(() => {});
           setCorsHeaders(req, res);
           res.json({
             uploadstatus: "ok",
             resultMap: JSON.stringify(resultMap),
           });
-        });
-      } else {
+        }
+      })
+      .catch((err) => {
+        console.log("promise all errror", err);
+        pool.end(() => {});
         setCorsHeaders(req, res);
-        res.json({
-          uploadstatus: "ok",
-          resultMap: JSON.stringify(resultMap),
-        });
-      }
-    })
-    .catch((err) => {
-      setCorsHeaders(req, res);
-      res.json({ uploadstatus: "error", message: err });
-    });
+        res.json({ uploadstatus: "error", message: err });
+      });
+  }
 };
 
 exports.fileUpload = function (req, res, next) {

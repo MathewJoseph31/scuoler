@@ -30,8 +30,16 @@ router.all("/*", securityController);
 router.post("/insertMeetingAction", dbControllerMeeting.insertMeetingToDbJson);
 router.post("/updateMeeting", dbControllerMeeting.updateMeeting);
 router.post("/getTheMeeting", dbControllerMeeting.getTheMeeting);
-router.get("/getMeetings", dbControllerMeeting.getMeetings);
-router.get("/getMeetingsOfUser", dbControllerMeeting.getMeetingsOfUser);
+router.get(
+  "/getMeetings",
+  jwtVerifier.verifyJwtForGets,
+  dbControllerMeeting.getMeetings
+);
+router.get(
+  "/getMeetingsOfUser",
+  jwtVerifier.verifyJwtForGets,
+  dbControllerMeeting.getMeetingsOfUser
+);
 
 //PROBLEM
 router.post("/updateProblem", dbControllerProblem.editProblemInDB);
@@ -41,11 +49,19 @@ router.post("/insertProblemBulk", dbControllerProblem.insertProblemBulk);
 router.post("/getTheProblem", dbControllerProblem.getTheProblem);
 router.post("/addProblemToQuiz", dbControllerProblem.addProblemToQuiz);
 router.post("/searchProblems", dbControllerProblem.searchProblems);
-router.get("/getProblems", dbControllerProblem.getProblems);
+router.get(
+  "/getProblems",
+  jwtVerifier.verifyJwtForGets,
+  dbControllerProblem.getProblems
+);
 
 //QUIZ
 router.post("/insertQuizAction", dbControllerQuiz.insertQuizToDbJson);
-router.get("/getQuizes", dbControllerQuiz.getQuizes);
+router.get(
+  "/getQuizes",
+  jwtVerifier.verifyJwtForGets,
+  dbControllerQuiz.getQuizes
+);
 router.post("/searchQuizes", dbControllerQuiz.searchQuizes);
 router.post("/searchQuizesForPrefix", dbControllerQuiz.searchQuizesForPrefix);
 router.post("/getTheQuiz", dbControllerQuiz.getTheQuiz);
@@ -83,7 +99,11 @@ router.get(
 //code snippets
 router.post("/insertCodeSnippet", dbControllerCodeSnippet.insertCodeSnippet);
 router.post("/getTheCodeSnippet", dbControllerCodeSnippet.getTheCodeSnippet);
-router.get("/getCodeSnippets", dbControllerCodeSnippet.getCodeSnippets);
+router.get(
+  "/getCodeSnippets",
+  jwtVerifier.verifyJwtForGets,
+  dbControllerCodeSnippet.getCodeSnippets
+);
 router.post("/updateCodeSnippet", dbControllerCodeSnippet.updateCodeSnippet);
 router.post("/deleteCodeSnippet", dbControllerCodeSnippet.deleteCodeSnippet);
 router.post("/searchCodeSnippets", dbControllerCodeSnippet.searchCodeSnippets);
@@ -92,7 +112,11 @@ router.post("/searchCodeSnippets", dbControllerCodeSnippet.searchCodeSnippets);
 router.post("/insertCourseAction", dbControllerCourse.insertCourseToDbJson);
 router.post("/insertScormCourse", dbControllerCourse.insertScormCourse);
 router.post("/insertExternalCourse", dbControllerCourse.insertExternalCourse);
-router.get("/getCourses", dbControllerCourse.getCourses);
+router.get(
+  "/getCourses",
+  jwtVerifier.verifyJwtForGets,
+  dbControllerCourse.getCourses
+);
 router.get("/getCourseName", dbControllerCourse.getCourseName);
 router.post("/searchCourses", dbControllerCourse.searchCourses);
 router.post(
@@ -114,7 +138,11 @@ router.post("/login", function (req, res) {
 });
 router.post("/insertUserAction", dbControllerUser.insertUserToDbJson);
 router.post("/changeUserPassword", dbControllerUser.changeUserPassword);
-router.get("/getUsers", dbControllerUser.getUsers);
+router.get(
+  "/getUsers",
+  jwtVerifier.verifyJwtForGets,
+  dbControllerUser.getUsers
+);
 router.post("/searchUsers", dbControllerUser.searchUsers);
 router.post("/getTheUser", dbControllerUser.getTheUser);
 router.post("/updateUser", dbControllerUser.editUserInDbJson);
@@ -135,7 +163,11 @@ router.post(
   jwtVerifier.verifyJwt,
   dbControllerEmployee.insertEmployeeToDbJson
 );
-router.get("/getEmployees", dbControllerEmployee.getEmployees);
+router.get(
+  "/getEmployees",
+  jwtVerifier.verifyJwtForGets,
+  dbControllerEmployee.getEmployees
+);
 router.post("/searchEmployees", dbControllerEmployee.searchEmployees);
 router.post("/getTheEmployee", dbControllerEmployee.getTheEmployee);
 router.post("/updateEmployee", dbControllerEmployee.editEmployeeInDbJson);

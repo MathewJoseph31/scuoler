@@ -55,7 +55,7 @@ const whiteListedIps = [
 ];
 exports.setCorsHeaders = function (req, res) {
   whiteListedIps.forEach((val) => {
-    if (req.ip.includes(val)) {
+    if (req.ip?.includes(val)) {
       res.setHeader("Access-Control-Allow-Origin", "*");
       res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
       res.setHeader("Access-Control-Allow-Headers", "Content-Type");

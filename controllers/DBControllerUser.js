@@ -73,7 +73,6 @@ exports.verifyUserJson = async function (req, res, next) {
 
   pool.query(sql, [email], async function (err, result, fields) {
     pool.end(() => {});
-
     if (err) {
       next(err);
     } else {
@@ -84,9 +83,15 @@ exports.verifyUserJson = async function (req, res, next) {
         let dbPassword = result.rows[0].password;
         let match = await bcrypt.compare(password, dbPassword);
         if (match || dbPassword === password) {
-          let accessToken = jwt.sign({ email }, constants.ACCESS_TOKEN_SECRET, {
-            expiresIn: "9999d",
-          });
+          let userId = result.rows[0].id;
+          let admin = result.rows[0].admin;
+          let accessToken = jwt.sign(
+            { userId, email, role: admin ? "ADMIN" : "EXTERNAL_READER" },
+            constants.ACCESS_TOKEN_SECRET,
+            {
+              expiresIn: "9999d",
+            }
+          );
           resObj = {
             login: "ok",
             admin: result.rows[0].admin,
@@ -233,9 +238,13 @@ exports.mergeUser = async function (req, res, next) {
         next(err);
         //res.json({"mergestatus":"error"});
       } else {
-        let accessToken = jwt.sign({ userId }, constants.ACCESS_TOKEN_SECRET, {
-          expiresIn: "9999d",
-        });
+        let accessToken = jwt.sign(
+          { userId, email, role: "EXTERNAL_READER" },
+          constants.ACCESS_TOKEN_SECRET,
+          {
+            expiresIn: "9999d",
+          }
+        );
 
         setCorsHeaders(req, res);
         res.json({ mergestatus: "ok", accessToken });
