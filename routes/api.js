@@ -32,12 +32,12 @@ router.post("/updateMeeting", dbControllerMeeting.updateMeeting);
 router.post("/getTheMeeting", dbControllerMeeting.getTheMeeting);
 router.get(
   "/getMeetings",
-  jwtVerifier.verifyJwtForGets,
+  jwtVerifier.checkPageForGets,
   dbControllerMeeting.getMeetings
 );
 router.get(
   "/getMeetingsOfUser",
-  jwtVerifier.verifyJwtForGets,
+  jwtVerifier.checkPageForGets,
   dbControllerMeeting.getMeetingsOfUser
 );
 
@@ -48,10 +48,14 @@ router.post("/insertProblemAction", dbControllerProblem.insertProblemToDbJson);
 router.post("/insertProblemBulk", dbControllerProblem.insertProblemBulk);
 router.post("/getTheProblem", dbControllerProblem.getTheProblem);
 router.post("/addProblemToQuiz", dbControllerProblem.addProblemToQuiz);
-router.post("/searchProblems", dbControllerProblem.searchProblems);
+router.post(
+  "/searchProblems",
+  jwtVerifier.checkPageForPosts,
+  dbControllerProblem.searchProblems
+);
 router.get(
   "/getProblems",
-  jwtVerifier.verifyJwtForGets,
+  jwtVerifier.checkPageForGets,
   dbControllerProblem.getProblems
 );
 
@@ -59,10 +63,14 @@ router.get(
 router.post("/insertQuizAction", dbControllerQuiz.insertQuizToDbJson);
 router.get(
   "/getQuizes",
-  jwtVerifier.verifyJwtForGets,
+  jwtVerifier.checkPageForGets,
   dbControllerQuiz.getQuizes
 );
-router.post("/searchQuizes", dbControllerQuiz.searchQuizes);
+router.post(
+  "/searchQuizes",
+  jwtVerifier.checkPageForPosts,
+  dbControllerQuiz.searchQuizes
+);
 router.post("/searchQuizesForPrefix", dbControllerQuiz.searchQuizesForPrefix);
 router.post("/getTheQuiz", dbControllerQuiz.getTheQuiz);
 router.post(
@@ -101,12 +109,16 @@ router.post("/insertCodeSnippet", dbControllerCodeSnippet.insertCodeSnippet);
 router.post("/getTheCodeSnippet", dbControllerCodeSnippet.getTheCodeSnippet);
 router.get(
   "/getCodeSnippets",
-  jwtVerifier.verifyJwtForGets,
+  jwtVerifier.checkPageForGets,
   dbControllerCodeSnippet.getCodeSnippets
 );
 router.post("/updateCodeSnippet", dbControllerCodeSnippet.updateCodeSnippet);
 router.post("/deleteCodeSnippet", dbControllerCodeSnippet.deleteCodeSnippet);
-router.post("/searchCodeSnippets", dbControllerCodeSnippet.searchCodeSnippets);
+router.post(
+  "/searchCodeSnippets",
+  jwtVerifier.checkPageForPosts,
+  dbControllerCodeSnippet.searchCodeSnippets
+);
 
 //Course
 router.post("/insertCourseAction", dbControllerCourse.insertCourseToDbJson);
@@ -114,11 +126,15 @@ router.post("/insertScormCourse", dbControllerCourse.insertScormCourse);
 router.post("/insertExternalCourse", dbControllerCourse.insertExternalCourse);
 router.get(
   "/getCourses",
-  jwtVerifier.verifyJwtForGets,
+  jwtVerifier.checkPageForGets,
   dbControllerCourse.getCourses
 );
 router.get("/getCourseName", dbControllerCourse.getCourseName);
-router.post("/searchCourses", dbControllerCourse.searchCourses);
+router.post(
+  "/searchCourses",
+  jwtVerifier.checkPageForPosts,
+  dbControllerCourse.searchCourses
+);
 router.post(
   "/searchCoursesForPrefix",
   dbControllerCourse.searchCoursesForPrefix
@@ -140,10 +156,14 @@ router.post("/insertUserAction", dbControllerUser.insertUserToDbJson);
 router.post("/changeUserPassword", dbControllerUser.changeUserPassword);
 router.get(
   "/getUsers",
-  jwtVerifier.verifyJwtForGets,
+  jwtVerifier.checkPageForGets,
   dbControllerUser.getUsers
 );
-router.post("/searchUsers", dbControllerUser.searchUsers);
+router.post(
+  "/searchUsers",
+  jwtVerifier.checkPageForPosts,
+  dbControllerUser.searchUsers
+);
 router.post("/getTheUser", dbControllerUser.getTheUser);
 router.post("/updateUser", dbControllerUser.editUserInDbJson);
 router.post("/profileImageUpload", dbControllerUser.profileImageUpload);
@@ -165,10 +185,14 @@ router.post(
 );
 router.get(
   "/getEmployees",
-  jwtVerifier.verifyJwtForGets,
+  jwtVerifier.checkPageForGets,
   dbControllerEmployee.getEmployees
 );
-router.post("/searchEmployees", dbControllerEmployee.searchEmployees);
+router.post(
+  "/searchEmployees",
+  jwtVerifier.checkPageForPosts,
+  dbControllerEmployee.searchEmployees
+);
 router.post("/getTheEmployee", dbControllerEmployee.getTheEmployee);
 router.post("/updateEmployee", dbControllerEmployee.editEmployeeInDbJson);
 router.post("/mergeEmployee", dbControllerEmployee.mergeEmployee);
