@@ -249,6 +249,10 @@ const readdirRecursiveSync = (p, a = [], depth, maxDepth) => {
 
 exports.readdirRecursiveSync = readdirRecursiveSync;
 
+exports.parseBool = function (val) {
+  return val === true || val === "true";
+};
+
 exports.getScormIndexFileContent = (indexFilePath, scormApiCode) => {
   if (!scormApiCode) {
     scormApiCode = constants.SCORM_API_CODE;
