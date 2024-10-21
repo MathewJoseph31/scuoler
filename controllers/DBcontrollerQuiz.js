@@ -86,6 +86,14 @@ exports.insertQuizToDbJson = async function (req, res, next) {
   let authorName = req.body.authorName;
   let thumbnail = req.body.thumbnail;
 
+  let practiceAllowed = req.body.practiceAllowed === "true";
+  let repeatsAllowed = req.body.repeatsAllowed === "true";
+  let attemptsAllowedAtAllTimes = req.body.attemptsAllowedAtAllTimes === "true";
+  let attemptsAllowedStartTimestamp = req.body.attemptsAllowedStartTimestamp;
+  let attemptsAllowedEndTimestamp = req.body.attemptsAllowedEndTimestamp;
+  let quizTakersAccessAll = req.body.quizTakersAccessAll === "true";
+  let takersArray = JSON.parse(req.body.takersArray);
+
   let coursesArray = JSON.parse(req.body.coursesArray);
   let problemsArray = JSON.parse(req.body.problemsArray);
 
@@ -132,7 +140,10 @@ exports.insertQuizToDbJson = async function (req, res, next) {
   let sql =
     "select quiz_insert(p_id:=$1, p_description:=$2, p_name:=$3, p_duration_minutes:=$4," +
     " p_type:=$5, p_author_id:=$6, p_courses_id:=$7, p_problems_id:=$8,   " +
-    " p_categories_id:=$9, p_thumbnail :=$10)";
+    ` p_categories_id:=$9, p_thumbnail :=$10, p_practice_allowed:=$11, p_repeats_allowed:=$12, 
+     p_attempts_allowed_at_all_times:=$13, p_attempts_allowed_start_timestamp:=$14, 
+     p_attempts_allowed_end_timestamp:=$15, p_attempt_access_to_all_users:=$16, 
+     p_role_name_quiz_taker:=$17, p_takers_id:=$18)`;
 
   //console.log("Dbcontroller insert Quiz "+courseId);
 
@@ -151,6 +162,14 @@ exports.insertQuizToDbJson = async function (req, res, next) {
       problemsId,
       categoriesId,
       thumbnail,
+      practiceAllowed,
+      repeatsAllowed,
+      attemptsAllowedAtAllTimes,
+      attemptsAllowedStartTimestamp,
+      attemptsAllowedEndTimestamp,
+      quizTakersAccessAll,
+      constants.ROLE_NAME_QUIZ_TAKER,
+      takersArray,
     ],
     function (err, result) {
       pool.end(() => {});
@@ -160,7 +179,6 @@ exports.insertQuizToDbJson = async function (req, res, next) {
         next(err);
       } else {
         setCorsHeaders(req, res);
-        console.log("in quiz inserting to db and return json");
         res.json({ insertstatus: "ok", quizId: quizId });
       }
     }
@@ -645,6 +663,17 @@ exports.editQuizInDbJson = async function (req, res, next) {
   let description = req.body.description;
   let name = req.body.name;
   let thumbnail = req.body.thumbnail;
+  let practiceAllowed = req.body.practiceAllowed === "true";
+  let repeatsAllowed = req.body.repeatsAllowed === "true";
+  let attemptsAllowedAtAllTimes = req.body.attemptsAllowedAtAllTimes === "true";
+  let attemptsAllowedStartTimestamp = req.body.attemptsAllowedStartTimestamp;
+  let attemptsAllowedEndTimestamp = req.body.attemptsAllowedEndTimestamp;
+  let quizTakersAccessAll = req.body.quizTakersAccessAll === "true";
+
+  let takersArray = [];
+
+  if (req.body.takersArray) takersArray = JSON.parse(req.body.takersArray);
+
   let coursesArray = [];
   if (req.body.coursesArray) coursesArray = JSON.parse(req.body.coursesArray);
   let problemsArray = [];
@@ -674,13 +703,14 @@ exports.editQuizInDbJson = async function (req, res, next) {
     categoriesId.push(item.id);
   });
 
-  console.log("quizid " + id);
-  console.log("ProblemsArray\n" + JSON.stringify(problemsArray));
-
   let sql =
     "select quiz_update(p_id:=$1, p_description:=$2, p_name:=$3, " +
     " p_duration_minutes:=$4, p_type:=$5, p_courses_id:=$6, p_problems_id:=$7, " +
-    " p_categories_id:=$8, p_thumbnail:=$9)";
+    ` p_categories_id:=$8, p_thumbnail:=$9, p_practice_allowed:=$10, 
+    p_repeats_allowed:=$11, p_attempts_allowed_at_all_times:=$12,
+    p_attempts_allowed_start_timestamp:=$13, p_attempts_allowed_end_timestamp:=$14, 
+    p_attempt_access_to_all_users:=$15, p_role_name_quiz_taker:=$16, p_takers_id:=$17 )
+    `;
 
   let accountId = req.body.accountId;
   let accountConfiguration = configuration;
@@ -700,7 +730,6 @@ exports.editQuizInDbJson = async function (req, res, next) {
     port: accountConfiguration.getPort(),
     ssl: { rejectUnauthorized: false },
   });
-
   pool.query(
     sql,
     [
@@ -713,6 +742,14 @@ exports.editQuizInDbJson = async function (req, res, next) {
       problemsId,
       categoriesId,
       thumbnail,
+      practiceAllowed,
+      repeatsAllowed,
+      attemptsAllowedAtAllTimes,
+      attemptsAllowedStartTimestamp,
+      attemptsAllowedEndTimestamp,
+      quizTakersAccessAll,
+      constants.ROLE_NAME_QUIZ_TAKER,
+      takersArray,
     ],
     function (err, result, fields) {
       pool.end(() => {});
@@ -770,6 +807,15 @@ exports.getTheQuiz = async function (req, res, next) {
     " inner join category B on A.category_id=B.id and A.DELETED=false and B.deleted=false " +
     " where A.id=$1 ";
 
+  let sql4 = `select B.ID, coalesce(B.first_name,'') first_name, coalesce(B.last_name, '') last_name, 
+     coalesce(B.address1,'') address1, coalesce(B.address2, '') address2, 
+     coalesce(B.city, '') city, coalesce(B.zip, '') zip, 
+      coalesce(B.phone, '') phone, coalesce(B.mobile, '') mobile, 
+      coalesce(B.email, '') email, B.sex_male, B.profile_image_url
+     from role_membership A 
+     inner join customer B on A.user_id=B.id and A.DELETED=false and B.deleted=false 
+     where A.source_object_id=$1 and A.role_name=$2 `;
+
   let resObj = {};
 
   pool.query(sql, [quizId, authorName], function (err, result, fields) {
@@ -784,10 +830,21 @@ exports.getTheQuiz = async function (req, res, next) {
       resObj.duration_minutes = result?.rows[0]?.duration_minutes;
       resObj.thumbnail = result?.rows[0]?.thumbnail;
       resObj.type = result?.rows[0]?.type;
+      resObj.practice_allowed = result?.rows[0]?.practice_allowed;
+      resObj.repeats_allowed = result?.rows[0]?.repeats_allowed;
+      resObj.attempts_allowed_at_all_times =
+        result?.rows[0]?.attempts_allowed_at_all_times;
+      resObj.attempts_allowed_start_timestamp =
+        result?.rows[0]?.attempts_allowed_start_timestamp;
+      resObj.attempts_allowed_end_timestamp =
+        result?.rows[0]?.attempts_allowed_end_timestamp;
+      resObj.attempt_access_to_all_users =
+        result?.rows[0]?.attempt_access_to_all_users;
       resObj.view_count = result?.rows[0]?.view_count;
       resObj.rating = result?.rows[0]?.rating;
       resObj.likes = result?.rows[0]?.likes;
       resObj.liked = result?.rows[0]?.liked;
+      resObj.taker_ids = result?.rows[0]?.taker_ids;
       resObj.coursesArray = [];
 
       pool.query(sql1, [quizId], function (err, result1, fields) {
@@ -806,12 +863,24 @@ exports.getTheQuiz = async function (req, res, next) {
               resObj.problemsArray = result2?.rows;
               resObj.categoriesArray = [];
               pool.query(sql3, [quizId], function (err, result3, fields) {
-                pool.end(() => {});
-                if (err) next(err);
-                else {
+                if (err) {
+                  pool.end(() => {});
+                  next(err);
+                } else {
                   resObj.categoriesArray = result3.rows;
-                  setCorsHeaders(req, res);
-                  res.json(resObj);
+                  pool.query(
+                    sql4,
+                    [quizId, constants.ROLE_NAME_QUIZ_TAKER],
+                    function (err, result4, fields) {
+                      pool.end(() => {});
+                      if (err) {
+                        next(err);
+                      }
+                      resObj.takersArray = result4.rows;
+                      setCorsHeaders(req, res);
+                      res.json(resObj);
+                    }
+                  );
                 }
               });
             }
