@@ -24,6 +24,24 @@ exports.verifyJwt = function (req, res, next) {
   }
 };
 
+exports.decodeToken = function (req, res, next) {
+  let authHeader = req.headers["authorisation"];
+  if (authHeader) {
+    let token = authHeader.split(" ")[1];
+    jwt.verify(token, constants.ACCESS_TOKEN_SECRET, (err, decoded) => {
+      if (err) {
+      } else {
+        req.email = decoded.email;
+        req.role = decoded.role;
+        req.userId = decoded.userId;
+      }
+      next();
+    });
+  } else {
+    next();
+  }
+};
+
 exports.checkPageForPosts = function (req, res, next) {
   let currentPage = req.body.currentPage || 1;
   let authHeader = req.headers["authorisation"];

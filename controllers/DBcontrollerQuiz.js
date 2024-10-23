@@ -189,10 +189,9 @@ exports.insertQuizToDbJson = async function (req, res, next) {
 exports.quizStart = async function (req, res, next) {
   let quizId = req.body.quizId;
   let startTime = req.body.startTime;
-  let userId = req.body.userId;
-  let sql =
-    "insert into quiz_instance(quiz_instance_id, quiz_id,  user_id) values($1,$2,$3)";
-  let quizInstanceId = utils.getUniqueId(quizId);
+  let userId = req.userId || req.body.userId;
+  let userEmail = req.email;
+  let repeatsAllowed = req.body.repeatsAllowed === "true";
   let accountId = req.body.accountId;
   let accountConfiguration = configuration;
 
@@ -212,17 +211,38 @@ exports.quizStart = async function (req, res, next) {
     ssl: { rejectUnauthorized: false },
   });
 
-  pool.query(sql, [quizInstanceId, quizId, userId], function (err, result) {
-    pool.end(() => {});
+  let sql = `select ((select repeats_allowed from quiz where deleted=false and id=$1) or count(*)=0) as start_quiz from quiz_instance where quiz_id=$1 and user_id=$2 and deleted=false and create_timestamp>(now()-interval '365 days');`;
+  pool.query(sql, [quizId, userId], function (err, result) {
     if (err) {
       next(err);
-      //res.json({ insertstatus: "error" });
-    } else {
+    } else if (result.rows[0]?.start_quiz === false) {
       setCorsHeaders(req, res);
-      console.log("in inserting quizInstance to db and return json");
-      res.json({ insertstatus: "ok", quizInstanceId: quizInstanceId });
+      res.json({
+        insertstatus: "error",
+        message: "Repeat Attempts Not Allowed For This Quiz",
+      });
+    } else {
+      let quizInstanceId = utils.getUniqueId(quizId);
+      let sql1 =
+        "insert into quiz_instance(quiz_instance_id, quiz_id,  user_id) values($1,$2,$3)";
+      pool.query(
+        sql1,
+        [quizInstanceId, quizId, userId],
+        function (err, result) {
+          pool.end(() => {});
+          if (err) {
+            next(err);
+            //res.json({ insertstatus: "error" });
+          } else {
+            setCorsHeaders(req, res);
+            res.json({ insertstatus: "ok", quizInstanceId: quizInstanceId });
+          }
+        }
+      );
     }
   });
+
+  /**/
 };
 
 /*Api method to be invoked to submit answers of a quiz */

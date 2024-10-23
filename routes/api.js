@@ -85,7 +85,7 @@ router.post("/updateQuiz", dbControllerQuiz.editQuizInDbJson);
 router.post("/addQuizToCourse", dbControllerQuiz.addQuizToCourse);
 router.post("/deleteQuiz", dbControllerQuiz.deleteQuizInDB);
 router.post("/quizAnwersSubmit", dbControllerQuiz.quizAnwersSubmit);
-router.post("/quizStart", dbControllerQuiz.quizStart);
+router.post("/quizStart", jwtVerifier.decodeToken, dbControllerQuiz.quizStart);
 router.post("/quizGetInstances", dbControllerQuiz.quizGetInstances);
 router.post(
   "/getQuizInstanceProblems",
