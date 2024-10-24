@@ -422,7 +422,7 @@ exports.getProblems = async function (req, res, next) {
   let sort = queryObject.sort || "";
   let author = queryObject.author || "";
   let authorFilter = utils.parseBool(queryObject.authorFilter);
-  //console.log(pageSize+', currPage '+currentPage);
+  //console.log(queryObject);
 
   const offset = pageSize * (currentPage - 1);
 
@@ -456,7 +456,7 @@ exports.getProblems = async function (req, res, next) {
       category,
       language,
       sort,
-      req.role === "ADMIN" ? "*" : author,
+      author ? author : req.role === "ADMIN" ? "*" : "",
       authorFilter,
       offset,
       pageSize,

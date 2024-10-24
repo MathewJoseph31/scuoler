@@ -399,7 +399,6 @@ exports.getTheUser = async function (req, res, next) {
       pool.end(() => {});
       next(err);
     } else {
-      console.log(JSON.stringify(result.rows));
       let resObj = {};
 
       if (result != undefined && result.rows.length > 0) {
