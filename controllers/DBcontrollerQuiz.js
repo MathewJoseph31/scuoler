@@ -353,7 +353,7 @@ exports.updateQuizMarksAwarded = async function (req, res, next) {
       if (err) next(err);
       else {
         setCorsHeaders(req, res);
-        console.log(result);
+        //console.log(result);
         res.json('{"updatestatus":"ok"}');
       }
     }
