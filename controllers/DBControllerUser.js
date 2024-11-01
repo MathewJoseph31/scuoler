@@ -66,7 +66,9 @@ exports.verifyUserJson = async function (req, res, next) {
     ssl: { rejectUnauthorized: false },
   });
 
-  var sql = `SELECT  count(*) as count, max(case when admin=true then 1 else 0 end) as admin, trim(max(first_name)||' '||max(last_name)) as full_name,  max(password) as password,   max(id) as id  
+  var sql = `SELECT  count(*) as count, max(case when admin=true then 1 else 0 end) as admin, trim(max(first_name)||' '||max(last_name)) as full_name,  max(password) as password,
+    max(id) as id, max(question_for_problem::varchar) as question_for_problem,
+    max(option_sequence_alphabetical::varchar) as option_sequence_alphabetical
     FROM Customer 
     where deleted=false and coalesce(password,'')<>'' and email=$1 
     `;
@@ -97,6 +99,9 @@ exports.verifyUserJson = async function (req, res, next) {
             admin: result.rows[0].admin,
             full_name: result.rows[0].full_name,
             userId: result.rows[0].id,
+            question_for_problem: result.rows[0].question_for_problem,
+            option_sequence_alphabetical:
+              result.rows[0].option_sequence_alphabetical,
             accessToken,
           };
         } else {

@@ -385,6 +385,9 @@ exports.getTheProblem = async function (req, res, next) {
         resObj.type = result.rows[0].type;
         resObj.author_id = result.rows[0].author_id;
         resObj.author_name = result.rows[0].author_name;
+        resObj.question_for_problem = result.rows[0].question_for_problem;
+        resObj.option_sequence_alphabetical =
+          result.rows[0].option_sequence_alphabetical;
         resObj.source = result.rows[0].source;
         resObj.problem_open = result.rows[0].problem_open;
         resObj.solution_open = result.rows[0].solution_open;
