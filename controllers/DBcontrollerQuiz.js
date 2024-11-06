@@ -86,6 +86,7 @@ exports.insertQuizToDbJson = async function (req, res, next) {
   let authorName = req.body.authorName;
   let thumbnail = req.body.thumbnail;
 
+  let resultsOpen = req.body.resultsOpen === "true";
   let practiceAllowed = req.body.practiceAllowed === "true";
   let repeatsAllowed = req.body.repeatsAllowed === "true";
   let attemptsAllowedAtAllTimes = req.body.attemptsAllowedAtAllTimes === "true";
@@ -140,10 +141,10 @@ exports.insertQuizToDbJson = async function (req, res, next) {
   let sql =
     "select quiz_insert(p_id:=$1, p_description:=$2, p_name:=$3, p_duration_minutes:=$4," +
     " p_type:=$5, p_author_id:=$6, p_courses_id:=$7, p_problems_id:=$8,   " +
-    ` p_categories_id:=$9, p_thumbnail :=$10, p_practice_allowed:=$11, p_repeats_allowed:=$12, 
-     p_attempts_allowed_at_all_times:=$13, p_attempts_allowed_start_timestamp:=$14, 
-     p_attempts_allowed_end_timestamp:=$15, p_attempt_access_to_all_users:=$16, 
-     p_role_name_quiz_taker:=$17, p_takers_id:=$18)`;
+    ` p_categories_id:=$9, p_thumbnail :=$10, p_results_open:=$11, p_practice_allowed:=$12, 
+     p_repeats_allowed:=$13, p_attempts_allowed_at_all_times:=$14, 
+     p_attempts_allowed_start_timestamp:=$15, p_attempts_allowed_end_timestamp:=$16, 
+     p_attempt_access_to_all_users:=$17, p_role_name_quiz_taker:=$18, p_takers_id:=$19)`;
 
   //console.log("Dbcontroller insert Quiz "+courseId);
 
@@ -162,6 +163,7 @@ exports.insertQuizToDbJson = async function (req, res, next) {
       problemsId,
       categoriesId,
       thumbnail,
+      resultsOpen,
       practiceAllowed,
       repeatsAllowed,
       attemptsAllowedAtAllTimes,
@@ -683,6 +685,7 @@ exports.editQuizInDbJson = async function (req, res, next) {
   let description = req.body.description;
   let name = req.body.name;
   let thumbnail = req.body.thumbnail;
+  let resultsOpen = req.body.resultsOpen === "true";
   let practiceAllowed = req.body.practiceAllowed === "true";
   let repeatsAllowed = req.body.repeatsAllowed === "true";
   let attemptsAllowedAtAllTimes = req.body.attemptsAllowedAtAllTimes === "true";
@@ -726,10 +729,10 @@ exports.editQuizInDbJson = async function (req, res, next) {
   let sql =
     "select quiz_update(p_id:=$1, p_description:=$2, p_name:=$3, " +
     " p_duration_minutes:=$4, p_type:=$5, p_courses_id:=$6, p_problems_id:=$7, " +
-    ` p_categories_id:=$8, p_thumbnail:=$9, p_practice_allowed:=$10, 
-    p_repeats_allowed:=$11, p_attempts_allowed_at_all_times:=$12,
-    p_attempts_allowed_start_timestamp:=$13, p_attempts_allowed_end_timestamp:=$14, 
-    p_attempt_access_to_all_users:=$15, p_role_name_quiz_taker:=$16, p_takers_id:=$17 )
+    ` p_categories_id:=$8, p_thumbnail:=$9, p_results_open:=$10, p_practice_allowed:=$11, 
+    p_repeats_allowed:=$12, p_attempts_allowed_at_all_times:=$13,
+    p_attempts_allowed_start_timestamp:=$14, p_attempts_allowed_end_timestamp:=$15, 
+    p_attempt_access_to_all_users:=$16, p_role_name_quiz_taker:=$17, p_takers_id:=$18 )
     `;
 
   let accountId = req.body.accountId;
@@ -762,6 +765,7 @@ exports.editQuizInDbJson = async function (req, res, next) {
       problemsId,
       categoriesId,
       thumbnail,
+      resultsOpen,
       practiceAllowed,
       repeatsAllowed,
       attemptsAllowedAtAllTimes,
@@ -853,6 +857,7 @@ exports.getTheQuiz = async function (req, res, next) {
       resObj.duration_minutes = result?.rows[0]?.duration_minutes;
       resObj.thumbnail = result?.rows[0]?.thumbnail;
       resObj.type = result?.rows[0]?.type;
+      resObj.results_open = result?.rows[0]?.results_open;
       resObj.practice_allowed = result?.rows[0]?.practice_allowed;
       resObj.repeats_allowed = result?.rows[0]?.repeats_allowed;
       resObj.attempts_allowed_at_all_times =
