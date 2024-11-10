@@ -433,6 +433,40 @@ exports.quizGetInstances = async function (req, res, next) {
   });
 };
 
+exports.quizGetInstancesByCategories = async function (req, res, next) {
+  let quizId = req.body.quizId;
+
+  let sql = "select * from quiz_instances_categories_get(p_quizId:=$1)";
+
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
+  var pool = new pg.Pool({
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
+    ssl: { rejectUnauthorized: false },
+  });
+
+  pool.query(sql, [quizId], function (err, result, fields) {
+    pool.end(() => {});
+    if (err) next(err);
+    else {
+      setCorsHeaders(req, res);
+      res.json(result.rows);
+    }
+  });
+};
+
 exports.quizGetScoresForUser = async function (req, res, next) {
   let userId = req.body.userId;
 
