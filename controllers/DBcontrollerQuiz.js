@@ -854,11 +854,16 @@ exports.getTheQuiz = async function (req, res, next) {
     " inner join Quiz_Course on Course.id=Quiz_Course.course_id " +
     " where Course.deleted=false and Quiz_Course.deleted=false and Quiz_Course.Quiz_id=$1";
 
-  let sql2 =
-    "SELECT id, description, options, solution, author_id, type " +
-    " FROM Problem " +
-    " INNER JOIN Problem_Quiz on Problem.id=Problem_Quiz.problem_id " +
-    " where Problem_Quiz.quiz_id=$1 and Problem.deleted=false and Problem_Quiz.deleted=false";
+  let sql2 = `SELECT id, description, options, solution, author_id, type,
+    	( select array_agg(coalesce(C.name, 'Unknown')) 
+	      from 
+	      category_association CA
+	      inner join category C on CA.category_id=C.id and C.deleted=false and CA.deleted=false
+	      where CA.id=Problem.id
+	    ) categories 
+     FROM Problem 
+     INNER JOIN Problem_Quiz on Problem.id=Problem_Quiz.problem_id 
+    where Problem_Quiz.quiz_id=$1 and Problem.deleted=false and Problem_Quiz.deleted=false`;
 
   let sql3 =
     "select B.ID, B.name  from category_association A " +
