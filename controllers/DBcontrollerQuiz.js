@@ -895,6 +895,7 @@ exports.getTheQuiz = async function (req, res, next) {
         result.rows[0]?.option_sequence_alphabetical;
       resObj.quiz_started_problem_wide_width =
         result.rows[0]?.quiz_started_problem_wide_width;
+      resObj.ads = result.rows[0]?.ads;
       resObj.duration_minutes = result?.rows[0]?.duration_minutes;
       resObj.thumbnail = result?.rows[0]?.thumbnail;
       resObj.type = result?.rows[0]?.type;

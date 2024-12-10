@@ -102,6 +102,7 @@ exports.verifyUserJson = async function (req, res, next) {
             question_for_problem: result.rows[0].question_for_problem,
             option_sequence_alphabetical:
               result.rows[0].option_sequence_alphabetical,
+            ads: result.rows[0].ads,
             accessToken,
           };
         } else {

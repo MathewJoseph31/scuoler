@@ -560,6 +560,7 @@ exports.getTheCourse = async function (req, res, next) {
       resObj.description = result.rows[0]?.description;
       resObj.ownerId = result.rows[0]?.author_id;
       resObj.author_name = result.rows[0]?.author_name;
+      resObj.ads = result.rows[0]?.ads;
       resObj.thumbnail = result.rows[0]?.thumbnail;
       resObj.view_count = result.rows[0]?.view_count;
       resObj.rating = result.rows[0]?.rating;

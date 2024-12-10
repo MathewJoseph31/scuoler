@@ -186,6 +186,7 @@ exports.getThePage = async function (req, res, next) {
       resObj.pagePayload = result.rows[0].page_payload;
       resObj.pageAuthorId = result.rows[0].page_author_id;
       resObj.view_count = result.rows[0].view_count;
+      resObj.ads = result.rows[0].ads;
       //console.log(result.rows);
       setCorsHeaders(req, res);
       res.send(resObj);
@@ -238,6 +239,7 @@ exports.getTheLesson = async function (req, res, next) {
       resObj.pageIdNext = result.rows[0].next_page_id;
       resObj.pageIdPrev = result.rows[0].prev_page_id;
       resObj.view_count = result.rows[0].view_count;
+      resObj.ads = result.rows[0].ads;
       //console.log(result.rows);
       setCorsHeaders(req, res);
       res.send(resObj);
@@ -289,6 +291,7 @@ exports.getTheModule = async function (req, res, next) {
       resObj.lessonIdNext = result.rows[0].next_lesson_id;
       resObj.pageIdPrev = result.rows[0].prev_page_id;
       resObj.view_count = result.rows[0].view_count;
+      resObj.ads = result.rows[0].ads;
 
       //console.log(result.rows);
       setCorsHeaders(req, res);

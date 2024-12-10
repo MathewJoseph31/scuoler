@@ -388,6 +388,7 @@ exports.getTheProblem = async function (req, res, next) {
         resObj.question_for_problem = result.rows[0].question_for_problem;
         resObj.option_sequence_alphabetical =
           result.rows[0].option_sequence_alphabetical;
+        resObj.ads = result.rows[0].ads;
         resObj.source = result.rows[0].source;
         resObj.problem_open = result.rows[0].problem_open;
         resObj.solution_open = result.rows[0].solution_open;
