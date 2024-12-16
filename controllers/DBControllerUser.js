@@ -41,6 +41,53 @@ exports.encryptPass = function (req, res, next) {
   res.json(result);
 };
 
+exports.emailUnsubscribe = async function (req, res, next) {
+  //let userId = req.body.userId;
+  let token = req.body.token;
+  console.log(token);
+  jwt.verify(token, constants.ACCESS_TOKEN_SECRET, async (err, decoded) => {
+    if (err) {
+      let err = new Error("Access Token Invalid");
+      next(err);
+    } else {
+      //console.log(decoded);
+      let email = decoded.email;
+
+      let accountId = req.body.accountId;
+      let accountConfiguration = configuration;
+
+      if (accountId) {
+        accountConfiguration = await utils.getConfiguration(
+          accountId,
+          configuration
+        );
+      }
+      var pool = new pg.Pool({
+        host: accountConfiguration.getHost(),
+        user: accountConfiguration.getUserId(),
+        password: accountConfiguration.getPassword(),
+        database: accountConfiguration.getDatabase(),
+        port: accountConfiguration.getPort(),
+        ssl: { rejectUnauthorized: false },
+      });
+
+      var sql = `Update customer set marketing_email_send=false, modified_timestamp=now() 
+        where email=$1 and deleted=false
+        `;
+
+      pool.query(sql, [email], async function (err, result, fields) {
+        pool.end(() => {});
+        if (err) {
+          next(err);
+        } else {
+          setCorsHeaders(req, res);
+          res.json({ status: "ok" });
+        }
+      });
+    }
+  });
+};
+
 /*Api Json version of verify user*/
 exports.verifyUserJson = async function (req, res, next) {
   //let userId = req.body.userId;
