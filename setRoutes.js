@@ -18,7 +18,10 @@ exports.setRoutes = (app, peerServer) => {
   //app.use("/chat", chatRouter);
 
   app.use(function (req, res, next) {
-    if (req.headers["host"] === "seed.scuoler.com") {
+    if (
+      req.headers["host"] === "seed.scuoler.com" &&
+      (req.url === "/" || req.url.endsWith(".html"))
+    ) {
       let modUrl = "/seed" + req.url;
       res.redirect(modUrl);
     } else {
