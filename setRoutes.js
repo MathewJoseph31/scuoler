@@ -17,17 +17,17 @@ exports.setRoutes = (app, peerServer) => {
 
   //app.use("/chat", chatRouter);
 
+  app.use(function (req, res, next) {
+    if (req.headers["host"] === "seed.scuoler.com") {
+      let modUrl = "/seed" + req.url;
+      res.redirect(modUrl);
+    } else {
+      next();
+    }
+  });
+
   if (process.env.NODE_ENV === "production") {
     // domains specific routing
-    app.use(function (req, res, next) {
-      console.log(req.headers);
-      console.log(req.headers["host"]);
-      if (req.headers["host"] === "seed.scuoler.com") {
-        let modUrl = "/seed" + req.url;
-        res.redirect(modUrl);
-      }
-    });
-
     // Serve any static files
     app.use(express.static(path.join(__dirname, "client/build")));
 
