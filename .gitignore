@@ -7,6 +7,7 @@ public/uploadFiles/*
 public/scormFiles/*
 public/tinymce-utils/*
 public/pdfkit/*
+public/seed
 importLogs/Configuration.js
 refreshDB/remoteFromTest/Configuration.js
 refreshDB/remoteFromTest/ConfigurationTest.js

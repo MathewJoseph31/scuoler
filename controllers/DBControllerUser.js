@@ -44,7 +44,6 @@ exports.encryptPass = function (req, res, next) {
 exports.emailUnsubscribe = async function (req, res, next) {
   //let userId = req.body.userId;
   let token = req.body.token;
-  console.log(token);
   jwt.verify(token, constants.ACCESS_TOKEN_SECRET, async (err, decoded) => {
     if (err) {
       let err = new Error("Access Token Invalid");
