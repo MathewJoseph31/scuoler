@@ -17,26 +17,7 @@ exports.setRoutes = (app, peerServer) => {
 
   app.use("/api", apiRouter);
 
-  //app.use("/chat", chatRouter);
-
-  app.use(
-    "/",
-    seedRedirector.seedRedirect
-
-    /*function (req, res, next) {
-    if (req.headers["host"] === constants.SEED_DOMAIN_NAME) {
-      let servedFile = "";
-      if (req.url === "/") {
-        servedFile = "index.html";
-      } else {
-        servedFile = decodeURI(req.url).substring(1);
-      }
-      res.sendFile(path.join(__dirname, "public", "seed", servedFile));
-    } else {
-      next();
-    }
-  }*/
-  );
+  app.use("/", seedRedirector.seedRedirect);
 
   if (process.env.NODE_ENV === "production") {
     // domains specific routing
