@@ -20,9 +20,13 @@ exports.setRoutes = (app, peerServer) => {
 
   app.use(function (req, res, next) {
     if (req.headers["host"] === constants.SEED_DOMAIN_NAME) {
-      res.sendFile(
-        path.join(__dirname, "public", "seed", decodeURI(req.url).substring(1))
-      );
+      let servedFile = "";
+      if (req.url === "/") {
+        servedFile = "index.html";
+      } else {
+        servedFile = decodeURI(req.url).substring(1);
+      }
+      res.sendFile(path.join(__dirname, "public", "seed", servedFile));
     } else {
       next();
     }
