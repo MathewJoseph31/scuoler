@@ -8,6 +8,7 @@ const { setCorsHeaders } = utils;
 
 const apiRouter = require("./routes/api");
 const constants = require("./Constants");
+const seedRedirector = require("./middleware/seedRedirector");
 
 //const chatRouter = require("./routes/chat");
 
@@ -18,7 +19,11 @@ exports.setRoutes = (app, peerServer) => {
 
   //app.use("/chat", chatRouter);
 
-  app.use(function (req, res, next) {
+  app.use(
+    "/",
+    seedRedirector.seedRedirect
+
+    /*function (req, res, next) {
     if (req.headers["host"] === constants.SEED_DOMAIN_NAME) {
       let servedFile = "";
       if (req.url === "/") {
@@ -30,7 +35,8 @@ exports.setRoutes = (app, peerServer) => {
     } else {
       next();
     }
-  });
+  }*/
+  );
 
   if (process.env.NODE_ENV === "production") {
     // domains specific routing
