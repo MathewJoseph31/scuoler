@@ -7,6 +7,7 @@ const utils = require("./utils/Utils");
 const { setCorsHeaders } = utils;
 
 const apiRouter = require("./routes/api");
+const constants = require("./Constants");
 
 //const chatRouter = require("./routes/chat");
 
@@ -18,12 +19,10 @@ exports.setRoutes = (app, peerServer) => {
   //app.use("/chat", chatRouter);
 
   app.use(function (req, res, next) {
-    if (
-      req.headers["host"] === "seed.scuoler.com" &&
-      (req.url === "/" || req.url.endsWith(".html"))
-    ) {
-      let modUrl = "/seed" + req.url;
-      res.redirect(modUrl);
+    if (req.headers["host"] === constants.SEED_DOMAIN_NAME) {
+      res.sendFile(
+        path.join(__dirname, "public", "seed", decodeURI(req.url).substring(1))
+      );
     } else {
       next();
     }
