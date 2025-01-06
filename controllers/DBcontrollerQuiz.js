@@ -319,13 +319,15 @@ exports.quizAnwersSubmit = async function (req, res, next) {
   });
 };
 
-exports.updateQuizMarksAwarded = async function (req, res, next) {
+exports.updateQuizInstanceAttributes = async function (req, res, next) {
   let quizInstanceId = req.body.quizInstanceId;
   let marksAwardedString = req.body.marksAwardedArray;
   let marksAwardedArray = JSON.parse(marksAwardedString);
-  //console.log(Array.isArray(marksAwardedArray));
+  let remarks = req.body.remarks;
 
-  let sql = "select quiz_marks_awarded_update($1, $2)";
+  //let sql = "select quiz_marks_awarded_update($1, $2)";
+
+  let sql = "select quiz_instance_attributes_update($1, $2, $3)";
 
   let accountId = req.body.accountId;
   let accountConfiguration = configuration;
@@ -348,7 +350,7 @@ exports.updateQuizMarksAwarded = async function (req, res, next) {
 
   pool.query(
     sql,
-    [quizInstanceId, marksAwardedArray],
+    [quizInstanceId, remarks, marksAwardedArray],
     function (err, result, fields) {
       pool.end(() => {});
 

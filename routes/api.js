@@ -95,7 +95,10 @@ router.post(
   "/getQuizInstanceProblems",
   dbControllerQuiz.getQuizInstanceProblems
 );
-router.post("/updateQuizMarksAwarded", dbControllerQuiz.updateQuizMarksAwarded);
+router.post(
+  "/updateQuizInstanceAttributes",
+  dbControllerQuiz.updateQuizInstanceAttributes
+);
 router.post("/quizGetScoresForUser", dbControllerQuiz.quizGetScoresForUser);
 //categories
 router.get("/getCategoryList", dbControllerCourse.getCategoryList);
