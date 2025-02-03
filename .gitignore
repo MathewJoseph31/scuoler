@@ -6,6 +6,7 @@ logs/
 public/uploadFiles/*
 public/scormFiles/*
 public/tinymce-utils/*
+public/peerjs/*
 public/pdfkit/*
 public/seed
 importLogs/Configuration.js
