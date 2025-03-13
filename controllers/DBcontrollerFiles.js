@@ -42,7 +42,9 @@ exports.getUploadsForSource = async function (req, res, next) {
   });
 
   let sql =
-    " SELECT A.file_name, A.relative_url, A.file_type, A.author_id, A.create_timestamp  " +
+    " SELECT A.file_name,  A.file_type, A.author_id, " +
+    " CASE WHEN A.id_no_download is not null THEN A.id_no_download ELSE A.relative_url END relative_url, " +
+    " CASE WHEN A.id_no_download is not null THEN TRUE ELSE FALSE END as no_download,  A.create_timestamp  " +
     "  from Upload_Association A  " +
     " where  A.deleted=false and A.source_object_id=$1 " +
     " order by A.create_timestamp desc " +
@@ -358,6 +360,110 @@ exports.courseScormFileUpload = function (req, res, next) {
           });
           // handle any errors
         }
+      }
+    });
+  }
+};
+
+exports.fileUploadGetRelativeUrl = async function (req, res, next) {
+  var queryObject = url.parse(req.url, true).query;
+
+  let idNoDownload = queryObject.idNoDownload;
+  let courseId = queryObject.courseId;
+
+  let accountId = queryObject.accountId;
+  let accountConfiguration = configuration;
+
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
+  var pool = new pg.Pool({
+    host: accountConfiguration.getHost(),
+    user: accountConfiguration.getUserId(),
+    password: accountConfiguration.getPassword(),
+    database: accountConfiguration.getDatabase(),
+    port: accountConfiguration.getPort(),
+    ssl: { rejectUnauthorized: false },
+  });
+
+  let sql = `select file_name, file_type, relative_url 
+             from upload_association 
+             where upload_association.source_object_id=$1
+             AND upload_association.id_no_download=$2
+             limit 1;
+  `;
+  pool.query(sql, [courseId, idNoDownload], function (err, result, fields) {
+    if (err) {
+      pool.end(() => {});
+      next(err);
+    } else {
+      setCorsHeaders(req, res);
+      res.json(result.rows[0]);
+    }
+  });
+};
+
+exports.fileUploadToggleDownload = async function (req, res, next) {
+  let noDownload = req.body.noDownload === "true";
+  let accountId = req.body.accountId;
+  let accountConfiguration = configuration;
+  if (accountId) {
+    accountConfiguration = await utils.getConfiguration(
+      accountId,
+      configuration
+    );
+  }
+
+  if (noDownload === true) {
+    let relativeUrl = req.body.relativeUrl;
+    let sourceId = req.body.sourceId;
+    let idNoDownload = uuidv4();
+    let sql = `Update Upload_Association set id_no_download=$1, modified_timestamp=now() where source_object_id=$2 and relative_url=$3`;
+
+    var pool = new pg.Pool({
+      host: accountConfiguration.getHost(),
+      user: accountConfiguration.getUserId(),
+      password: accountConfiguration.getPassword(),
+      database: accountConfiguration.getDatabase(),
+      port: accountConfiguration.getPort(),
+      ssl: { rejectUnauthorized: false },
+    });
+
+    pool.query(sql, [idNoDownload, sourceId, relativeUrl], (err, result) => {
+      pool.end(() => {});
+      if (err) {
+        next(err);
+      } else {
+        setCorsHeaders(req, res);
+        res.json({ togglestatus: "ok", idNoDownload });
+      }
+    });
+  } else {
+    let sourceId = req.body.sourceId;
+    let idNoDownload = req.body.idNoDownload;
+    let pool = new pg.Pool({
+      host: accountConfiguration.getHost(),
+      user: accountConfiguration.getUserId(),
+      password: accountConfiguration.getPassword(),
+      database: accountConfiguration.getDatabase(),
+      port: accountConfiguration.getPort(),
+      ssl: { rejectUnauthorized: false },
+    });
+    let sql = `select upload_files_enable_download(p_source_object_id:=$1, p_id_no_download:=$2)`;
+
+    pool.query(sql, [sourceId, idNoDownload], (err, result) => {
+      pool.end(() => {});
+      if (err) {
+        next(err);
+      } else {
+        //console.log(result);
+        let resObj = result.rows[0].upload_files_enable_download;
+        setCorsHeaders(req, res);
+        res.json({ togglestatus: "ok", relativeUrl: resObj.relative_url });
       }
     });
   }

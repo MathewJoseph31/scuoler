@@ -256,7 +256,15 @@ router.post(
   "/fileUploadDeleteFromDB",
   dbControllerFiles.fileUploadDeleteFromDB
 );
+router.post(
+  "/fileUploadToggleDownload",
+  dbControllerFiles.fileUploadToggleDownload
+);
 router.post("/courseScormFileUpload", dbControllerFiles.courseScormFileUpload);
+router.get(
+  "/fileUploadGetRelativeUrl",
+  dbControllerFiles.fileUploadGetRelativeUrl
+);
 //MAILER
 router.post("/sendMail", controllerEmail.recieveContactUsEmail);
 router.post("/sendReply", controllerEmail.sendContactUsEmailReply);
