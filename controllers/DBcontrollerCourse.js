@@ -60,6 +60,13 @@ exports.insertCourseToDbJson = async function (req, res, next) {
   let quizesArray = JSON.parse(req.body.quizesArray);
   let categoriesArray = [];
 
+  let contentViewersAccessAll = req.body.contentViewersAccessAll === "true";
+  let contentViewersArray = JSON.parse(req.body.contentViewersArray);
+
+  let fileUploadViewersAccessAll =
+    req.body.fileUploadViewersAccessAll === "true";
+  let fileUploadViewersArray = JSON.parse(req.body.fileUploadViewersArray);
+
   if (req.body.categoriesArray)
     categoriesArray = JSON.parse(req.body.categoriesArray);
 
@@ -104,8 +111,9 @@ exports.insertCourseToDbJson = async function (req, res, next) {
     ssl: { rejectUnauthorized: false },
   });
 
-  var sql =
-    "select course_insertDB(p_id:=$1, p_name:=$2, p_description:=$3, p_author_id:=$4, p_thumbnail:=$5, p_type:=$6, p_categories_id:=$7, p_languages_id:=$8, p_quizes_id:=$9)";
+  var sql = `select course_insertDB(p_id:=$1, p_name:=$2, p_description:=$3, p_author_id:=$4, p_thumbnail:=$5, p_type:=$6, p_categories_id:=$7, p_languages_id:=$8, p_quizes_id:=$9, 
+     p_content_view_access_to_all_users:=$10, p_role_name_content_viewer:=$11, p_content_viewer_ids:=$12, 
+     p_file_upload_view_access_to_all_users:=$13, p_role_name_file_upload_viewer:=$14, p_file_upload_viewer_ids:=$15)`;
 
   var courseId = uuidv4();
   pool.query(
@@ -120,6 +128,12 @@ exports.insertCourseToDbJson = async function (req, res, next) {
       categoriesId,
       languagesId,
       quizesId,
+      contentViewersAccessAll,
+      constants.ROLE_NAME_COURSE_CONTENTS_VIEWER,
+      contentViewersArray,
+      fileUploadViewersAccessAll,
+      constants.ROLE_NAME_COURSE_UPLOAD_FILES_VIEWER,
+      fileUploadViewersArray,
     ],
     function (err, result) {
       pool.end(() => {});
@@ -549,6 +563,16 @@ exports.getTheCourse = async function (req, res, next) {
     " inner join language B on A.language_id=B.id and A.DELETED=false and B.deleted=false " +
     " where A.id=$1 ";
 
+  let sql4 = `select B.ID, coalesce(B.first_name,'') first_name, coalesce(B.last_name, '') last_name, 
+    coalesce(B.address1,'') address1, coalesce(B.address2, '') address2, 
+    coalesce(B.city, '') city, coalesce(B.zip, '') zip, 
+     coalesce(B.phone, '') phone, coalesce(B.mobile, '') mobile, 
+     coalesce(B.email, '') email, B.sex_male, B.profile_image_url,
+     A.role_name
+    from role_membership A 
+    inner join customer B on A.user_id=B.id and A.DELETED=false and B.deleted=false 
+    where A.source_object_id=$1 and A.role_name in ($2, $3)`;
+
   pool.query(sql, [courseId, authorName], function (err, result, fields) {
     if (err) {
       pool.end(() => {});
@@ -570,6 +594,10 @@ exports.getTheCourse = async function (req, res, next) {
       resObj.launch_file = result.rows[0]?.launch_file;
       resObj.source = result.rows[0]?.source;
       resObj.creative_commons = result.rows[0]?.creative_commons;
+      resObj.content_view_access_to_all_users =
+        result.rows[0]?.content_view_access_to_all_users;
+      resObj.file_upload_view_access_to_all_users =
+        result.rows[0]?.file_upload_view_access_to_all_users;
       resObj.relative_url =
         resObj.type === constants.COURSE_TYPE_CODE_SCORM
           ? path.join(
@@ -595,13 +623,41 @@ exports.getTheCourse = async function (req, res, next) {
               resObj.categoriesArray = result2.rows;
               resObj.languagesArray = [];
               pool.query(sql3, [courseId], function (err, result3, fields) {
-                pool.end(() => {});
-
-                if (err) next(err);
-                else {
+                if (err) {
+                  pool.end(() => {});
+                  next(err);
+                } else {
                   resObj.languagesArray = result3.rows;
-                  setCorsHeaders(req, res);
-                  res.json(resObj);
+                  resObj.contentViewersArray = [];
+                  resObj.fileUploadViewersArray = [];
+
+                  pool.query(
+                    sql4,
+                    [
+                      courseId,
+                      constants.ROLE_NAME_COURSE_UPLOAD_FILES_VIEWER,
+                      constants.ROLE_NAME_COURSE_CONTENTS_VIEWER,
+                    ],
+                    function (err, result4, fields) {
+                      pool.end(() => {});
+                      if (err) {
+                        next(err);
+                      } else {
+                        resObj.contentViewersArray = result4.rows.filter(
+                          (obj) =>
+                            obj.role_name ===
+                            constants.ROLE_NAME_COURSE_CONTENTS_VIEWER
+                        );
+                        resObj.fileUploadViewersArray = result4.rows.filter(
+                          (obj) =>
+                            obj.role_name ===
+                            constants.ROLE_NAME_COURSE_UPLOAD_FILES_VIEWER
+                        );
+                        setCorsHeaders(req, res);
+                        res.json(resObj);
+                      }
+                    }
+                  );
                 }
               });
             }
@@ -665,6 +721,21 @@ exports.editCourseInDbJson = async function (req, res, next) {
   let description = req.body.description;
   let name = req.body.name;
   let thumbnail = req.body.thumbnail;
+
+  let contentViewersAccessAll = req.body.contentViewersAccessAll === "true";
+  let contentViewersArray = [];
+
+  if (req.body.contentViewersArray)
+    contentViewersArray = JSON.parse(req.body.contentViewersArray);
+
+  let fileUploadViewersAccessAll =
+    req.body.fileUploadViewersAccessAll === "true";
+
+  let fileUploadViewersArray = [];
+
+  if (req.body.fileUploadViewersArray)
+    fileUploadViewersArray = JSON.parse(req.body.fileUploadViewersArray);
+
   let quizesArray = [],
     categoriesArray = [],
     languagesArray = [];
@@ -696,8 +767,10 @@ exports.editCourseInDbJson = async function (req, res, next) {
 
   /*var sql="UPDATE COURSE SET  name=$1, description=$2, p_quizes_id:=$3, modified_timestamp=now() "+
   " where id=$4 ";*/
-  var sql =
-    "select course_update(p_id:=$1, p_name:=$2, p_description:=$3, p_thumbnail:=$4,p_quizes_id:=$5, p_categories_id:=$6, p_languages_id:=$7)";
+  var sql = `select course_update(p_id:=$1, p_name:=$2, p_description:=$3, p_thumbnail:=$4,p_quizes_id:=$5, p_categories_id:=$6, p_languages_id:=$7, 
+    p_content_view_access_to_all_users:=$8, p_role_name_content_viewer:=$9, p_content_viewer_ids:=$10,
+    p_file_upload_view_access_to_all_users:=$11, p_role_name_file_upload_viewer:=$12, p_file_upload_viewer_ids:=$13
+    )`;
 
   let accountId = req.body.accountId;
   let accountConfiguration = configuration;
@@ -728,6 +801,12 @@ exports.editCourseInDbJson = async function (req, res, next) {
       quizesId,
       categoriesId,
       languagesId,
+      contentViewersAccessAll,
+      constants.ROLE_NAME_COURSE_CONTENTS_VIEWER,
+      contentViewersArray,
+      fileUploadViewersAccessAll,
+      constants.ROLE_NAME_COURSE_UPLOAD_FILES_VIEWER,
+      fileUploadViewersArray,
     ],
     function (err, result, fields) {
       pool.end(() => {});
