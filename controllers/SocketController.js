@@ -41,6 +41,10 @@ exports.handleSocketIO = function (server) {
       socket.join(roomId);
       //socket.broadcast.emit("user-connected", userId);
 
+      socket.on("stream-close", (userId) => {
+        console.log(`peer ${userId} exited`);
+      });
+
       socket.on("message", (chatMsg) => {
         console.log("new chat msg", chatMsg);
         io.to(roomId).emit("createMessage", chatMsg);
@@ -52,6 +56,33 @@ exports.handleSocketIO = function (server) {
       });
 
       socket.to(roomId).emit("user-connected", userId);
+    });
+
+    socket.on("join-room-stream", (roomId, userId, streamer) => {
+      console.log(`user ${userId} joined the room stream`, roomId, streamer);
+      socket.join(roomId);
+      //socket.broadcast.emit("user-connected", userId);
+
+      socket.on("message", (chatMsg) => {
+        console.log("new chat msg", chatMsg);
+        io.to(roomId).emit("createMessage", chatMsg);
+      });
+
+      socket.on("disconnect", () => {
+        console.log("socket disconnect", userId);
+        socket.to(roomId).emit("user-disconnected-stream", userId);
+      });
+
+      socket.on("request-stream", (streamerId, viewerId) => {
+        console.log("stream requested", streamerId, viewerId);
+        socket.to(roomId).emit("user-connected-live", viewerId);
+      });
+
+      if (streamer) {
+        socket.to(roomId).emit("user-connected-stream", userId);
+      } else {
+        socket.to(roomId).emit("user-connected-live", userId);
+      }
     });
   });
 };
