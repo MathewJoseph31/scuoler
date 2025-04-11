@@ -63,9 +63,9 @@ exports.handleSocketIO = function (server) {
       socket.join(roomId);
       //socket.broadcast.emit("user-connected", userId);
 
-      socket.on("message", (chatMsg) => {
+      socket.on("message-stream", (chatMsg) => {
         console.log("new chat msg", chatMsg);
-        io.to(roomId).emit("createMessage", chatMsg);
+        io.to(roomId).emit("createMessage-stream", chatMsg);
       });
 
       socket.on("disconnect", () => {
