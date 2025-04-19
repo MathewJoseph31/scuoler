@@ -1,5 +1,7 @@
 const pg = require("pg");
 const url = require("url");
+const path = require("path");
+const fs = require("fs");
 const { v4: uuidv4 } = require("uuid");
 
 const configuration = require("../Configuration");
@@ -138,9 +140,152 @@ exports.getMeetingsOfUser = async function (req, res, next) {
   });
 };
 
+exports.meetingRecordingUpload = async (req, res, next) => {
+  const file = req.files.file;
+  let [uploadDir, fileName] = [req.body.uploadDir, req.body.name];
+
+  let dirPath = path.join(
+    __basedir,
+    constants.PUBLIC_DIRECTORY,
+    constants.UPLOAD_FILES_DIRECTORY,
+    uploadDir
+  );
+
+  if (!fileName.endsWith(".webm")) {
+    fileName += ".webm";
+  }
+
+  let newFilePath = path.join(dirPath, fileName);
+
+  //console.log(dirPath, newFilePath, file);
+
+  if (!fs.existsSync(dirPath)) {
+    fs.mkdirSync(dirPath, { recursive: true });
+  }
+
+  let oldFilePath = file.path;
+
+  fs.rename(oldFilePath, newFilePath, function (err) {
+    if (err) next(err);
+    //    console.log(`Successfully  ${fileName} moved!`);
+    setCorsHeaders(req, res);
+    res.json({ uploadStatus: "ok" });
+  });
+};
+
+exports.meetingRecordingsMerge = async (req, res, next) => {
+  const eventId = req.body.eventId;
+  const organiserId = req.body.organiserId;
+  let uploadDir = `${organiserId}/${eventId}`;
+
+  let dirPath = path.join(
+    __basedir,
+    constants.PUBLIC_DIRECTORY,
+    constants.UPLOAD_FILES_DIRECTORY,
+    uploadDir
+  );
+
+  let filesArr = fs.readdirSync(dirPath);
+  filesArr = filesArr.filter((filename) => filename.endsWith(".webm"));
+  filesArr = filesArr.filter(
+    (filename) => !isNaN(filename.substring(0, filename.indexOf(".")))
+  );
+  //console.log(filesArr);
+  let promises = filesArr.map((filename) =>
+    utils.parseMediaFile(path.join(dirPath, filename))
+  );
+
+  Promise.allSettled(promises).then((response) => {
+    let goodFiles = [];
+    let badFiles = [];
+    response.forEach((obj) => {
+      if (obj.status === "fulfilled") {
+        goodFiles.push(obj.value);
+      } else if (obj.status === "rejected") {
+        badFiles.push(obj.reason);
+      }
+    });
+    console.log(goodFiles, badFiles);
+    if (badFiles.length > 0) {
+      //badFiles = badFiles.map((fileName) => path.join(dirPath, fileName));
+      utils.moveFilesToDirectory(
+        badFiles,
+        path.join(dirPath, constants.BAD_MEDIA_RECORD_FILES_DIRECTORY_NAME)
+      );
+    }
+
+    let mergeSourceFiles = [...goodFiles];
+
+    let goodFilesExistingDir = path.join(
+      dirPath,
+      constants.GOOD_MEDIA_RECORD_FILES_DIRECTORY_NAME
+    );
+
+    if (fs.existsSync(goodFilesExistingDir)) {
+      let goodFilesExisting = fs.readdirSync(goodFilesExistingDir);
+      goodFilesExisting = goodFilesExisting.map((fileName) =>
+        path.join(goodFilesExistingDir, fileName)
+      );
+      mergeSourceFiles = [...goodFilesExisting, ...mergeSourceFiles];
+    }
+
+    if (
+      mergeSourceFiles &&
+      mergeSourceFiles.length > 0 &&
+      goodFiles.length > 0
+    ) {
+      // perform a numeric sort on file names and take the last one's name
+      mergeSourceFiles = mergeSourceFiles.sort((fileName1, fileName2) => {
+        let pref1 = fileName1.substring(fileName1.lastIndexOf("/") + 1);
+        let pref2 = fileName2.substring(fileName2.lastIndexOf("/") + 1);
+        pref1 = pref1.substring(0, pref1.indexOf("."));
+        pref2 = pref2.substring(0, pref2.indexOf("."));
+        if (pref1.length === pref2.length) {
+          return Number(pref1) - Number(pref2);
+        } else {
+          return pref1.length - pref2.length;
+        }
+      });
+      utils.writeRecordingFileNamesToRecordingConcatFile(
+        path.join(dirPath, constants.MERGE_RECORDINGS_CONCAT_FILE_NAME),
+        mergeSourceFiles
+      );
+
+      utils
+        .mergeRecordingFiles(
+          path.join(dirPath, constants.MERGE_RECORDINGS_CONCAT_FILE_NAME),
+          path.join(dirPath, constants.MERGE_RECORDINGS_OUTPUT_FILE_NAME)
+        )
+        .then(() => {
+          if (goodFiles.length > 0) {
+            utils.moveFilesToDirectory(
+              goodFiles,
+              path.join(
+                dirPath,
+                constants.GOOD_MEDIA_RECORD_FILES_DIRECTORY_NAME
+              )
+            );
+          }
+          res.json({
+            mergeStatus: "ok",
+            description: `recordings merged successfully to ${constants.MERGE_RECORDINGS_OUTPUT_FILE_NAME}`,
+          });
+        })
+        .catch((err) => {
+          next(err);
+        });
+    } else {
+      res.json({
+        mergeStatus: "ok",
+        description: "Empty set of source recordings",
+      });
+    }
+  });
+};
+
 exports.getTheMeeting = async (req, res, next) => {
   const eventId = req.body.eventId;
-  const authorId = req.body.authorId;
+  const userId = req.body.userId;
   const accountId = req.body.accountId;
 
   let accountConfiguration = configuration;
@@ -164,7 +309,7 @@ exports.getTheMeeting = async (req, res, next) => {
   const sql = "select * from meeting_get_one(p_id:=$1, p_user_id:=$2)";
 
   let resObj = {};
-  pool.query(sql, [eventId, authorId], function (err, result, fields) {
+  pool.query(sql, [eventId, userId], function (err, result, fields) {
     if (err) {
       pool.end(() => {});
       next(err);
@@ -181,11 +326,61 @@ exports.getTheMeeting = async (req, res, next) => {
         resObj.end_time = result.rows[0].end_time;
         resObj.organiser_id = result.rows[0].organiser_id;
         resObj.notify_before_minutes = result.rows[0].notify_before_minutes;
+        resObj.record_at_server = result.rows[0].record_at_server;
         resObj.rating = result.rows[0].rating;
         resObj.likes = result.rows[0].likes;
         resObj.liked = result.rows[0].liked;
 
         resObj.participant_email_ids = resObj.participant_email_ids.join(", ");
+
+        let uploadDir = result.rows[0].organiser_id + "/" + eventId;
+        let dirPath = path.join(
+          __basedir,
+          constants.PUBLIC_DIRECTORY,
+          constants.UPLOAD_FILES_DIRECTORY,
+          uploadDir
+        );
+        if (!fs.existsSync(dirPath)) {
+          resObj.startChunkId = 0;
+        } else {
+          let filesArr = fs.readdirSync(dirPath);
+          let goodFilesDir = path.join(
+            dirPath,
+            constants.GOOD_MEDIA_RECORD_FILES_DIRECTORY_NAME
+          );
+          if (fs.existsSync(goodFilesDir)) {
+            filesArr = [...filesArr, ...fs.readdirSync(goodFilesDir)];
+          }
+          let badFilesDir = path.join(
+            dirPath,
+            constants.BAD_MEDIA_RECORD_FILES_DIRECTORY_NAME
+          );
+          if (fs.existsSync(badFilesDir)) {
+            filesArr = [...filesArr, ...fs.readdirSync(badFilesDir)];
+          }
+          filesArr = filesArr.filter((filename) => filename.endsWith(".webm"));
+          filesArr = filesArr.filter(
+            (filename) => !isNaN(filename.substring(0, filename.indexOf(".")))
+          );
+
+          if (filesArr && filesArr.length > 0) {
+            /* perform a numeric sort on file names and take the last one's name */
+            filesArr = filesArr.sort((fileName1, fileName2) => {
+              let pref1 = fileName1.substring(0, fileName1.indexOf("."));
+              let pref2 = fileName2.substring(0, fileName2.indexOf("."));
+              if (pref1.length === pref2.length) {
+                return Number(pref1) - Number(pref2);
+              } else {
+                return pref1.length - pref2.length;
+              }
+            });
+            let lastFile = filesArr[filesArr.length - 1];
+            resObj.startChunkId =
+              Number(lastFile.substring(0, lastFile.indexOf("."))) + 1;
+          } else {
+            resObj.startChunkId = 0;
+          }
+        }
       }
       setCorsHeaders(req, res);
       res.json(resObj);
@@ -257,6 +452,10 @@ exports.insertMeetingToDbJson = async function (req, res, next) {
   if (req.body.ignoreConflicts === "true") {
     ignoreConflicts = true;
   }
+  let recordAtServer = false;
+  if (req.body.recordAtServer === "true") {
+    recordAtServer = true;
+  }
 
   let accountConfiguration = configuration;
 
@@ -318,7 +517,7 @@ exports.insertMeetingToDbJson = async function (req, res, next) {
   let sql = `select meeting_insert(p_id:=$1, p_description:=$2, p_participant_email_ids:=$3,
           p_timezone:=$4, p_timezone_description:=$5, p_start_time:=$6,
           p_end_time:=$7, p_organiser_id:=$8, p_notify_before_minutes:=$9,
-          p_ignore_conflicts:=$10 );`;
+          p_ignore_conflicts:=$10, p_record_at_server:=$11 );`;
 
   pool.query(
     sql,
@@ -333,6 +532,7 @@ exports.insertMeetingToDbJson = async function (req, res, next) {
       organiserId,
       notifyMinutes,
       ignoreConflicts,
+      recordAtServer,
     ],
     (err, result) => {
       pool.end(() => {});
@@ -451,6 +651,12 @@ exports.updateMeeting = async function (req, res, next) {
   if (req.body.ignoreConflicts === "true") {
     ignoreConflicts = true;
   }
+
+  let recordAtServer = false;
+  if (req.body.recordAtServer === "true") {
+    recordAtServer = true;
+  }
+
   let accountConfiguration = configuration;
 
   if (accountId) {
@@ -511,7 +717,7 @@ exports.updateMeeting = async function (req, res, next) {
   let sql = `select meeting_update(p_id:=$1, p_description:=$2, p_participant_email_ids:=$3,
           p_timezone:=$4, p_timezone_description:=$5, p_start_time:=$6,
           p_end_time:=$7, p_organiser_id:=$8, p_notify_before_minutes:=$9,
-          p_ignore_conflicts:=$10 );`;
+          p_ignore_conflicts:=$10, p_record_at_server:=$11 );`;
 
   pool.query(
     sql,
@@ -526,6 +732,7 @@ exports.updateMeeting = async function (req, res, next) {
       organiserId,
       notifyMinutes,
       ignoreConflicts,
+      recordAtServer,
     ],
     (err, result) => {
       pool.end(() => {});

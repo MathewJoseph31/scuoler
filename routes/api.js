@@ -40,6 +40,14 @@ router.get(
   jwtVerifier.checkPageForGets,
   dbControllerMeeting.getMeetingsOfUser
 );
+router.post(
+  "/meetingRecordingUpload",
+  dbControllerMeeting.meetingRecordingUpload
+);
+router.post(
+  "/meetingRecordingsMerge",
+  dbControllerMeeting.meetingRecordingsMerge
+);
 
 //PROBLEM
 router.post("/updateProblem", dbControllerProblem.editProblemInDB);

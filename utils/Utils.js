@@ -1,6 +1,7 @@
 const pg = require("pg");
 const fs = require("fs");
 const path = require("path");
+const ffmpeg = require("fluent-ffmpeg");
 
 /*Cloudinary cloud image server initialization*/
 const cloudinary = require("cloudinary").v2;
@@ -324,4 +325,104 @@ exports.formatLogLines = (logLines, log_file_name, filterBots) => {
   });
   formattedLines = formattedLines.filter((obj) => obj.source_ip);
   return formattedLines;
+};
+
+exports.parseMediaFile = (filePath) => {
+  return new Promise((resolve, reject) => {
+    let ff = new ffmpeg();
+    ff.on("start", function (commandLine) {
+      // on start, you can verify the command line to be used
+      console.log("The ffmpeg command line is: " + commandLine);
+    })
+      .on("progress", function (data) {})
+      .on("end", function () {
+        resolve(filePath);
+      })
+      .on("error", function (err) {
+        // handle error conditions
+        if (err) {
+          reject(filePath);
+        }
+      })
+      .addInput(filePath)
+      .addOption("-f", "null")
+      .output("test_out")
+      .run();
+  });
+};
+
+/**
+ * moves the set of files (absolute paths) in sourcefilesArr arg
+ * to target directory specified in targetDir
+ *
+ * @param {*} sourcefilesArr
+ * @param {*} targetDir
+ */
+exports.moveFilesToDirectory = (sourcefilesArr, targetDir) => {
+  if (!fs.existsSync(targetDir)) {
+    fs.mkdirSync(targetDir);
+  }
+
+  for (let sourceFileName of sourcefilesArr) {
+    let shortFileName = sourceFileName.substring(
+      sourceFileName.lastIndexOf("/") + 1
+    );
+    let targetFileName = path.join(targetDir, shortFileName);
+    fs.renameSync(sourceFileName, targetFileName);
+    //console.log(sourceFileName, targetFileName);
+  }
+};
+
+/**
+ * writes the list of absolute file paths in arr to a target file, specified
+ * by  concatFilePath
+ * @param {*} concatFilePath
+ * @param {*} arr
+ */
+exports.writeRecordingFileNamesToRecordingConcatFile = (
+  concatFilePath,
+  arr
+) => {
+  let outArr = arr.map((fileName) => `file '${fileName}'`);
+  let str = outArr.join("\n");
+  fs.writeFileSync(concatFilePath, str);
+};
+
+/**
+ * merge multiple recording files (format webm) specified in concat file (concatFilePath)
+ * to a single file, specified in outFilePath param
+ *
+ * @param {*} concatFilePath
+ * @param {*} outFilePath
+ * @returns
+ */
+exports.mergeRecordingFiles = (concatFilePath, outFilePath) => {
+  return new Promise((resolve, reject) => {
+    let ff = new ffmpeg();
+    ff.on("start", function (commandLine) {
+      // on start, you can verify the command line to be used
+      console.log("The ffmpeg command line is: " + commandLine);
+    })
+      .on("progress", function (data) {
+        // do something with progress data if you like
+      })
+      .on("end", function () {
+        // do something when complete
+        resolve(outFilePath);
+      })
+      .on("error", function (err) {
+        // handle error conditions
+        if (err) {
+          console.log("Error transcoding file, Err: ", err);
+          reject(outFilePath);
+        }
+      })
+      .addInput(concatFilePath)
+      .addInputOption("-f concat")
+      .addInputOption("-v error")
+      .addInputOption("-safe 0")
+      .addOutput(outFilePath)
+      .outputOptions("-c copy")
+      .run();
+  });
 };
