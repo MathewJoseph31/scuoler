@@ -173,6 +173,51 @@ exports.meetingRecordingUpload = async (req, res, next) => {
   });
 };
 
+exports.meetingRecordingUploadOld = async (req, res, next) => {
+  const file = req.files.file;
+  let [uploadDir, fileName, subsequentUpload] = [
+    req.body.uploadDir,
+    req.body.name,
+    req.body.subsequentUpload === "true",
+  ];
+
+  let dirPath = path.join(
+    __basedir,
+    constants.PUBLIC_DIRECTORY,
+    constants.UPLOAD_FILES_DIRECTORY,
+    uploadDir
+  );
+
+  if (!fileName.endsWith(".webm")) {
+    fileName += ".webm";
+  }
+
+  if (!fs.existsSync(dirPath)) {
+    fs.mkdirSync(dirPath, { recursive: true });
+  }
+
+  let filePath = path.join(dirPath, fileName);
+  if (subsequentUpload && fs.existsSync(filePath)) {
+    let fileContents = fs.readFileSync(filePath);
+    let writeBlob = new Blob([fileContents, file], {
+      type: "video/webm",
+    });
+    fs.writeFileSync(filePath, Buffer.from(await writeBlob.arrayBuffer()));
+    res.json({ uploadStatus: "ok", description: "appended" });
+  } else {
+    //console.log(dirPath, newFilePath, file);
+
+    let oldFilePath = file.path;
+
+    fs.rename(oldFilePath, filePath, function (err) {
+      if (err) next(err);
+      //    console.log(`Successfully  ${fileName} moved!`);
+      setCorsHeaders(req, res);
+      res.json({ uploadStatus: "ok", description: "new created" });
+    });
+  }
+};
+
 exports.meetingRecordingsMerge = async (req, res, next) => {
   const eventId = req.body.eventId;
   const organiserId = req.body.organiserId;
@@ -376,7 +421,7 @@ exports.getTheMeeting = async (req, res, next) => {
             });
             let lastFile = filesArr[filesArr.length - 1];
             resObj.startChunkId =
-              Number(lastFile.substring(0, lastFile.indexOf("."))) + 1;
+              Number(lastFile.substring(0, lastFile.indexOf("."))) + 10;
           } else {
             resObj.startChunkId = 0;
           }
