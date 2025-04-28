@@ -328,6 +328,9 @@ exports.formatLogLines = (logLines, log_file_name, filterBots) => {
 };
 
 exports.parseMediaFile = (filePath) => {
+  /*shell command for the logic embedded by this function
+  ffmpeg -i 10.webm -f null test_out
+  */
   return new Promise((resolve, reject) => {
     let ff = new ffmpeg();
     ff.on("start", function (commandLine) {
@@ -388,9 +391,46 @@ exports.writeRecordingFileNamesToRecordingConcatFile = (
   fs.writeFileSync(concatFilePath, str);
 };
 
+exports.convertToMp4 = (inFilePath, outFilePath) => {
+  /*shell command for the logic embedded by
+   * this function (convert to mp4)
+   * ffmpeg -i 10.webm -y -qscale 0  10.mp4
+   */
+  return new Promise((resolve, reject) => {
+    let ff = new ffmpeg();
+    ff.on("start", function (commandLine) {
+      // on start, you can verify the command line to be used
+      console.log("The ffmpeg command line is: " + commandLine);
+    })
+      .on("progress", function (data) {
+        // do something with progress data if you like
+      })
+      .on("end", function () {
+        // do something when complete
+        resolve(outFilePath);
+      })
+      .on("error", function (err) {
+        // handle error conditions
+        if (err) {
+          console.log("Error transcoding file, Err: ", err);
+          reject(outFilePath);
+        }
+      })
+      .addInput(inFilePath)
+      //.addInputOption("-safe 0")
+      .addOutput(outFilePath)
+      .outputOptions("-qscale 0")
+      .run();
+  });
+};
+
 /**
  * merge multiple recording files (format webm) specified in concat file (concatFilePath)
  * to a single file, specified in outFilePath param
+ *
+ * shell command for the logic embedded by
+ * this function (convert to mp4)
+ * cmd:  ffmpeg -f concat -v error -safe 0 -i concat.txt -y -c copy  outfile.m4
  *
  * @param {*} concatFilePath
  * @param {*} outFilePath

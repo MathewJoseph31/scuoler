@@ -173,13 +173,10 @@ exports.meetingRecordingUpload = async (req, res, next) => {
   });
 };
 
-exports.meetingRecordingUploadOld = async (req, res, next) => {
-  const file = req.files.file;
-  let [uploadDir, fileName, subsequentUpload] = [
-    req.body.uploadDir,
-    req.body.name,
-    req.body.subsequentUpload === "true",
-  ];
+exports.meetingRecordingsMerge = async (req, res, next) => {
+  const eventId = req.body.eventId;
+  const organiserId = req.body.organiserId;
+  let uploadDir = `${organiserId}/${eventId}`;
 
   let dirPath = path.join(
     __basedir,
@@ -188,37 +185,150 @@ exports.meetingRecordingUploadOld = async (req, res, next) => {
     uploadDir
   );
 
-  if (!fileName.endsWith(".webm")) {
-    fileName += ".webm";
+  let filesArr = fs.readdirSync(dirPath);
+  filesArr = filesArr.filter((filename) => filename.endsWith(".webm"));
+  filesArr = filesArr.filter(
+    (filename) => !isNaN(filename.substring(0, filename.indexOf(".")))
+  );
+  filesArr = filesArr.map((fileLocalName) => path.join(dirPath, fileLocalName));
+  //console.log(filesArr);
+
+  let goodFilesExistingDir = path.join(
+    dirPath,
+    constants.GOOD_MEDIA_RECORD_FILES_DIRECTORY_NAME
+  );
+
+  let mergeSourceFiles = [...filesArr];
+
+  if (fs.existsSync(goodFilesExistingDir)) {
+    let goodFilesExisting = fs.readdirSync(goodFilesExistingDir);
+    goodFilesExisting = goodFilesExisting.map((fileName) =>
+      path.join(goodFilesExistingDir, fileName)
+    );
+    mergeSourceFiles = [...goodFilesExisting, ...mergeSourceFiles];
+    //console.log("before sort", mergeSourceFiles);
   }
 
-  if (!fs.existsSync(dirPath)) {
-    fs.mkdirSync(dirPath, { recursive: true });
-  }
-
-  let filePath = path.join(dirPath, fileName);
-  if (subsequentUpload && fs.existsSync(filePath)) {
-    let fileContents = fs.readFileSync(filePath);
-    let writeBlob = new Blob([fileContents, file], {
-      type: "video/webm",
+  if (mergeSourceFiles && mergeSourceFiles.length > 0) {
+    mergeSourceFiles = mergeSourceFiles.sort((fileName1, fileName2) => {
+      let pref1 = fileName1.substring(fileName1.lastIndexOf("/") + 1);
+      let pref2 = fileName2.substring(fileName2.lastIndexOf("/") + 1);
+      pref1 = pref1.substring(0, pref1.indexOf("."));
+      pref2 = pref2.substring(0, pref2.indexOf("."));
+      if (pref1.length === pref2.length) {
+        return Number(pref1) - Number(pref2);
+      } else {
+        return pref1.length - pref2.length;
+      }
     });
-    fs.writeFileSync(filePath, Buffer.from(await writeBlob.arrayBuffer()));
-    res.json({ uploadStatus: "ok", description: "appended" });
+
+    const clusters = {};
+    let lastElement = mergeSourceFiles[0];
+    let currentClusterIndex = 0,
+      currentIndex = 1;
+    clusters[currentClusterIndex] = [mergeSourceFiles[0]];
+
+    while (currentIndex < mergeSourceFiles.length) {
+      let currentElement = mergeSourceFiles[currentIndex];
+      let lastLocal = lastElement.substring(lastElement.lastIndexOf("/") + 1);
+      let currentLocal = currentElement.substring(
+        currentElement.lastIndexOf("/") + 1
+      );
+      lastLocal = lastLocal.substring(0, lastLocal.indexOf("."));
+      currentLocal = currentLocal.substring(0, currentLocal.indexOf("."));
+      if (Number(currentLocal) === Number(lastLocal) + 1) {
+        //append element to the current cluster
+        clusters[currentClusterIndex].push(currentElement);
+      } else {
+        //begin a new cluster with the element
+        currentClusterIndex++;
+        clusters[currentClusterIndex] = [mergeSourceFiles[currentIndex]];
+      }
+      currentIndex++;
+      lastElement = currentElement;
+    }
+
+    console.log(clusters);
+
+    let promises = Object.keys(clusters).map((clusterKey) =>
+      utils.parseMediaFile(clusters[clusterKey][0])
+    );
+
+    Promise.allSettled(promises).then(async (response) => {
+      let goodFileIndexes = [],
+        badFileIndexes = [];
+      response.forEach((obj, index) => {
+        if (obj.status === "fulfilled") {
+          goodFileIndexes.push(index);
+        } else if (obj.status === "rejected") {
+          badFileIndexes.push(index);
+          utils.moveFilesToDirectory(
+            clusters[index],
+            path.join(dirPath, constants.BAD_MEDIA_RECORD_FILES_DIRECTORY_NAME)
+          );
+        }
+      });
+      let intermediateFiles = [];
+      for (let goodFileIndex of goodFileIndexes) {
+        let goodCluster = clusters[goodFileIndex];
+        goodSources = goodCluster.map((fileName) => {
+          return fs.readFileSync(fileName);
+        });
+        let blob = new Blob(goodSources, {
+          type: "video/webm",
+        });
+        let intermediateFilPath = path.join(
+          dirPath,
+          `${constants.INTERMEDIATE_MEDIA_RECORD_FILES_PREFIX_NAME}${goodFileIndex}.webm`
+        );
+        fs.writeFileSync(
+          intermediateFilPath,
+          Buffer.from(await blob.arrayBuffer())
+        );
+        await utils.convertToMp4(
+          intermediateFilPath,
+          path.join(dirPath, `${goodFileIndex}.mp4`)
+        );
+        intermediateFiles.push(path.join(dirPath, `${goodFileIndex}.mp4`));
+      }
+      //console.log(goodFileIndexes, badFileIndexes);
+      utils.writeRecordingFileNamesToRecordingConcatFile(
+        path.join(dirPath, constants.MERGE_RECORDINGS_CONCAT_FILE_NAME),
+        intermediateFiles
+      );
+
+      utils
+        .mergeRecordingFiles(
+          path.join(dirPath, constants.MERGE_RECORDINGS_CONCAT_FILE_NAME),
+          path.join(dirPath, constants.MERGE_RECORDINGS_OUTPUT_FILE_NAME)
+        )
+        .then(() => {
+          if (goodFileIndexes.length > 0) {
+            goodFileIndexes.forEach((goodFileIndex) => {
+              utils.moveFilesToDirectory(
+                clusters[goodFileIndex],
+                path.join(
+                  dirPath,
+                  constants.GOOD_MEDIA_RECORD_FILES_DIRECTORY_NAME
+                )
+              );
+            });
+          }
+          res.json({
+            mergeStatus: "ok",
+            description: `recordings merged successfully to ${constants.MERGE_RECORDINGS_OUTPUT_FILE_NAME}`,
+          });
+        });
+    });
   } else {
-    //console.log(dirPath, newFilePath, file);
-
-    let oldFilePath = file.path;
-
-    fs.rename(oldFilePath, filePath, function (err) {
-      if (err) next(err);
-      //    console.log(`Successfully  ${fileName} moved!`);
-      setCorsHeaders(req, res);
-      res.json({ uploadStatus: "ok", description: "new created" });
+    res.json({
+      mergeStatus: "ok",
+      description: "Empty set of source recordings",
     });
   }
 };
 
-exports.meetingRecordingsMerge = async (req, res, next) => {
+exports.meetingRecordingsMergeOld = async (req, res, next) => {
   const eventId = req.body.eventId;
   const organiserId = req.body.organiserId;
   let uploadDir = `${organiserId}/${eventId}`;
