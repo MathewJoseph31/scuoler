@@ -1,3 +1,4 @@
+const { glob } = require("fs");
 const path = require("path");
 /*Export method that accepts an http server instance as param and performs the necessary
 socket io initialization and message handling definitions*/
@@ -12,6 +13,8 @@ exports.handleSocketIO = function (server) {
       },
     });
   }
+  global.peerSocketMap = {};
+
   /*const io = require("socket.io")({
     transports: ["websocket", "flashsocket", "polling", "xhr-polling"],
     allowEIO3: true, // false by default
@@ -31,6 +34,8 @@ exports.handleSocketIO = function (server) {
         ? path.basename(socket.handshake.headers.referer)
         : "errRoom";
       //console.log("disconnect from room: ", socket.handshake.headers.referer);
+      console.log("disconnect from room: ", socket.id);
+      delete global.peerSocketMap[socket?.id];
     });
     /*socket.on("message", (chatMsg) => {
       console.log("new chat msg", chatMsg);
@@ -39,6 +44,7 @@ exports.handleSocketIO = function (server) {
     socket.on("join-room", (roomId, userId) => {
       console.log(`user ${userId} joined the room`, roomId);
       socket.join(roomId);
+      global.peerSocketMap[socket.id] = userId;
       //socket.broadcast.emit("user-connected", userId);
 
       socket.on("stream-close", (userId) => {
@@ -58,9 +64,14 @@ exports.handleSocketIO = function (server) {
       socket.to(roomId).emit("user-connected", userId);
     });
 
-    socket.on("join-room-stream", (roomId, userId, streamer) => {
-      console.log(`user ${userId} joined the room stream`, roomId, streamer);
+    socket.on("join-room-stream", (roomId, userId, userName, streamer) => {
+      console.log(
+        `user (id: ${userId}, name: ${userName})  joined the room stream`,
+        roomId,
+        streamer
+      );
       socket.join(roomId);
+      global.peerSocketMap[socket.id] = userId;
       //socket.broadcast.emit("user-connected", userId);
 
       socket.on("message-stream", (chatMsg) => {
@@ -73,15 +84,29 @@ exports.handleSocketIO = function (server) {
         socket.to(roomId).emit("user-disconnected-stream", userId);
       });
 
-      socket.on("request-stream", (streamerId, viewerId) => {
-        console.log("stream requested", streamerId, viewerId);
-        socket.to(roomId).emit("user-connected-live", viewerId);
+      socket.on("request-stream", (streamerId, viewerId, viewerName) => {
+        console.log("stream requested", streamerId, viewerId, viewerName);
+        socket.to(roomId).emit("user-connected-live", viewerId, viewerName);
       });
 
+      socket.on(
+        "introduce-client-stream",
+        (toPeerId, fromPeerId, fromPeerName) => {
+          console.log("introduce-client", toPeerId, fromPeerId, fromPeerName);
+          for (let [key, value] of Object.entries(global.peerSocketMap)) {
+            if (value === toPeerId) {
+              io.sockets.sockets
+                .get(key)
+                .emit("user-introduce", fromPeerId, fromPeerName);
+            }
+          }
+        }
+      );
+
       if (streamer) {
-        socket.to(roomId).emit("user-connected-stream", userId);
+        socket.to(roomId).emit("user-connected-stream", userId, userName);
       } else {
-        socket.to(roomId).emit("user-connected-live", userId);
+        socket.to(roomId).emit("user-connected-live", userId, userName);
       }
     });
   });
