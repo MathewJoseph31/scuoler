@@ -41,8 +41,11 @@ exports.handleSocketIO = function (server) {
       console.log("new chat msg", chatMsg);
     });*/
 
-    socket.on("join-room", (roomId, userId) => {
-      console.log(`user ${userId} joined the room`, roomId);
+    socket.on("join-room", (roomId, userId, userName) => {
+      console.log(
+        `user (id: ${userId}, name: ${userName}) joined the room`,
+        roomId
+      );
       socket.join(roomId);
       global.peerSocketMap[socket.id] = userId;
       //socket.broadcast.emit("user-connected", userId);
@@ -61,7 +64,18 @@ exports.handleSocketIO = function (server) {
         socket.to(roomId).emit("user-disconnected", userId);
       });
 
-      socket.to(roomId).emit("user-connected", userId);
+      socket.on("introduce-client", (toPeerId, fromPeerId, fromPeerName) => {
+        console.log("introduce-client", toPeerId, fromPeerId, fromPeerName);
+        for (let [key, value] of Object.entries(global.peerSocketMap)) {
+          if (value === toPeerId) {
+            io.sockets.sockets
+              .get(key)
+              .emit("user-introduce", fromPeerId, fromPeerName);
+          }
+        }
+      });
+
+      socket.to(roomId).emit("user-connected", userId, userName);
     });
 
     socket.on("join-room-stream", (roomId, userId, userName, streamer) => {
