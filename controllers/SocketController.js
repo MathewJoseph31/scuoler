@@ -48,7 +48,7 @@ exports.handleSocketIO = function (server) {
       );
       socket.join(roomId);
       global.peerSocketMap[socket.id] = userId;
-      //socket.broadcast.emit("user-connected", userId);
+      //socket.broadcast.emit("joined-room", userId);
 
       socket.on("stream-close", (userId) => {
         console.log(`peer ${userId} exited`);
@@ -75,7 +75,7 @@ exports.handleSocketIO = function (server) {
         }
       });
 
-      socket.to(roomId).emit("user-connected", userId, userName);
+      socket.to(roomId).emit("joined-room", userId, userName);
     });
 
     socket.on("join-room-stream", (roomId, userId, userName, streamer) => {
@@ -86,7 +86,7 @@ exports.handleSocketIO = function (server) {
       );
       socket.join(roomId);
       global.peerSocketMap[socket.id] = userId;
-      //socket.broadcast.emit("user-connected", userId);
+      //socket.broadcast.emit("joined-room", userId);
 
       socket.on("message-stream", (chatMsg) => {
         console.log("new chat msg", chatMsg);
@@ -100,7 +100,7 @@ exports.handleSocketIO = function (server) {
 
       socket.on("request-stream", (streamerId, viewerId, viewerName) => {
         console.log("stream requested", streamerId, viewerId, viewerName);
-        socket.to(roomId).emit("user-connected-live", viewerId, viewerName);
+        socket.to(roomId).emit("joined-room-live", viewerId, viewerName);
       });
 
       socket.on(
@@ -118,9 +118,9 @@ exports.handleSocketIO = function (server) {
       );
 
       if (streamer) {
-        socket.to(roomId).emit("user-connected-stream", userId, userName);
+        socket.to(roomId).emit("joined-room-stream", userId, userName);
       } else {
-        socket.to(roomId).emit("user-connected-live", userId, userName);
+        socket.to(roomId).emit("joined-room-live", userId, userName);
       }
     });
   });
