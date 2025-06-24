@@ -78,6 +78,14 @@ socketController.handleSocketIO(server);
 const { ExpressPeerServer } = require("peer");
 const peerServer = ExpressPeerServer(server, {
   debug: true,
+  /** the following corsOptions are the default options set by
+   * cors package, however peerServer default is {origin: true} */
+  corsOptions: {
+    origin: "*",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+  },
 });
 
 const { setRoutes } = require("../setRoutes");
