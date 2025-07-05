@@ -50,7 +50,7 @@ exports.getUniqueId = getUniqueId;
 
 const whiteListedIps = [
   "111.92.69.150",
-  "116.68.110.42", //asianet kochi
+  "111.92.67.92", //asianet kochi
   "127.0.0.1",
   "150.136.243.153", //scuoler.com
   "129.213.81.150", //data.scuoler.com
