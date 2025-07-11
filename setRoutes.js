@@ -16,7 +16,7 @@ exports.setRoutes = (app, peerServer) => {
   app.use("/peerjsServer", peerServer);
 
   app.get("/ads.txt", function (req, res) {
-    res.redirect(constants.ADS_TXT_MANAGER_REDIRECT_URL);
+    res.redirect(301, constants.ADS_TXT_MANAGER_REDIRECT_URL);
   });
 
   app.use("/api", apiRouter);
