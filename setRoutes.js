@@ -15,9 +15,11 @@ const seedRedirector = require("./middleware/seedRedirector");
 exports.setRoutes = (app, peerServer) => {
   app.use("/peerjsServer", peerServer);
 
+  /*
+  //commented because ezoic was not enabling ads
   app.get("/ads.txt", function (req, res) {
     res.redirect(301, constants.ADS_TXT_MANAGER_REDIRECT_URL);
-  });
+  });*/
 
   app.use("/api", apiRouter);
 
