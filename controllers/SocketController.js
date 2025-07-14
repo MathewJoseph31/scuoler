@@ -5,13 +5,11 @@ socket io initialization and message handling definitions*/
 exports.handleSocketIO = function (server) {
   var io;
   if (process.env.NODE_ENV === "production") {
-    io = require("socket.io")(
-      server /*, {
+    io = require("socket.io")(server, {
       cors: {
         origin: "*",
       },
-    }*/
-    );
+    });
   } else {
     io = require("socket.io")(server, {
       cors: {
