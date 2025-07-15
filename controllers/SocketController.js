@@ -58,9 +58,9 @@ exports.handleSocketIO = function (server) {
         console.log(`peer ${userId} exited`);
       });
 
-      socket.on("message", (chatMsg) => {
+      socket.on("message-chat", (chatMsg) => {
         console.log("new chat msg", chatMsg);
-        io.to(roomId).emit("createMessage", chatMsg);
+        io.to(roomId).emit("create-message", chatMsg);
       });
 
       socket.on("disconnect", () => {
