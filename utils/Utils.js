@@ -50,7 +50,7 @@ exports.getUniqueId = getUniqueId;
 
 const whiteListedIps = [
   "111.92.69.150",
-  "111.92.67.92", //asianet kochi
+  "111.92.124.42", //asianet kochi
   "127.0.0.1",
   "150.136.243.153", //scuoler.com
   "129.213.81.150", //data.scuoler.com
@@ -431,7 +431,7 @@ exports.convertToMp4 = (inFilePath, outFilePath) => {
  *
  * shell command for the logic embedded by
  * this function (convert to mp4)
- * cmd:  ffmpeg -f concat -v error -safe 0 -i concat.txt -y -c copy  outfile.m4
+ * cmd:  ffmpeg -f concat -v error -safe 0 -i concat.txt -y -c copy  outfile.mp4
  *
  * @param {*} concatFilePath
  * @param {*} outFilePath
