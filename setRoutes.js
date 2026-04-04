@@ -24,7 +24,7 @@ exports.setRoutes = (app, peerServer) => {
 
   app.use("/api", apiRouter);
 
-  app.use("/", shawnRedirector.shawnRedirect);
+  app.use("/shawn", shawnRedirector.shawnRedirect);
 
   app.use("/", seedRedirector.seedRedirect);
 
