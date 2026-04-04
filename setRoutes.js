@@ -9,6 +9,7 @@ const { setCorsHeaders } = utils;
 const apiRouter = require("./routes/api");
 const constants = require("./Constants");
 const seedRedirector = require("./middleware/seedRedirector");
+const shawnRedirector = require("./middleware/shawnRedirector");
 
 //const chatRouter = require("./routes/chat");
 
@@ -22,6 +23,8 @@ exports.setRoutes = (app, peerServer) => {
   });*/
 
   app.use("/api", apiRouter);
+
+  app.use("/", shawnRedirector.shawnRedirect);
 
   app.use("/", seedRedirector.seedRedirect);
 

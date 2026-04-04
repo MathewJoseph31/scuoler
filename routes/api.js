@@ -33,20 +33,20 @@ router.post("/getTheMeeting", dbControllerMeeting.getTheMeeting);
 router.get(
   "/getMeetings",
   jwtVerifier.checkPageForGets,
-  dbControllerMeeting.getMeetings
+  dbControllerMeeting.getMeetings,
 );
 router.get(
   "/getMeetingsOfUser",
   jwtVerifier.checkPageForGets,
-  dbControllerMeeting.getMeetingsOfUser
+  dbControllerMeeting.getMeetingsOfUser,
 );
 router.post(
   "/meetingRecordingUpload",
-  dbControllerMeeting.meetingRecordingUpload
+  dbControllerMeeting.meetingRecordingUpload,
 );
 router.post(
   "/meetingRecordingsMerge",
-  dbControllerMeeting.meetingRecordingsMerge
+  dbControllerMeeting.meetingRecordingsMerge,
 );
 
 //PROBLEM
@@ -59,12 +59,12 @@ router.post("/addProblemToQuiz", dbControllerProblem.addProblemToQuiz);
 router.post(
   "/searchProblems",
   jwtVerifier.checkPageForPosts,
-  dbControllerProblem.searchProblems
+  dbControllerProblem.searchProblems,
 );
 router.get(
   "/getProblems",
   jwtVerifier.checkPageForGets,
-  dbControllerProblem.getProblems
+  dbControllerProblem.getProblems,
 );
 
 //QUIZ
@@ -72,22 +72,22 @@ router.post("/insertQuizAction", dbControllerQuiz.insertQuizToDbJson);
 router.get(
   "/getQuizes",
   jwtVerifier.checkPageForGets,
-  dbControllerQuiz.getQuizes
+  dbControllerQuiz.getQuizes,
 );
 router.post(
   "/searchQuizes",
   jwtVerifier.checkPageForPosts,
-  dbControllerQuiz.searchQuizes
+  dbControllerQuiz.searchQuizes,
 );
 router.post("/searchQuizesForPrefix", dbControllerQuiz.searchQuizesForPrefix);
 router.post("/getTheQuiz", dbControllerQuiz.getTheQuiz);
 router.post(
   "/getProblemListForQuiz",
-  dbControllerQuiz.getProblemListForQuizJson
+  dbControllerQuiz.getProblemListForQuizJson,
 );
 router.post(
   "/getCategoryListForQuiz",
-  dbControllerQuiz.getCategoryListForQuizJson
+  dbControllerQuiz.getCategoryListForQuizJson,
 );
 router.post("/updateQuiz", dbControllerQuiz.editQuizInDbJson);
 router.post("/addQuizToCourse", dbControllerQuiz.addQuizToCourse);
@@ -97,15 +97,15 @@ router.post("/quizStart", jwtVerifier.decodeToken, dbControllerQuiz.quizStart);
 router.post("/quizGetInstances", dbControllerQuiz.quizGetInstances);
 router.post(
   "/quizGetInstancesByCategories",
-  dbControllerQuiz.quizGetInstancesByCategories
+  dbControllerQuiz.quizGetInstancesByCategories,
 );
 router.post(
   "/getQuizInstanceProblems",
-  dbControllerQuiz.getQuizInstanceProblems
+  dbControllerQuiz.getQuizInstanceProblems,
 );
 router.post(
   "/updateQuizInstanceAttributes",
-  dbControllerQuiz.updateQuizInstanceAttributes
+  dbControllerQuiz.updateQuizInstanceAttributes,
 );
 router.post("/quizGetScoresForUser", dbControllerQuiz.quizGetScoresForUser);
 //categories
@@ -117,7 +117,7 @@ router.get("/getLanguageList", dbControllerCourse.getLanguageList);
 //code snippet languages
 router.get(
   "/getCodeSnippetLanguageList",
-  dbControllerCodeSnippet.getCodeSnippetLanguageList
+  dbControllerCodeSnippet.getCodeSnippetLanguageList,
 );
 //code snippets
 router.post("/insertCodeSnippet", dbControllerCodeSnippet.insertCodeSnippet);
@@ -125,14 +125,14 @@ router.post("/getTheCodeSnippet", dbControllerCodeSnippet.getTheCodeSnippet);
 router.get(
   "/getCodeSnippets",
   jwtVerifier.checkPageForGets,
-  dbControllerCodeSnippet.getCodeSnippets
+  dbControllerCodeSnippet.getCodeSnippets,
 );
 router.post("/updateCodeSnippet", dbControllerCodeSnippet.updateCodeSnippet);
 router.post("/deleteCodeSnippet", dbControllerCodeSnippet.deleteCodeSnippet);
 router.post(
   "/searchCodeSnippets",
   jwtVerifier.checkPageForPosts,
-  dbControllerCodeSnippet.searchCodeSnippets
+  dbControllerCodeSnippet.searchCodeSnippets,
 );
 
 //Course
@@ -142,22 +142,22 @@ router.post("/insertExternalCourse", dbControllerCourse.insertExternalCourse);
 router.get(
   "/getCourses",
   jwtVerifier.checkPageForGets,
-  dbControllerCourse.getCourses
+  dbControllerCourse.getCourses,
 );
 router.get("/getCourseName", dbControllerCourse.getCourseName);
 router.post(
   "/searchCourses",
   jwtVerifier.checkPageForPosts,
-  dbControllerCourse.searchCourses
+  dbControllerCourse.searchCourses,
 );
 router.post(
   "/searchCoursesForPrefix",
-  dbControllerCourse.searchCoursesForPrefix
+  dbControllerCourse.searchCoursesForPrefix,
 );
 router.post("/getTheCourse", dbControllerCourse.getTheCourse);
 router.post(
   "/getQuizListForCourse",
-  dbControllerCourse.getQuizListForCourseJson
+  dbControllerCourse.getQuizListForCourseJson,
 );
 
 router.post("/updateCourse", dbControllerCourse.editCourseInDbJson);
@@ -172,12 +172,12 @@ router.post("/changeUserPassword", dbControllerUser.changeUserPassword);
 router.get(
   "/getUsers",
   jwtVerifier.checkPageForGets,
-  dbControllerUser.getUsers
+  dbControllerUser.getUsers,
 );
 router.post(
   "/searchUsers",
   jwtVerifier.checkPageForPosts,
-  dbControllerUser.searchUsers
+  dbControllerUser.searchUsers,
 );
 router.post("/getTheUser", dbControllerUser.getTheUser);
 router.post("/updateUser", dbControllerUser.editUserInDbJson);
@@ -197,17 +197,17 @@ router.post("/emailUnsubscribe", dbControllerUser.emailUnsubscribe);
 router.post(
   "/insertEmployeeAction",
   jwtVerifier.verifyJwt,
-  dbControllerEmployee.insertEmployeeToDbJson
+  dbControllerEmployee.insertEmployeeToDbJson,
 );
 router.get(
   "/getEmployees",
   jwtVerifier.checkPageForGets,
-  dbControllerEmployee.getEmployees
+  dbControllerEmployee.getEmployees,
 );
 router.post(
   "/searchEmployees",
   jwtVerifier.checkPageForPosts,
-  dbControllerEmployee.searchEmployees
+  dbControllerEmployee.searchEmployees,
 );
 router.post("/getTheEmployee", dbControllerEmployee.getTheEmployee);
 router.post("/updateEmployee", dbControllerEmployee.editEmployeeInDbJson);
@@ -246,7 +246,7 @@ router.post("/updateRoom", dbControllerRoom.editRoomInDbJson);
 router.post("/addCustomersToRoom", dbControllerRoom.addCustomersToRoom);
 router.post(
   "/deleteCustomersFromRoom",
-  dbControllerRoom.deleteCustomersFromRoom
+  dbControllerRoom.deleteCustomersFromRoom,
 );
 
 //CHAT
@@ -262,16 +262,16 @@ router.post("/fileUploadDelete", dbControllerFiles.fileUploadDelete);
 router.post("/fileUploadInsertToDB", dbControllerFiles.fileUploadInsertToDB);
 router.post(
   "/fileUploadDeleteFromDB",
-  dbControllerFiles.fileUploadDeleteFromDB
+  dbControllerFiles.fileUploadDeleteFromDB,
 );
 router.post(
   "/fileUploadToggleDownload",
-  dbControllerFiles.fileUploadToggleDownload
+  dbControllerFiles.fileUploadToggleDownload,
 );
 router.post("/courseScormFileUpload", dbControllerFiles.courseScormFileUpload);
 router.get(
   "/fileUploadGetRelativeUrl",
-  dbControllerFiles.fileUploadGetRelativeUrl
+  dbControllerFiles.fileUploadGetRelativeUrl,
 );
 //MAILER
 router.post("/sendMail", controllerEmail.recieveContactUsEmail);
@@ -295,7 +295,7 @@ JSON.safeStringify = (obj, indent = 2) => {
           ? undefined // Duplicate reference found, discard key
           : cache.push(value) && value // Store value in our collection
         : value,
-    indent
+    indent,
   );
   cache = null;
   return retVal;
