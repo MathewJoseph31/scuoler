@@ -10,6 +10,7 @@ public/peerjs/*
 public/pdfkit/*
 public/seed
 public/shawn
+public/james
 importLogs/Configuration.js
 refreshDB/remoteFromTest/Configuration.js
 refreshDB/remoteFromTest/ConfigurationTest.js
