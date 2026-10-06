@@ -23,7 +23,7 @@ const ipController = require("../controllers/IPController");
 const { securityController } = require("../controllers/SecurityController");
 const jwtVerifier = require("../middleware/JwtVerifier");
 
-router.all("/*", securityController);
+router.all("/{*splat}", securityController);
 //#####################################################################
 
 //MEETING

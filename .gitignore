@@ -12,6 +12,8 @@ public/seed
 public/shawn
 public/james
 public/elenor
+public/chris
+public/abrb
 importLogs/Configuration.js
 refreshDB/remoteFromTest/Configuration.js
 refreshDB/remoteFromTest/ConfigurationTest.js

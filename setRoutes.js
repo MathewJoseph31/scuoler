@@ -12,6 +12,7 @@ const seedRedirector = require("./middleware/seedRedirector");
 const shawnRedirector = require("./middleware/shawnRedirector");
 const jamesRedirector = require("./middleware/jamesRedirector");
 const elenorRedirector = require("./middleware/elenorRedirector");
+const abrbRedirector = require("./middleware/abrbRedirector");
 
 //const chatRouter = require("./routes/chat");
 
@@ -31,6 +32,8 @@ exports.setRoutes = (app, peerServer) => {
   app.use("/james", jamesRedirector.jamesRedirect);
 
   app.use("/elenor", elenorRedirector.elenorRedirect);
+
+  app.use("/abrb", abrbRedirector.abrbRedirect);
 
   app.use("/", seedRedirector.seedRedirect);
 
