@@ -50,6 +50,7 @@ exports.getUniqueId = getUniqueId;
 
 const whiteListedIps = [
   "111.92.69.150",
+  "73.124.11.118", //miami 3rd st 13 ave
   "111.92.117.137", //asianet kochi
   "127.0.0.1",
   "150.136.243.153", //scuoler.com
@@ -94,7 +95,7 @@ exports.uploadFilesToCloudinary = function (req, res, next, dir_name) {
         }
         exports.setCorsHeaders(req, res);
         res.json(result);
-      }
+      },
     );
   } else {
     cloudinary.uploader.upload(uploadFiles[0].path, function (err, result) {
@@ -136,7 +137,7 @@ exports.delete_images_local = function (image_urls_for_delete) {
     let deletePath = path.join(
       __basedir,
       constants.PUBLIC_DIRECTORY,
-      image_urls_for_delete[key]
+      image_urls_for_delete[key],
     );
     return fs.promises.unlink(deletePath);
   });
@@ -194,7 +195,7 @@ const padL = (nr, len = 2, chr = `0`) => `${nr}`.padStart(2, chr);
 
 exports.convertDateToString = (dt) => {
   return `${dt.getFullYear()}-${padL(dt.getMonth() + 1)}-${padL(
-    dt.getDate()
+    dt.getDate(),
   )}T${padL(dt.getHours())}:${padL(dt.getMinutes())}:${padL(dt.getSeconds())}`;
 };
 
@@ -231,7 +232,7 @@ exports.dateAddMinutes = (d, minutes) => {
 const readdirSync = (p, a = []) => {
   if (fs.statSync(p).isDirectory())
     fs.readdirSync(p).map((f) =>
-      readdirSync(a[a.push(path.join(p, f)) - 1], a)
+      readdirSync(a[a.push(path.join(p, f)) - 1], a),
     );
   return a;
 };
@@ -243,8 +244,8 @@ const readdirRecursiveSync = (p, a = [], depth, maxDepth) => {
         a[a.push(path.join(p, f)) - 1],
         a,
         depth + 1,
-        maxDepth
-      )
+        maxDepth,
+      ),
     );
   return a;
 };
@@ -369,7 +370,7 @@ exports.moveFilesToDirectory = (sourcefilesArr, targetDir) => {
 
   for (let sourceFileName of sourcefilesArr) {
     let shortFileName = sourceFileName.substring(
-      sourceFileName.lastIndexOf("/") + 1
+      sourceFileName.lastIndexOf("/") + 1,
     );
     let targetFileName = path.join(targetDir, shortFileName);
     fs.renameSync(sourceFileName, targetFileName);
@@ -385,7 +386,7 @@ exports.moveFilesToDirectory = (sourcefilesArr, targetDir) => {
  */
 exports.writeRecordingFileNamesToRecordingConcatFile = (
   concatFilePath,
-  arr
+  arr,
 ) => {
   let outArr = arr.map((fileName) => `file '${fileName}'`);
   let str = outArr.join("\n");
