@@ -20,6 +20,8 @@ const controllerEmail = require("../controllers/EmailController");
 const lambdaController = require("../controllers/LambdaController");
 const ipController = require("../controllers/IPController");
 
+const abrbController = require("../controllers/ControllerAbrb");
+
 const { securityController } = require("../controllers/SecurityController");
 const jwtVerifier = require("../middleware/JwtVerifier");
 
@@ -301,8 +303,13 @@ JSON.safeStringify = (obj, indent = 2) => {
   return retVal;
 };
 
+//abrb
+router.post("/sendAbrbJsFile", abrbController.sendAbrbJsFile);
+router.post("/sendAbrbCssFile", abrbController.sendAbrbCssFile);
+
 //Test
 router.get("/test", (req, res) => {
   res.send(JSON.safeStringify(req));
 });
+
 module.exports = router;

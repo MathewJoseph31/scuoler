@@ -14,6 +14,7 @@ public/james
 public/elenor
 public/chris
 public/abrb
+public/owen
 importLogs/Configuration.js
 refreshDB/remoteFromTest/Configuration.js
 refreshDB/remoteFromTest/ConfigurationTest.js
