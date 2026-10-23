@@ -305,6 +305,7 @@ JSON.safeStringify = (obj, indent = 2) => {
 
 //abrb
 router.post("/sendAbrbJsFile", abrbController.sendAbrbJsFile);
+router.post("/sendAbrbJsChunkFile", abrbController.sendAbrbJsChunkFile);
 router.post("/sendAbrbCssFile", abrbController.sendAbrbCssFile);
 
 //Test
